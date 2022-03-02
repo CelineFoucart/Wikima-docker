@@ -1,20 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <header class="bg-default p-5 text-white">
+        <div class="container">
+            <div class="heading">
+                <h1 class="heading-title">Wikima</h1>
+                <p class="lead text-center">Lead volutpat nibh ligula gravida. Magna auctor eget.</p>
+            </div>
+            <form action="" method="GET" class="mt-5 mb-4">
+                <div class="search-row">
+                    <input type="text" name="search" id="search" class="form-control rounded-pill" placeholder="Recherche...">
+                    <button type="submit" class="search-btn"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </header>
+    <article class="container mt-5">
+        <div class="text-center">
+            <p>
+                Wikima a <span class="fw-bold">6</span> catégories, 
+                <span class="fw-bold">12</span> portails et 
+                <span class="fw-bold">54</span> articles.
+            </p>
+            <p>
+                Ses membres ont importé <span class="fw-bold">13</span> fichiers multimédias.
+            </p>
+        </div>
+    </article>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'D:/xampp/htdocs/Wikima/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'D:/xampp/htdocs/Wikima/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a></code></li>
-    </ul>
-</div>
 {% endblock %}

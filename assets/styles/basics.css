@@ -1,0 +1,11 @@
+.bg-default {
+    background-color: var(--secondary);
+}
+
+.bg-default .btn-outline-light:hover {
+    color: var(--secondary);
+}
+
+.bg-default-light {
+    background-color: var(--secondary-light);
+}

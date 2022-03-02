@@ -5,5 +5,6 @@
 }
 
 body {
-    background-color: var(--secondary-light);
+    height: 100vh;
 }
+
