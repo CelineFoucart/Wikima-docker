@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Category{% endblock %}
+
+{% block body %}
+<header class="pt-4 pb-1 bg-item header-item">
+    <div class="container">
+        <div class="row border-bottom pb-4 pb-md-3 align-items-center">
+            <div class="col-md-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Lorem Ipsum</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-md-6">{{ include('includes/_search.html.twig') }}</div>
+        </div>
+        <div class="item-heading">
+            <h1 class="mb-3">Lorem Ipsum</h1>
+            <p class="lead mb-3">Lead volutpat nibh ligula gravida. Magna auctor eget.</p>
+        </div>
+    </div>
+</header>
+<div class="container">
+    <section class="row justify-content-between">
+        <article class="col-md-7 p-4">
+            <h2 class="list-title">Les derniers articles</h1>
+
+           {% for row in range(0, 9) %}
+                <p class="article-link">
+                    <a href="{{ path('app_article', {slug:"consectetur-adipiscing"}) }}">
+                        Consectetur adipiscing elit sed do eiusmod
+                    </a>
+                    <i class="bi bi-chevron-right fw-bold"></i>
+                </p>
+            {% endfor %}
+
+            <div class="navigation">
+                <nav aria-label="...">
+                    <ul class="pagination">
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">2</span>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            
+        </article>
+        <aside class="col-md-4 aside">
+            <h3 class="h4 mb-4">Portails de cette catégorie</h3>
+            <ul class="children-list">
+                {% for row in range(0, 5) %}
+                    <li>
+                        <a href="{{ path('app_portal', {slug:"sorem-do-eiusmod"}) }}" class="label">
+                            <i class="bi bi-tag-fill me-1"></i>
+                            Sorem do eiusmod
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </aside>
+    </section>
+</div>
+{% endblock %}

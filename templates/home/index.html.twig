@@ -3,22 +3,9 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-    <header class="bg-default p-5 text-white">
-        <div class="container">
-            <div class="heading">
-                <h1 class="heading-title">Wikima</h1>
-                <p class="lead text-center">Lead volutpat nibh ligula gravida. Magna auctor eget.</p>
-            </div>
-            <form action="" method="GET" class="mt-5 mb-4">
-                <div class="search-row">
-                    <input type="text" name="search" id="search" class="form-control rounded-pill" placeholder="Recherche...">
-                    <button type="submit" class="search-btn"><i class="bi bi-search"></i></button>
-                </div>
-            </form>
-        </div>
-    </header>
+   {{ include('home/_header.html.twig') }}
     <article class="container mt-5">
-        <div class="text-center">
+        <aside class="text-center">
             <p>
                 Wikima a <span class="fw-bold">6</span> catégories, 
                 <span class="fw-bold">12</span> portails et 
@@ -27,6 +14,36 @@
             <p>
                 Ses membres ont importé <span class="fw-bold">13</span> fichiers multimédias.
             </p>
+        </aside>
+        
+        <h2 class="list-title">Catégories</h2>
+        <p class="text-center text-muted fs-5 mb-4">Explorer l'une des catégories disponibles sur le site</p>
+
+        <section class="row border-bottom pb-5">
+            {% for row in range(0, 6) %}
+                <div class="col-md-6 col-lg-4 my-3">
+                    <a href="{{ path('app_category', {slug:"lorem-ipsum"}) }}" class="category-link">
+                        Lorem Ipsum
+                    </a>
+                </div>
+            {% endfor %}
+        </section>
+    </article>
+
+    <article class="container my-5">
+        <h2 class="mb-5">Articles récents</h2>
+
+        <div class="row gx-5">
+            {% for row in range(0, 5) %}
+                <div class="col-md-6">
+                    <p class="article-link">
+                        <a href="{{ path('app_article', {slug:"consectetur-adipiscing"}) }}">
+                            Consectetur adipiscing elit sed do eiusmod
+                        </a>
+                        <i class="bi bi-chevron-right fw-bold"></i>
+                    </p>
+                </div>
+            {% endfor %}
         </div>
     </article>
 

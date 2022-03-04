@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Articles{% endblock %}
+
+{% block body %}
+<article>
+    <header class="pt-4 bg-item header-item border-bottom">
+        <div class="container">
+            <div class="border-bottom pb-3 pb-md-2">
+                <span class="label-title">Portails : </span>
+                {% for row in range(0, 3) %}
+                    <a href="{{ path('app_portal', {slug:"sorem-do-eiusmod"}) }}" class="label ms-1">
+                        <i class="bi bi-tag-fill me-1"></i>
+                        Sorem do eiusmod
+                    </a>
+                {% endfor %}
+            </div>
+            <div class="item-heading">
+                <h1 class="mb-1">Article</h1>
+                <p class="text-muted mb-3">Par Ermina, publié le 10/10/2021</p>
+                <p class="lead mb-3">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat occaecat cupidatat culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita fugit, hic quasi nesciunt, odio atque qui recusandae inventore nulla est incidunt quos quia? Quibusdam non dicta voluptatum pariatur distinctio consequuntur.</p>
+            </div>
+
+            <ul class="nav nav-tabs border-bottom-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Lecture</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Commentaire</a>
+                </li>
+            </ul>
+        </div>
+        
+    </header>
+
+    <section class="container py-5 px-4">
+        <h2 class="h3">Cogito ergo sum</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+        <h2 class="h3">Mens sana in corpore sano</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </section>
+</article>
+{% endblock %}

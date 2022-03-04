@@ -9,3 +9,20 @@
 .bg-default-light {
     background-color: var(--secondary-light);
 }
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 3rem;
+}
+
+.breadcrumb a {
+    text-decoration: none;
+}
+
+@media (min-width:768px) {
+    .grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0 3rem;
+    }
+}

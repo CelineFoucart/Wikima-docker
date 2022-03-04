@@ -1,0 +1,36 @@
+.category-link {
+    transition: color .15s ease-in-out, background-color .15s ease-in-out;
+    border: 1px solid  var(--secondary);
+    background-color: transparent;
+    color: var(--secondary);
+    padding: 23px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    border-radius: 4px;
+    font-size: 1.1rem;
+}
+
+.category-link:hover {
+    color: var(--primary);
+    background-color: var(--secondary);
+    text-decoration: none;
+}
+
+.article-link {
+    border-bottom: 1px solid #C4C4C4;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: space-between;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out;
+}
+
+.article-link a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.article-link:hover {
+    color: var(--secondary);
+    border-color: var(--secondary);
+}

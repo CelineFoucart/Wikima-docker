@@ -5,9 +5,12 @@
     padding-bottom: 2rem;
 }
 
+.index-header .search-row {
+    max-width: 320px;
+}
+
 .search-row {
     position: relative;
-    max-width: 320px;
     margin: 0 auto;
     padding: 0 10px;
 }
@@ -29,7 +32,7 @@
 }
 
 @media (min-width:768px) {
-    .search-row {
+    .index-header .search-row {
         max-width: 400px;
     }
 }

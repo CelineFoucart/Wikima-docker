@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Portail{% endblock %}
+
+{% block body %}
+<article>
+    <header class="pt-4 pb-1 bg-item header-item">
+        <div class="container">
+            <div class="row border-bottom pb-4 pb-md-3 align-items-center">
+                <div class="col-md-6">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ path('app_category', {slug: "lorem-ipsum"}) }}">Lorem Ipsum</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Sorem do eiusmod</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-md-6">{{ include('includes/_search.html.twig') }}</div>
+            </div>
+            <div class="item-heading">
+                <h1 class="mb-3">Sorem do eiusmod</h1>
+                <p class="lead mb-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita fugit, hic quasi nesciunt, odio atque qui recusandae inventore nulla est incidunt quos quia? Quibusdam non dicta voluptatum pariatur distinctio consequuntur.</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container py-5 px-4">
+        <div class="grid-2">
+            {% for row in range(0, 9) %}
+                <p class="article-link">
+                    <a href="{{ path('app_article', {slug:"consectetur-adipiscing"}) }}">
+                        Consectetur adipiscing elit sed do eiusmod
+                    </a>
+                    <i class="bi bi-chevron-right fw-bold"></i>
+                </p>
+            {% endfor %}
+        </div>
+
+        <div class="navigation">
+            <nav aria-label="...">
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <span class="page-link">Previous</span>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">2</span>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</article>
+{% endblock %}
