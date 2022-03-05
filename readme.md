@@ -18,3 +18,9 @@ Un projet de wiki développé en symfony pour gérer du contenu textuel et des i
 docker-compose up -d
 symfony serve -d
 ```
+
+### Création des fixtures
+
+```bash
+symfony console hautelook:fixtures:load
+```
