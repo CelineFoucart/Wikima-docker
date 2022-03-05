@@ -69,7 +69,7 @@ class ArticleRepository extends ServiceEntityRepository
             ->orderBy('a.title', 'ASC')
             ->leftJoin('a.portals', 'p')->addSelect()
             ->andWhere('p.id IN (:portalIds)')
-            ->setParameter('portalId', $portalIds)
+            ->setParameter('portalIds', $portalIds)
             ->getQuery()
             ->getResult()
         ;

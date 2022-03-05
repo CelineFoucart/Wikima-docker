@@ -27,19 +27,7 @@ App\Entity\Article:
     portals: '<numberBetween(1,4)>x @portal_*'
 
 App\Entity\Comment:
-  comment_{1..10}:
-    author: '@user_*'
-    content: '<text(100)>'
-    createdAt: '<dateTimeBetween("-200 days", "now")>'
-    category: '@category_*'
-
-  comment_{11..20}:
-    author: '@user_*'
-    content: '<text(100)>'
-    createdAt: '<dateTimeBetween("-200 days", "now")>'
-    portal: '@portal_*'
-
-  comment_{21..30}:
+  comment_{1..30}:
     author: '@user_*'
     content: '<text(100)>'
     createdAt: '<dateTimeBetween("-200 days", "now")>'

@@ -39,9 +39,6 @@ class Portal
     #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: 'portals')]
     private $articles;
 
-    #[ORM\OneToMany(mappedBy: 'portals', targetEntity: Comment::class)]
-    private $comments;
-
     public function __construct()
     {
         $this->categories = new ArrayCollection();
@@ -176,36 +173,6 @@ class Portal
     {
         if ($this->articles->removeElement($article)) {
             $article->removePortal($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Comment>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    public function addComment(Comment $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments[] = $comment;
-            $comment->setPortal($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getPortal() === $this) {
-                $comment->setPortal(null);
-            }
         }
 
         return $this;

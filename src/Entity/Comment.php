@@ -26,12 +26,6 @@ class Comment
     #[ORM\ManyToOne(targetEntity: Article::class, inversedBy: 'comments')]
     private $article;
 
-    #[ORM\ManyToOne(targetEntity: Portal::class, inversedBy: 'comments')]
-    private $portal;
-
-    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'comments')]
-    private $category;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -85,30 +79,6 @@ class Comment
     public function setArticle(?Article $article): self
     {
         $this->article = $article;
-
-        return $this;
-    }
-
-    public function getPortal(): ?Portal
-    {
-        return $this->portal;
-    }
-
-    public function setPortal(?Portal $portal): self
-    {
-        $this->portal = $portal;
-
-        return $this;
-    }
-
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?Category $category): self
-    {
-        $this->category = $category;
 
         return $this;
     }
