@@ -107,9 +107,13 @@ class Portal
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->createdAt = $createdAt;
+        if ($createdAt instanceof \DateTimeImmutable) {
+            $this->createdAt = $createdAt;
+        } else {
+            $this->createdAt = new \DateTimeImmutable($createdAt->format('Y-m-d H:i:s'));
+        }
 
         return $this;
     }
