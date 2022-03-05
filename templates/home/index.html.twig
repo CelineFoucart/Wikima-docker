@@ -20,10 +20,10 @@
         <p class="text-center text-muted fs-5 mb-4">Explorer l'une des catégories disponibles sur le site</p>
 
         <section class="row border-bottom pb-5">
-            {% for row in range(0, 6) %}
+            {% for category in categories %}
                 <div class="col-md-6 col-lg-4 my-3">
-                    <a href="{{ path('app_category', {slug:"lorem-ipsum"}) }}" class="category-link">
-                        Lorem Ipsum
+                    <a href="{{ path('app_category', {slug: category.slug}) }}" class="category-link">
+                        {{ category.title }}
                     </a>
                 </div>
             {% endfor %}
@@ -34,14 +34,15 @@
         <h2 class="mb-5">Articles récents</h2>
 
         <div class="row gx-5">
-            {% for row in range(0, 5) %}
+            {% for article in articles %}
                 <div class="col-md-6">
-                    <p class="article-link">
-                        <a href="{{ path('app_article', {slug:"consectetur-adipiscing"}) }}">
-                            Consectetur adipiscing elit sed do eiusmod
-                        </a>
-                        <i class="bi bi-chevron-right fw-bold"></i>
-                    </p>
+                   {{ include('wiki/_article_link.html.twig') }}
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-danger">
+                        Aucun article trouvé
+                    </div>
                 </div>
             {% endfor %}
         </div>
