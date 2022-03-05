@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,12 +21,12 @@ class CategoryController extends AbstractController
     public function category(string $slug, Request $request): Response
     {
         $category = $this->categoryRepository->findOneBy(['slug' => $slug]);
-        $portalIds = [];
-
-        foreach ($category->getPortals() as $portal) {
-            $portalIds[] = $portal->getId();
+        
+        if ($category === null) {
+            throw $this->createNotFoundException();
         }
         
+        $portalIds = $this->getCategoryPortalIds($category);
         $page = $request->query->getInt('page', 1);
         $articles = $this->articleRepository->findByPortals($portalIds, $page);
 
@@ -33,5 +34,16 @@ class CategoryController extends AbstractController
             'category' => $category,
             'articles' => $articles,
         ]);
+    }
+
+    private function getCategoryPortalIds(Category $category): array
+    {
+        $portalIds = [];
+
+        foreach ($category->getPortals() as $portal) {
+            $portalIds[] = $portal->getId();
+        }
+
+        return $portalIds;
     }
 }

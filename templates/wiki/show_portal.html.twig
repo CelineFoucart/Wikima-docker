@@ -12,7 +12,7 @@
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
                             <li class="breadcrumb-item">
-                                <a href="{{ path('app_category', {slug: "lorem-ipsum"}) }}">Lorem Ipsum</a>
+                                <a href="{{ path('app_portal_index') }}">Portails</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">Sorem do eiusmod</li>
                         </ol>
@@ -22,7 +22,13 @@
             </div>
             <div class="item-heading">
                 <h1 class="mb-3">Sorem do eiusmod</h1>
-                <p class="lead mb-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita fugit, hic quasi nesciunt, odio atque qui recusandae inventore nulla est incidunt quos quia? Quibusdam non dicta voluptatum pariatur distinctio consequuntur.</p>
+                <p class="lead mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita fugit, hic quasi nesciunt, odio atque qui recusandae inventore nulla est incidunt quos quia? Quibusdam non dicta voluptatum pariatur distinctio consequuntur.</p>
+                <p class="mb-0">
+                    <a href="{{ path('app_category', {slug: "lorem"}) }}" class="label">
+                        <i class="bi bi-tag-fill me-1"></i>
+                        Lorem
+                    </a>
+                </p>
             </div>
         </div>
     </header>
