@@ -3,10 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Article;
+use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 
 /**
  * @method Article|null find($id, $lockMode = null, $lockVersion = null)
@@ -16,9 +18,13 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ArticleRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+
+    private PaginatorService $paginatorService;
+
+    public function __construct(ManagerRegistry $registry, PaginatorService $paginatorService)
     {
         parent::__construct($registry, Article::class);
+        $this->paginatorService = $paginatorService;
     }
 
     /**
@@ -63,15 +69,15 @@ class ArticleRepository extends ServiceEntityRepository
      * 
      * @return Articles[]
      */
-    public function findByPortals(array $portalIds): array
+    public function findByPortals(array $portalIds, int $page): PaginationInterface
     {
-        return $this->createQueryBuilder('a')
+        $query = $this->createQueryBuilder('a')
             ->orderBy('a.title', 'ASC')
             ->leftJoin('a.portals', 'p')->addSelect()
             ->andWhere('p.id IN (:portalIds)')
             ->setParameter('portalIds', $portalIds)
-            ->getQuery()
-            ->getResult()
         ;
+
+        return $this->paginatorService->paginate($query, $page);
     }
 }
