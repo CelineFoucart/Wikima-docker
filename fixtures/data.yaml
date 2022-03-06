@@ -39,7 +39,7 @@ App\Entity\User:
     email: 'admin@gmail.fr'
     password: '<hashPassword("password123")>'
     createdAt: '<dateTimeBetween("-200 days", "now")>'
-    roles: '["ROLE_ADMIN", "ROLE_USER"]'
+    roles: '[ROLE_ADMIN, ROLE_USER]'
 
   user_{2..3}:
     username: '<username()>'
