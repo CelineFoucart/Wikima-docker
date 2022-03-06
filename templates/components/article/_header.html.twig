@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="border-bottom pb-3 pb-md-2">
+        <span class="label-title">Portails : </span>
+        {% for portal in article.portals %}
+            {{ include('components/utils/_tag_link.html.twig', {item: portal, path: 'app_portal'}) }}
+        {% endfor %}
+    </div>
+    <div class="item-heading">
+        <h1 class="mb-1">{{ article.title|capitalize }}</h1>
+        <p class="text-muted mb-3 mt-2">
+            <span class="me-3">
+                <i class="bi bi-person-fill me-1"></i>  Par {{ article.author.username }}
+            </span>
+            <span class="me-2">
+                <i class="bi bi-calendar3 me-1"></i> Le {{ article.createdAt|date('d/m/Y') }}
+            </span>
+        </p>
+        <p class="lead mb-3">{{ article.description }}</p>
+    </div>
+
+    <ul class="nav nav-tabs border-bottom-0">
+        <li class="nav-item">
+            <a class="nav-link active" href="{{ path('app_article', {slug:article.slug}) }}">
+                Lecture
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Commentaires</a>
+        </li>
+    </ul>
+</div>

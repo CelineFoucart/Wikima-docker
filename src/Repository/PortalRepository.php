@@ -53,11 +53,11 @@ class PortalRepository extends ServiceEntityRepository
     public function findPaginated(int $page): PaginationInterface
     {
         $builder =  $this->createQueryBuilder('p')->orderBy('p.title', 'ASC');
-        return $this->paginatorService->setLimit(15)->paginate($builder, $page);
+        return $this->paginatorService->setLimit(16)->paginate($builder, $page);
     }
 
     /**
-     * Finds a portal and its portals
+     * Finds a portal and its categories.
      */
     public function findBySlug(string $slug): ?Portal
     {

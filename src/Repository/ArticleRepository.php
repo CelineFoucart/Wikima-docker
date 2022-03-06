@@ -80,4 +80,33 @@ class ArticleRepository extends ServiceEntityRepository
 
         return $this->paginatorService->setLimit($limit)->paginate($query, $page);
     }
+    
+    /**
+     * Finds a pagination of 16 articles.
+     * 
+     * @param int $page
+     * 
+     * @return PaginationInterface
+     */
+    public function findPaginated(int $page): PaginationInterface
+    {
+        $builder =  $this->createQueryBuilder('a')->orderBy('a.title', 'ASC');
+        return $this->paginatorService->setLimit(16)->paginate($builder, $page);
+    }
+
+    /**
+     * Finds an article and its portals.
+     */
+    public function findBySlug(string $slug): ?Article
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.title', 'ASC')
+            ->leftJoin('a.portals', 'p')->addSelect('p')
+            ->leftJoin('a.author', 'u')->addSelect('u')
+            ->andWhere('a.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }
