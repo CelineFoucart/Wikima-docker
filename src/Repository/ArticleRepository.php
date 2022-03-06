@@ -69,7 +69,7 @@ class ArticleRepository extends ServiceEntityRepository
      * 
      * @return Articles[]
      */
-    public function findByPortals(array $portalIds, int $page): PaginationInterface
+    public function findByPortals(array $portalIds, int $page, int $limit = 10): PaginationInterface
     {
         $query = $this->createQueryBuilder('a')
             ->orderBy('a.title', 'ASC')
@@ -78,6 +78,6 @@ class ArticleRepository extends ServiceEntityRepository
             ->setParameter('portalIds', $portalIds)
         ;
 
-        return $this->paginatorService->paginate($query, $page);
+        return $this->paginatorService->setLimit($limit)->paginate($query, $page);
     }
 }

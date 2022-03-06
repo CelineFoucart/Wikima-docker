@@ -3,10 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Portal;
+use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 
 /**
  * @method Portal|null find($id, $lockMode = null, $lockVersion = null)
@@ -16,9 +18,12 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PortalRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private PaginatorService $paginatorService;
+
+    public function __construct(ManagerRegistry $registry, PaginatorService $paginatorService)
     {
         parent::__construct($registry, Portal::class);
+        $this->paginatorService = $paginatorService;
     }
 
     /**
@@ -44,33 +49,24 @@ class PortalRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
-
-    // /**
-    //  * @return Portal[] Returns an array of Portal objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function findPaginated(int $page): PaginationInterface
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $builder =  $this->createQueryBuilder('p')->orderBy('p.title', 'ASC');
+        return $this->paginatorService->setLimit(15)->paginate($builder, $page);
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Portal
+    /**
+     * Finds a portal and its portals
+     */
+    public function findBySlug(string $slug): ?Portal
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+            ->leftJoin('p.categories', 'c')->addSelect('c')
+            ->andWhere('p.slug = :slug')
+            ->setParameter('slug', $slug)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
 }

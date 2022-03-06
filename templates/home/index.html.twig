@@ -32,20 +32,7 @@
 
     <article class="container my-5">
         <h2 class="mb-5">Articles récents</h2>
-
-        <div class="row gx-5">
-            {% for article in articles %}
-                <div class="col-md-6">
-                   {{ include('wiki/_article_link.html.twig') }}
-                </div>
-            {% else %}
-                <div class="col-12">
-                    <div class="alert alert-danger">
-                        Aucun article trouvé
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+        {{ include('components/layout/_row_link_list.html.twig', {path: 'app_article', items: articles}) }}
     </article>
 
 

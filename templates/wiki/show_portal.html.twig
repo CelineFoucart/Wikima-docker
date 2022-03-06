@@ -14,20 +14,20 @@
                             <li class="breadcrumb-item">
                                 <a href="{{ path('app_portal_index') }}">Portails</a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Sorem do eiusmod</li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ portal.title|capitalize }}</li>
                         </ol>
                     </nav>
                 </div>
                 <div class="col-md-6">{{ include('includes/_search.html.twig') }}</div>
             </div>
             <div class="item-heading">
-                <h1 class="mb-3">Sorem do eiusmod</h1>
-                <p class="lead mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita fugit, hic quasi nesciunt, odio atque qui recusandae inventore nulla est incidunt quos quia? Quibusdam non dicta voluptatum pariatur distinctio consequuntur.</p>
+                <h1 class="mb-3">{{ portal.title|capitalize }}</h1>
+                <p class="lead mb-4">{{ portal.description }}</p>
+
                 <p class="mb-0">
-                    <a href="{{ path('app_category', {slug: "lorem"}) }}" class="label">
-                        <i class="bi bi-tag-fill me-1"></i>
-                        Lorem
-                    </a>
+                    {% for category in portal.categories %}
+                        {{ include('components/utils/_tag_link.html.twig', {item: category, path: 'app_category'}) }}
+                    {% endfor %}
                 </p>
             </div>
         </div>
@@ -35,32 +35,11 @@
 
     <div class="container py-5 px-4">
         <div class="grid-2">
-            {% for row in range(0, 9) %}
-                <p class="article-link">
-                    <a href="{{ path('app_article', {slug:"consectetur-adipiscing"}) }}">
-                        Consectetur adipiscing elit sed do eiusmod
-                    </a>
-                    <i class="bi bi-chevron-right fw-bold"></i>
-                </p>
-            {% endfor %}
+            {{ include('components/layout/_single_col_list.html.twig',{path: 'app_article', items: articles}) }}
         </div>
 
         <div class="navigation">
-            <nav aria-label="...">
-                <ul class="pagination">
-                    <li class="page-item disabled">
-                        <span class="page-link">Previous</span>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item active" aria-current="page">
-                        <span class="page-link">2</span>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
+            {{ knp_pagination_render(articles) }}
         </div>
     </div>
 </article>

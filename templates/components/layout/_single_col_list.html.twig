@@ -1,0 +1,5 @@
+ {% for item in items %}
+    {{ include('components/utils/_border_bottom_link.html.twig', {item: item, path: path}) }}
+{% else %}
+    <p class="text-center">Aucun element trouvé</p>
+{% endfor %}
