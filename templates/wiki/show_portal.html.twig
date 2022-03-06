@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Portail{% endblock %}
+{% block title %}{{ portal.title }} | Portail{% endblock %}
+
+{% block description %}{{ portal.description }}{% endblock %}
 
 {% block body %}
 <article>

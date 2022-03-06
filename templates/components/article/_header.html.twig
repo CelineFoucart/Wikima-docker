@@ -1,3 +1,10 @@
+{% if comments is not defined %}
+    {% set comments = false %}
+{% endif %}
+{% if reading is not defined %}
+    {% set reading = false %}
+{% endif %}
+
 <div class="container">
     <div class="border-bottom pb-3 pb-md-2">
         <span class="label-title">Portails : </span>
@@ -20,12 +27,14 @@
 
     <ul class="nav nav-tabs border-bottom-0">
         <li class="nav-item">
-            <a class="nav-link active" href="{{ path('app_article', {slug:article.slug}) }}">
+            <a class="nav-link {{ reading ? 'active': '' }}" href="{{ path('app_article', {slug:article.slug}) }}">
                 Lecture
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Commentaires</a>
+            <a class="nav-link {{ comments ? 'active': '' }}" href="{{ path('app_comment', {slug:article.slug}) }}">
+                Commentaires
+            </a>
         </li>
     </ul>
 </div>

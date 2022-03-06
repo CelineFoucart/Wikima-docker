@@ -1,26 +1,17 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Article;
 
-use App\Repository\ArticleRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ArticleController extends AbstractController
+final class ArticleController extends AbstractArticleController
 {
-    public function __construct(
-        private ArticleRepository $articleRepository
-    ) { }
-
     #[Route('/articles/{slug}', name: 'app_article', requirements: ['slug' => '[a-z\-]*'])]
     public function article(string $slug): Response
     {
-        $article = $this->articleRepository->findBySlug($slug);
-        if ($article === null) {
-            throw $this->createNotFoundException();
-        }
+        $article = $this->getArticle($slug);
 
         return $this->render('wiki/show_article.html.twig', [
             'article' => $article,
