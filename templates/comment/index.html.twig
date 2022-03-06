@@ -15,6 +15,10 @@
             {{ comments.getTotalItemCount }} commentaire{{comments.getTotalItemCount > 1 ? 's':'' }}
         </h2>
 
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+
         {% for comment in comments %}
            {{ include('components/article/_comment.html.twig') }}
         {% else %}
@@ -29,10 +33,10 @@
         <article class="mx-5">
             <h3 class="h4 mb-4">Laisser un commentaire</h3>
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                {# form #}
+                {{ include('comment/_form.html.twig') }}
             {% else %}
                 <p class="text-center">
-                    Veuillez vous <a href="{">connecter</a> pour laisser un commentaire.
+                    Veuillez vous <a href="{{ path('app_login') }}">connecter</a> pour laisser un commentaire.
                 </p>
             {% endif %}
         </article>
