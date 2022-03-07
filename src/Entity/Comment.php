@@ -21,9 +21,7 @@ class Comment
     #[ORM\Column(type: 'text')]
     #[Assert\NotBlank]
     #[Assert\Length(
-        min: 10,
-        max: 50,
-        minMessage: 'This value name must be at least 10 characters long',
+        min: 10
     )]
     private $content;
 

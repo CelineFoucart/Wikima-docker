@@ -2,7 +2,12 @@
 
 {% block title %}Editer un commentaire{% endblock %}
 
-<article class="mx-5">
-    <h3 class="h4 mb-4">Editer un commentaire</h3>
-    {{ include('comment/_form.html.twig') }}
-</article>
+{% block body %}
+    {% include "components/article/_comment_header.html.twig" with {'article': article} only  %} 
+
+    <article class="container">
+
+        <h3 class="h4 my-4">Editer mon commentaire</h3>
+        {{ include('comment/_form.html.twig') }}
+    </article>
+{% endblock %}

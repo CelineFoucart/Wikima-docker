@@ -70,6 +70,24 @@ final class CommentController extends AbstractArticleController
 
         return $this->render('comment/edit.html.twig',[
             'form' => $form->createView(),
+            'article' => $comment->getArticle(),
+        ]);
+    }
+
+    #[Route('/comment/{id}/delete', name: 'app_comment_delete')]
+    public function delete(Comment $comment, CommentRepository $commentRepository, Request $request): Response
+    {
+        $article = $comment->getArticle();
+        if ($this->isCsrfTokenValid('delete'.$comment->getId(), $request->request->get('_token'))) {
+            $commentRepository->remove($comment);
+            $this->addFlash('success', "Le commentaire a bien été supprimée.");
+
+            return $this->redirectToRoute('app_comment', ['slug' => $article->getSlug()]);
+        }
+
+        return $this->render('comment/delete.html.twig', [
+            'comment' => $comment,
+            'article' => $article,
         ]);
     }
 }
