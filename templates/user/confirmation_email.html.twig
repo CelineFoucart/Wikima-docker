@@ -1,231 +1,37 @@
-<html xmlns:v="urn:schemas-microsoft-com:vml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
-    <!--[if !mso]--><!-- -->
-    <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,500,600,700" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,700" rel="stylesheet">
-    <!-- <![endif]-->
+{% extends "base_email.html.twig" %}
 
-    <title>Confirmer mon email</title>
+{% block title %}
+    Confirmer mon email
+{% endblock %}
 
-    <style type="text/css">
-        body {
-            width: 100%;
-            background-color: #ffffff;
-            margin: 0;
-            padding: 0;
-            -webkit-font-smoothing: antialiased;
-            mso-margin-top-alt: 0px;
-            mso-margin-bottom-alt: 0px;
-            mso-padding-alt: 0px 0px 0px 0px;
-        }
+{% block body %}
+    <h1 class="title">
+        BIENVENUE SUR <span style="color: #3087C9;">WIKIMA</span>
+    </h1>
 
-        .title {
-            color: #343434; 
-            font-size: 35px; 
-            font-family: Quicksand, Calibri, sans-serif; 
-            font-weight:700;
-            letter-spacing: 3px; 
-            text-align: center;
-            margin-bottom: 20px;
-            line-height: 3rem;
-            margin-top: 20px;
-        }
+    <p class="description">
+        Nous vous remercions d&#8217;avoir complété votre inscription sur Wikima. Cet e-mail confirme que votre compte est activé et que vous pouvez dès à présent poster des commentaires sur les articles.
+    </p>
 
-        .description {
-            color: #888888; 
-            font-size: 16px; 
-            font-family: 'Work Sans', Calibri, sans-serif; 
-            line-height: 1.7rem;
-            margin-top: 10px;
-        }
+    <p class="description">Vous pouvez visiter votre compte à tout moment en cliquant sur le lien ci-dessous :</p>
 
-        .subtitle {
-            color: #3d3d3d; 
-            font-size: 22px; 
-            font-family: Quicksand, Calibri, sans-serif; 
-            font-weight:700;
-            letter-spacing: 3px; line-height: 35px; 
-            text-transform: uppercase; 
-            margin-top: 2.5rem;
-        }
+    <p style="text-align: center;">
+        <a href="{{ url('app_profile') }}" class="account">Mon profil</a>
+    </p>
 
-        .validate {
-            color: #3087C9; 
-            font-size: 16px; 
-            font-family: 'Work Sans', Calibri, sans-serif; 
-            text-decoration: none;
-            border: 1px solid #eeeeee; 
-            padding: 10px 30px;
-            display: inline-block;
-            margin: 1rem 0;
-        }
+    <h2 class="subtitle">Confirmer mon email</h2>
+    <p class="description">Pour commencer, veuillez cliquer sur le lien ci-dessous pour confirmer votre adresse e-mail.</p>
 
-        .account {
-            color: #ffffff; 
-            font-family: 'Work Sans', Calibri, sans-serif; 
-            line-height: 22px; 
-            letter-spacing: 2px;
-            background-color: #3087C9;
-            padding: 10px 30px;
-            text-transform: uppercase;
-            text-decoration: none;
-            margin: 1rem 0;
-            display: inline-block;
-        }
+    <p style="text-align: center;">
+        <a href="{{ signedUrl }}" class="validate">Confirmer mon email</a>
+    </p>
 
-        p,
-        h1,
-        h2,
-        h3,
-        h4 {
-            margin-top: 0;
-            margin-bottom: 0;
-            padding-top: 0;
-            padding-bottom: 0;
-        }
-        html {
-            width: 100%;
-        }
+    <p class="description">
+        Ce lien expirera dans {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
+    </p>
 
-        table {
-            font-size: 14px;
-            border: 0;
-            background-color: #ffffff;
-            max-width: 590px;
-            margin: 0 auto;
-        }
-        /* ----------- responsivity ----------- */
-
-        @media only screen and (max-width: 640px) {
-            /*------ top header ------ */
-            .main-header {
-                font-size: 20px !important;
-            }
-            .main-section-header {
-                font-size: 28px !important;
-            }
-            .show {
-                display: block !important;
-            }
-            .hide {
-                display: none !important;
-            }
-            .align-center {
-                text-align: center !important;
-            }
-            .no-bg {
-                background: none !important;
-            }
-            /*----- main image -------*/
-            .main-image img {
-                width: 440px !important;
-                height: auto !important;
-            }
-            /* ====== divider ====== */
-            .divider img {
-                width: 440px !important;
-            }
-            /*-------- container --------*/
-            .container590 {
-                width: 440px !important;
-            }
-            .container580 {
-                width: 400px !important;
-            }
-            .main-button {
-                width: 220px !important;
-            }
-            /*-------- secions ----------*/
-            .section-img img {
-                width: 320px !important;
-                height: auto !important;
-            }
-            .team-img img {
-                width: 100% !important;
-                height: auto !important;
-            }
-        }
-
-        @media only screen and (max-width: 479px) {
-            /*------ top header ------ */
-            .main-header {
-                font-size: 18px !important;
-            }
-            .main-section-header {
-                font-size: 26px !important;
-            }
-            /* ====== divider ====== */
-            .divider img {
-                width: 280px !important;
-            }
-            /*-------- container --------*/
-            .container590 {
-                width: 280px !important;
-            }
-            .container590 {
-                width: 280px !important;
-            }
-            .container580 {
-                width: 260px !important;
-            }
-            /*-------- secions ----------*/
-            .section-img img {
-                width: 280px !important;
-                height: auto !important;
-            }
-        }
-    </style>
-    <!-- [if gte mso 9]><style type=”text/css”>
-        body {
-        font-family: arial, sans-serif!important;
-        }
-        </style>
-    <![endif]-->
-</head>
-
-<body class="respond" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-    <table width="100%" cellpadding="0" cellspacing="0"  class="bg_color">
-        <tbody>
-            <tr>
-                <td class="main-header">
-                    <h1 class="title">
-                        BIENVENUE SUR <span style="color: #3087C9;">WIKIMA</span>
-                    </h1>
-
-                    <p class="description">
-                        Nous vous remercions d&#8217;avoir complété votre inscription sur Wikima. Cet e-mail confirme que votre compte est activé et que vous pouvez dès à présent poster des commentaires sur les articles.
-                    </p>
-
-                    <p class="description">Vous pouvez visiter votre compte à tout moment en cliquant sur le lien ci-dessous :</p>
-
-                    <p style="text-align: center;">
-                        <a href="{{ url('app_profile') }}" class="account">Mon profil</a>
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <h2 class="subtitle">Confirmer mon email</h2>
-                    <p class="description">Pour commencer, veuillez cliquer sur le lien ci-dessous pour confirmer votre adresse e-mail.</p>
-
-                    <p style="text-align: center;">
-                        <a href="{{ signedUrl }}" class="validate">Confirmer mon email</a>
-                    </p>
-
-                    <p class="description">
-                        Ce lien expirera dans {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
-                    </p>
-
-                    <p class="description">
-                        <br>
-                        A bientôt !
-                    </p>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</body>
-
-</html>
+    <p class="description">
+        <br>
+        A bientôt !
+    </p>
+{% endblock %}
