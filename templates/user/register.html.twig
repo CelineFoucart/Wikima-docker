@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <header class="bg-default p-5 text-white index-header">
+        <div class="container">
+            <div class="heading">
+                <h1 class="heading-title">Page d'inscription</h1>
+                <p class="lead text-center">Veuillez vous créer un compte pour poster des commentaires.</p>
+            </div>
+        </div>
+    </header>
+    <section class="container my-5">
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        {% endfor %}
+
+        {{ form_start(registrationForm) }}
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_row(registrationForm.username) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(registrationForm.email) }}
+                </div>
+            </div>
+            {{ form_row(registrationForm.plainPassword, {
+                label: 'Password'
+            }) }}
+            {{ form_row(registrationForm.agreeTerms) }}
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Inscription</button>
+            </div>
+        {{ form_end(registrationForm) }}
+        <div class="my-4 text-center">Déjà de compte ? <a href="{{ path('app_login') }}">Connectez-vous</a>.</div>
+    </section>
+{% endblock %}
