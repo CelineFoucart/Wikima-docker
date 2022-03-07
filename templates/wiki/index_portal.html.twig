@@ -10,7 +10,7 @@
 
         {{ include('components/layout/_row_link_list.html.twig', {path: 'app_portal', items: portals}) }}
 
-        <div class="navigation">
+        <div class="navigation overflow-scroll">
             {{ knp_pagination_render(portals) }}
         </div>
     </article>

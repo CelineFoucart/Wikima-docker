@@ -1,6 +1,6 @@
-<form action="" method="GET">
+{{ form_start(form) }}
     <div class="search-row">
-        <input type="text" name="search" id="search" class="form-control rounded-pill" placeholder="Recherche...">
+        {{ form_widget(form) }}
         <button type="submit" class="search-btn"><i class="bi bi-search"></i></button>
     </div>
-</form>
+{{ form_end(form) }}

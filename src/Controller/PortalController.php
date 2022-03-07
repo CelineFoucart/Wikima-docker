@@ -4,12 +4,11 @@ namespace App\Controller;
 
 use App\Repository\ArticleRepository;
 use App\Repository\PortalRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class PortalController extends AbstractController
+final class PortalController extends AbstractWikiController
 {
     public function __construct(
         private PortalRepository $portalRepository,
@@ -39,6 +38,7 @@ final class PortalController extends AbstractController
 
         return $this->render('wiki/index_portal.html.twig', [
             'portals' => $this->portalRepository->findPaginated($page),
+            'form' => $this->getSearchForm()->createView(),
         ]);
     }
 }

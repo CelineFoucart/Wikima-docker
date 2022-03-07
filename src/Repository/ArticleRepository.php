@@ -3,10 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Article;
+use App\Entity\Data\SearchData;
 use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
@@ -99,14 +101,29 @@ class ArticleRepository extends ServiceEntityRepository
      */
     public function findBySlug(string $slug): ?Article
     {
-        return $this->createQueryBuilder('a')
-            ->orderBy('a.title', 'ASC')
-            ->leftJoin('a.portals', 'p')->addSelect('p')
-            ->leftJoin('a.author', 'u')->addSelect('u')
+        return $this->getDefaultQueryBuilder()
             ->andWhere('a.slug = :slug')
             ->setParameter('slug', $slug)
             ->getQuery()
             ->getOneOrNullResult()
+        ;
+    }
+
+    public function search(SearchData $search): PaginationInterface
+    {
+        $builder = $this->getDefaultQueryBuilder();
+
+        // condition
+
+        return $this->paginatorService->setLimit(10)->paginate($builder, $search->getPage());
+    }
+
+    private function getDefaultQueryBuilder(): QueryBuilder
+    {
+        return  $this->createQueryBuilder('a')
+            ->orderBy('a.title', 'ASC')
+            ->leftJoin('a.portals', 'p')->addSelect('p')
+            ->leftJoin('a.author', 'u')->addSelect('u')
         ;
     }
 }

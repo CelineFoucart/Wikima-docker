@@ -24,6 +24,7 @@ final class ArticleController extends AbstractArticleController
         $page = $request->query->getInt('page', 1);
         return $this->render('wiki/index_article.html.twig', [
             'articles' => $this->articleRepository->findPaginated($page),
+            'form' => $this->getSearchForm()->createView(),
         ]);
     }
 }
