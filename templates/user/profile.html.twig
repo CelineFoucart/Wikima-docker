@@ -4,8 +4,7 @@
 
 {% block body %}
 
-<div class="example-wrapper">
-    <header class="bg-default p-5 text-white index-header">
+<header class="bg-default p-5 text-white index-header">
     <div class="container">
         <div class="heading">
             <h1 class="heading-title">Profil</h1>
@@ -22,6 +21,23 @@
     {% endfor %}
 
     <div class="accordion" id="accordionPanelsStayOpenExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="stats-heading">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#stats" aria-expanded="true" aria-controls="stats">
+                    Mes statistiques
+                </button>
+            </h2>
+            <div id="stats" class="accordion-collapse collapse show" aria-labelledby="stats-heading">
+                <div class="accordion-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Date d'inscription</dt>
+                        <dd class="col-sm-9">{{ user.createdAt|date('d/m/Y') }}</dd>
+
+                        <dt class="col-sm-3">Mes commentaires</dt>
+                        <dd class="col-sm-9"><a href="{{ path('app_profile_comments') }}">rechercher mes commentaires</a></dd>
+                </div>
+            </div>
+        </div>
         <div class="accordion-item">
             <h2 class="accordion-header" id="panelsStayOpen-headingOne">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">

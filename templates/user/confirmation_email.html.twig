@@ -6,11 +6,11 @@
 
 {% block body %}
     <h1 class="title">
-        BIENVENUE SUR <span style="color: #3087C9;">WIKIMA</span>
+        BIENVENUE SUR <span style="color: #3087C9;">{{ website_name()|upper }}</span>
     </h1>
 
     <p class="description">
-        Nous vous remercions d&#8217;avoir complété votre inscription sur Wikima. Cet e-mail confirme que votre compte est activé et que vous pouvez dès à présent poster des commentaires sur les articles.
+        Nous vous remercions d&#8217;avoir complété votre inscription sur {{ website_name() }}. Cet e-mail confirme que votre compte est activé et que vous pouvez dès à présent poster des commentaires sur les articles.
     </p>
 
     <p class="description">Vous pouvez visiter votre compte à tout moment en cliquant sur le lien ci-dessous :</p>

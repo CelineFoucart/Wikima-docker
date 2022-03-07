@@ -1,8 +1,8 @@
 <header class="bg-default p-5 text-white index-header">
     <div class="container">
         <div class="heading">
-            <h1 class="heading-title">Wikima</h1>
-            <p class="lead text-center">Lead volutpat nibh ligula gravida. Magna auctor eget.</p>
+            <h1 class="heading-title">{{ website_name() }}</h1>
+            <p class="lead text-center">{{ website_description() }}</p>
         </div>
         <div class="mt-5 mb-4">
             {{ include('includes/_search.html.twig') }}

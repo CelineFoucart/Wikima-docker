@@ -25,7 +25,6 @@ class ChangePasswordType extends AbstractType
     {
         $builder
             ->add('currentPassword', PasswordType::class, [
-                'label' => 'Mot de passe actuel',
                 'mapped' => false,
                 'attr' => [
                     'autocomplete' => 'off',

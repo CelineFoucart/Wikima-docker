@@ -27,11 +27,19 @@ class ResetPasswordController extends AbstractController
 
     private $resetPasswordHelper;
     private $entityManager;
+    private string $contactMail; 
+    private string $contactName;
 
-    public function __construct(ResetPasswordHelperInterface $resetPasswordHelper, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        ResetPasswordHelperInterface $resetPasswordHelper, 
+        EntityManagerInterface $entityManager,
+        string $contactMail, 
+        string $contactName
+    ) {
         $this->resetPasswordHelper = $resetPasswordHelper;
         $this->entityManager = $entityManager;
+        $this->contactMail = $contactMail;
+        $this->contactName = $contactName;
     }
 
     /**
@@ -151,7 +159,7 @@ class ResetPasswordController extends AbstractController
         }
 
         $email = (new TemplatedEmail())
-            ->from(new Address('contact@wikima.com', 'Wikima Mail Bot'))
+            ->from(new Address($this->contactMail, $this->contactName))
             ->to($user->getEmail())
             ->subject('Votre demande de réinitilisation de mot de passe')
             ->htmlTemplate('reset_password/email.html.twig')

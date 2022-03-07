@@ -5,6 +5,7 @@ namespace App\Controller\User;
 use App\Entity\User;
 use App\Form\AccountType;
 use App\Form\ChangePasswordType;
+use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,6 +50,17 @@ class ProfileController extends AbstractController
         return $this->render('user/profile.html.twig', [
             'accountForm' => $accountForm->createView(),
             'passwordForm' => $passwordForm->createView(),
+            'user' => $user,
+        ]);
+    }
+
+    #[Route('/profile/comments', name: 'app_profile_comments')]
+    public function userComments(CommentRepository $commentRepository, Request $request): Response
+    {
+        $page = $request->query->getInt('page', 1);
+
+        return $this->render('user/user_comments.html.twig', [
+            'comments' => $commentRepository->findByAuthor($this->getUser(), $page),
         ]);
     }
 }

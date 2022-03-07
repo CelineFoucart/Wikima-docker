@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Article;
 use App\Entity\Comment;
+use App\Entity\User;
 use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -58,5 +59,17 @@ class CommentRepository extends ServiceEntityRepository
             ->andWhere('c.article = :article')
             ->setParameter('article', $article);
         return $this->paginatorService->setLimit(10)->paginate($builder, $page);
+    }
+
+    public function findByAuthor(User $user, int $page): PaginationInterface
+    {
+        $builder = $this->createQueryBuilder('c')
+            ->leftJoin('c.article', 'a')->addSelect('a')
+            ->orderBy('c.createdAt', 'DESC')
+            ->andWhere('c.author = :user')
+            ->setParameter('user', $user)
+        ;
+
+        return $this->paginatorService->setLimit(6)->paginate($builder, $page);
     }
 }

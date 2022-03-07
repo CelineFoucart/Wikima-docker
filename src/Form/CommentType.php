@@ -16,7 +16,7 @@ class CommentType extends AbstractType
             ->add('content', TextareaType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Votre commentaire',
+                    'placeholder' => 'Your comment',
                     'style' => 'height: 150px;'
                 ]
             ])
