@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProfileController!{% endblock %}
+{% block title %}Profil{% endblock %}
 
 {% block body %}
 
@@ -20,6 +20,43 @@
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
+
+    <div class="accordion" id="accordionPanelsStayOpenExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                    Modifier mes informations
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                <div class="accordion-body">
+                    {{ form_start(accountForm) }}
+                        {{ form_widget(accountForm) }}
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Changer mes informations</button> 
+                        </div>
+                    {{ form_end(accountForm) }}
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseTwo">
+                    Modifier mon mot de passe
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingTwo">
+                <div class="accordion-body">
+                    {{ form_start(passwordForm) }}
+                        {{ form_widget(passwordForm) }}
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Changer mon mot de passe</button> 
+                        </div>
+                    {{ form_end(passwordForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 {% endblock %}
