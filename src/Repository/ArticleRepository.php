@@ -67,17 +67,17 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param integer[] $portalIds
+     * @param Portal[] $portals
      * 
      * @return Articles[]
      */
-    public function findByPortals(array $portalIds, int $page, int $limit = 10): PaginationInterface
+    public function findByPortals(array $portals, int $page, int $limit = 10): PaginationInterface
     {
         $query = $this->createQueryBuilder('a')
             ->orderBy('a.title', 'ASC')
             ->leftJoin('a.portals', 'p')->addSelect()
-            ->andWhere('p.id IN (:portalIds)')
-            ->setParameter('portalIds', $portalIds)
+            ->andWhere('p.id IN (:portals)')
+            ->setParameter('portals', $portals)
         ;
 
         return $this->paginatorService->setLimit($limit)->paginate($query, $page);
@@ -109,7 +109,7 @@ class ArticleRepository extends ServiceEntityRepository
         ;
     }
 
-    public function search(SearchData $search): PaginationInterface
+    public function search(SearchData $search, int $limit = 10): PaginationInterface
     {
         $builder = $this->getDefaultQueryBuilder();
 
@@ -131,7 +131,7 @@ class ArticleRepository extends ServiceEntityRepository
             ;
         }
 
-        return $this->paginatorService->setLimit(10)->paginate($builder, $search->getPage());
+        return $this->paginatorService->setLimit($limit)->paginate($builder, $search->getPage());
     }
 
     private function getDefaultQueryBuilder(): QueryBuilder

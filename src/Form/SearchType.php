@@ -34,12 +34,11 @@ class SearchType extends AbstractType
         $resolver->setDefaults([
             'data_class' => SearchData::class,
             'method' => 'GET',
-            'csrf_protection' => false,
-            'action' => $this->urlGenerator->generate('app_article_index')
+            'csrf_protection' => false
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

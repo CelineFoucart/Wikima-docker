@@ -23,7 +23,7 @@ final class PortalController extends AbstractWikiController
             throw $this->createNotFoundException();
         }
         $page = $request->query->getInt('page', 1);;
-        $articles = $this->articleRepository->findByPortals([$portal->getId()], $page, 16);
+        $articles = $this->articleRepository->findByPortals([$portal], $page, 16);
 
         return $this->render('wiki/show_portal.html.twig', [
             'portal' => $portal,

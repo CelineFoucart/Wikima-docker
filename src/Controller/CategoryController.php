@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Data\SearchData;
+use App\Form\SearchType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,26 +26,14 @@ final class CategoryController extends AbstractWikiController
         if ($category === null) {
             throw $this->createNotFoundException();
         }
-        
-        $portalIds = $this->getCategoryPortalIds($category);
+
         $page = $request->query->getInt('page', 1);
-        $articles = $this->articleRepository->findByPortals($portalIds, $page);
+        $articles = $this->articleRepository->findByPortals($category->getPortals()->toArray(), $page);
 
         return $this->render('wiki/show_category.html.twig', [
             'category' => $category,
             'articles' => $articles,
             'form' => $this->getSearchForm()->createView(),
         ]);
-    }
-
-    private function getCategoryPortalIds(Category $category): array
-    {
-        $portalIds = [];
-
-        foreach ($category->getPortals() as $portal) {
-            $portalIds[] = $portal->getId();
-        }
-
-        return $portalIds;
     }
 }
