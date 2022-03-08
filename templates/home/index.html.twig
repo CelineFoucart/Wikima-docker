@@ -6,14 +6,7 @@
    {{ include('home/_header.html.twig') }}
     <article class="container mt-5">
         <aside class="text-center">
-            <p>
-                {{ website_name() }} a <span class="fw-bold">6</span> catégories, 
-                <span class="fw-bold">12</span> portails et 
-                <span class="fw-bold">54</span> articles.
-            </p>
-            <p>
-                Ses membres ont importé <span class="fw-bold">13</span> fichiers multimédias.
-            </p>
+            {{ get_statistics() }} 
         </aside>
         
         <h2 class="list-title">Catégories</h2>
