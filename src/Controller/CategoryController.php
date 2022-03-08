@@ -32,6 +32,7 @@ final class CategoryController extends AbstractWikiController
         return $this->render('wiki/show_category.html.twig', [
             'category' => $category,
             'articles' => $articles,
+            'form' => $this->getSearchForm()->createView(),
         ]);
     }
 

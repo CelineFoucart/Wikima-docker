@@ -22,7 +22,7 @@ class SearchType extends AbstractType
             ->add('query', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Search...',
+                    'placeholder' => 'Search an article...',
                     'class' => 'form-control rounded-pill'
                 ]
             ])
@@ -35,7 +35,7 @@ class SearchType extends AbstractType
             'data_class' => SearchData::class,
             'method' => 'GET',
             'csrf_protection' => false,
-            'action' => $this->urlGenerator->generate('app_search')
+            'action' => $this->urlGenerator->generate('app_article_index')
         ]);
     }
 

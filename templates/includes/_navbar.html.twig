@@ -7,13 +7,19 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item me-3">
-                    <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
+                    <a class="nav-link {{ active_link(app.request, 'app_home') }}" href="{{ path('app_home') }}">
+                        Accueil
+                    </a>
                 </li>
                 <li class="nav-item me-3">
-                    <a class="nav-link" aria-current="page" href="{{ path('app_article_index') }}">Articles</a>
+                    <a class="nav-link {{ active_link(app.request, 'app_article_index', false) }}" href="{{ path('app_article_index') }}">
+                        Articles
+                    </a>
                 </li>
                 <li class="nav-item me-3">
-                    <a class="nav-link" aria-current="page" href="{{ path('app_portal_index') }}">Portails</a>
+                    <a class="nav-link {{ active_link(app.request, 'app_portal_index', false) }}" href="{{ path('app_portal_index') }}">
+                        Portails
+                    </a>
                 </li>
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <li class="nav-item pe-2">

@@ -16,6 +16,8 @@ abstract class AbstractWikiController extends AbstractController
 {
     protected function getSearchForm(): FormInterface
     {
-        return $this->createForm(SearchType::class, new SearchData());
+        $search = new SearchData();
+
+        return $this->createForm(SearchType::class, $search);
     }
 }

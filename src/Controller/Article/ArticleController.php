@@ -2,6 +2,8 @@
 
 namespace App\Controller\Article;
 
+use App\Entity\Data\SearchData;
+use App\Form\AdvancedSearchType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,9 +24,14 @@ final class ArticleController extends AbstractArticleController
     public function index(Request $request): Response
     {
         $page = $request->query->getInt('page', 1);
+
+        $search = (new SearchData())->setPage($page);
+        $form = $this->createForm(AdvancedSearchType::class, $search);
+        $form->handleRequest($request);
+
         return $this->render('wiki/index_article.html.twig', [
-            'articles' => $this->articleRepository->findPaginated($page),
-            'form' => $this->getSearchForm()->createView(),
+            'articles' => $this->articleRepository->search($search),
+            'form' => $form->createView(),
         ]);
     }
 }

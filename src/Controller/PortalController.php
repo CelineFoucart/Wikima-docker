@@ -28,6 +28,7 @@ final class PortalController extends AbstractWikiController
         return $this->render('wiki/show_portal.html.twig', [
             'portal' => $portal,
             'articles' => $articles,
+            'form' => $this->getSearchForm()->createView(),
         ]);
     }
 

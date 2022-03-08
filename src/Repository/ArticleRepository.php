@@ -113,7 +113,23 @@ class ArticleRepository extends ServiceEntityRepository
     {
         $builder = $this->getDefaultQueryBuilder();
 
-        // condition
+        if (strlen($search->getQuery()) >= 3 AND $search->getQuery() !== null) {
+            $builder
+                ->andWhere('a.title LIKE :q_1')
+                ->setParameter('q_1', '%' . $search->getQuery() . '%')
+                ->orWhere('a.description LIKE :q_2')
+                ->setParameter('q_2', '%' . $search->getQuery() . '%')
+                ->orWhere('a.content LIKE :q_3')
+                ->setParameter('q_3', '%' . $search->getQuery() . '%')
+            ;
+        }
+        
+        if (!empty($search->getPortals())) {
+            $builder
+                ->andWhere('p.id IN (:portals)')
+                ->setParameter('portals', $search->getPortals())
+            ;
+        }
 
         return $this->paginatorService->setLimit(10)->paginate($builder, $search->getPage());
     }

@@ -20,7 +20,7 @@ class AdvancedSearchType extends AbstractType
                 'label' => false,
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'Search...',
+                    'placeholder' => 'Search an article...',
                     'class' => 'form-control rounded-pill'
                 ]
             ])

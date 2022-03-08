@@ -28,7 +28,10 @@
 
                 <p class="mb-0">
                     {% for category in portal.categories %}
-                        {{ include('components/utils/_tag_link.html.twig', {item: category, path: 'app_category'}) }}
+                        <a href="{{ path('app_category', {slug: category.slug}) }}" class="label mx-1">
+                            <i class="bi bi-folder-fill me-1"></i>
+                            {{ category.title }}
+                        </a>
                     {% endfor %}
                 </p>
             </div>

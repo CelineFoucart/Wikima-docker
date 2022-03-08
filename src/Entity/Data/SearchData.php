@@ -10,7 +10,7 @@ class SearchData
     #[Assert\Length(
         min: 3
     )]
-    private string $query = "";
+    private ?string $query = null;
 
     private int $page = 1;
 
@@ -22,7 +22,7 @@ class SearchData
     /**
      * Get the value of query
      */ 
-    public function getQuery(): string
+    public function getQuery(): ?string
     {
         return $this->query;
     }
@@ -32,7 +32,7 @@ class SearchData
      *
      * @return  self
      */ 
-    public function setQuery(string $query): self
+    public function setQuery(?string $query = null): self
     {
         $this->query = $query;
 
