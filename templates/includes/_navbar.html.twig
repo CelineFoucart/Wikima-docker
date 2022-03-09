@@ -21,6 +21,11 @@
                         Portails
                     </a>
                 </li>
+                <li class="nav-item me-3">
+                    <a class="nav-link {{ active_link(app.request, 'app_image', false) }}" href="{{ path('app_image') }}">
+                        Galerie
+                    </a>
+                </li>
                 {% if is_granted('ROLE_EDITOR') or is_granted('ROLE_ADMIN') %}
                      <li class="nav-item dropdown me-3">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -30,6 +35,11 @@
                             <li>
                                 <a class="dropdown-item fw-bold text-muted" href="{{ path('app_edit_dashboard') }}">
                                     <i class="bi bi-pencil-square me-1"></i> Panneau d'édition
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_edit_image_index') }}">
+                                    <i class="bi bi-image me-1"></i> Articles
                                 </a>
                             </li>
                             <li>
@@ -44,7 +54,7 @@
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{{ path('app_edit_article_index') }}">
-                                    <i class="bi bi-file-earmark-text me-1"></i> Articles
+                                    <i class="bi bi-file-earmark-text me-1"></i> Mes articles
                                 </a>
                             </li>
                             {% if is_granted('ROLE_ADMIN') %}

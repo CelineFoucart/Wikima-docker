@@ -9,6 +9,13 @@
         <div class="row h-100">
             <aside class="col-md-2 py-5 text-end">
                 <p class="article-link">
+                    <a href="{{ path('app_edit_image_index') }}" class="ms-2">
+                        <i class="bi bi-image me-1"></i>
+                        Gestion des images
+                    </a>
+                    <i class="bi bi-chevron-right fw-bold"></i>
+                </p>
+                <p class="article-link">
                     <a href="{{ path('app_edit_category_index') }}" class="ms-2">
                         <i class="bi bi-folder-fill me-1"></i>
                         Les catégories
@@ -87,6 +94,22 @@
                             </span>
                             <ul>
                                 <li><a href="{{ path('app_edit_article_index') }}">Gérer mes articles</a></li>
+                            </ul>
+                        </article>
+                    </div>
+
+                     <div class="col-md-6">
+                        <article class="border shadow-sm position-relative">
+                            <h2 class="h5 border-bottom p-2">
+                                <i class="bi bi-image me-1"></i> Gérer les images
+                            </h2>
+                            <span class="position-absolute top-0 end-0 badge m-2 rounded-pill bg-danger">
+                                <a href="{{ path('app_edit_article_new') }}" class="text-reset text-decoration-none">
+                                    Uploader
+                                </a> 
+                            </span>
+                            <ul>
+                                <li><a href="{{ path('app_edit_image_index') }}">Gérer les images</a></li>
                             </ul>
                         </article>
                     </div>

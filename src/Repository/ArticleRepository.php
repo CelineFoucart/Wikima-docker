@@ -21,7 +21,6 @@ use Knp\Component\Pager\Pagination\PaginationInterface;
  */
 class ArticleRepository extends ServiceEntityRepository
 {
-
     private PaginatorService $paginatorService;
 
     public function __construct(ManagerRegistry $registry, PaginatorService $paginatorService)

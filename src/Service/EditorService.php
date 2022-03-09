@@ -44,7 +44,7 @@ class EditorService
         return $entity;
     }
 
-    private function updateSlug(string $title): string
+    public function updateSlug(string $title): string
     {
         return $this->slugger->slug(strtolower($title));
     }

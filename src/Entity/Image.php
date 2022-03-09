@@ -6,7 +6,13 @@ use App\Repository\ImageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @Vich\Uploadable
+ */
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 class Image
 {
@@ -16,25 +22,39 @@ class Image
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(
+        min: 2,
+        max:255
+    )]
     private $title;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(
+        min: 2,
+        max:255
+    )]
     private $slug;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(
+        min: 2,
+        max:255
+    )]
     private $keywords;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(
+        min: 10,
+        max:255
+    )]
     private $description;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length(
+        min: 1,
+        max:255
+    )]
     private $filename;
-
-    #[ORM\Column(type: 'integer')]
-    private $width;
-
-    #[ORM\Column(type: 'integer')]
-    private $height;
 
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'images')]
     private $categories;
@@ -44,6 +64,14 @@ class Image
 
     #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: 'images')]
     private $articles;
+
+    /**
+     * @Vich\UploadableField(mapping="upload_images", fileNameProperty="filename")
+     */
+    private ?File $imageFile = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $updatedAt;
 
     public function __construct()
     {
@@ -113,30 +141,6 @@ class Image
     public function setFilename(string $filename): self
     {
         $this->filename = $filename;
-
-        return $this;
-    }
-
-    public function getWidth(): ?int
-    {
-        return $this->width;
-    }
-
-    public function setWidth(int $width): self
-    {
-        $this->width = $width;
-
-        return $this;
-    }
-
-    public function getHeight(): ?int
-    {
-        return $this->height;
-    }
-
-    public function setHeight(int $height): self
-    {
-        $this->height = $height;
 
         return $this;
     }
@@ -214,5 +218,33 @@ class Image
         }
 
         return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function setImageFile(File $image = null): self
+    {
+        $this->imageFile = $image;
+        
+        if ($image) {
+            $this->updatedAt = new \DateTime('now');
+        }
+
+        return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
     }
 }

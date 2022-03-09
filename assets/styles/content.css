@@ -66,6 +66,22 @@
     text-align: justify;
 }
 
+.image-container {
+    border: 1px solid var(--secondary);
+    background-color: var(--secondary-light);
+    color: var(--secondary);
+    width: 180px;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-container img {
+    max-width: 150px;
+}
+
 @media (min-width: 768px) {
     .list-title {
         font-size: 2.9rem;

@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Galerie | {{ website_name() }}{% endblock %}
+
+{% block body %}
+{{ include('home/_header.html.twig') }}
+
+<section class="container mt-5">
+    <header class="text-center">
+        <h2 class="h4">Bienvenue sur la galerie d'image de Wikima !</h2>
+        <p class="w-75 m-auto pt-3 lh-lg text-muted">Ici, vous pouvez voir l'ensemble des images chargées sur {{ website_name() }}. Pour accéder à la page d'information de l'image et l'afficher en plus grand, il suffit de cliquer sur la miniature.</p>
+    </header>
+
+    <div class="row my-4 g-3">
+        {% for row in range(1, 20) %}
+            <div class="col-sm-6 col-lg-3 col-md-4 col-xl-2">
+                <div class="image-container m-auto">
+                    <img src="https://picsum.photos/150/150" alt="">
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+
+</section>
+
+{% endblock %}
