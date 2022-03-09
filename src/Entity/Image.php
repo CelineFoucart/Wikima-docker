@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\CategoryRepository;
+use App\Repository\ImageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CategoryRepository::class)]
-class Category
+#[ORM\Entity(repositoryClass: ImageRepository::class)]
+class Image
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -27,22 +27,29 @@ class Category
     #[ORM\Column(type: 'string', length: 255)]
     private $description;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-    private $createdAt;
+    #[ORM\Column(type: 'string', length: 255)]
+    private $filename;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private $updatedAt;
+    #[ORM\Column(type: 'integer')]
+    private $width;
 
-    #[ORM\ManyToMany(targetEntity: Portal::class, mappedBy: 'categories')]
+    #[ORM\Column(type: 'integer')]
+    private $height;
+
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'images')]
+    private $categories;
+
+    #[ORM\ManyToMany(targetEntity: Portal::class, inversedBy: 'images')]
     private $portals;
 
-    #[ORM\ManyToMany(targetEntity: Image::class, mappedBy: 'categories')]
-    private $images;
+    #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: 'images')]
+    private $articles;
 
     public function __construct()
     {
+        $this->categories = new ArrayCollection();
         $this->portals = new ArrayCollection();
-        $this->images = new ArrayCollection();
+        $this->articles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -98,30 +105,62 @@ class Category
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getFilename(): ?string
     {
-        return $this->createdAt;
+        return $this->filename;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setFilename(string $filename): self
     {
-        if ($createdAt instanceof \DateTimeImmutable) {
-            $this->createdAt = $createdAt;
-        } else {
-            $this->createdAt = new \DateTimeImmutable($createdAt->format('Y-m-d H:i:s'));
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    public function getWidth(): ?int
+    {
+        return $this->width;
+    }
+
+    public function setWidth(int $width): self
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    public function getHeight(): ?int
+    {
+        return $this->height;
+    }
+
+    public function setHeight(int $height): self
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
         }
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function removeCategory(Category $category): self
     {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
+        $this->categories->removeElement($category);
 
         return $this;
     }
@@ -138,7 +177,6 @@ class Category
     {
         if (!$this->portals->contains($portal)) {
             $this->portals[] = $portal;
-            $portal->addCategory($this);
         }
 
         return $this;
@@ -146,35 +184,33 @@ class Category
 
     public function removePortal(Portal $portal): self
     {
-        if ($this->portals->removeElement($portal)) {
-            $portal->removeCategory($this);
-        }
+        $this->portals->removeElement($portal);
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Image>
+     * @return Collection<int, Article>
      */
-    public function getImages(): Collection
+    public function getArticles(): Collection
     {
-        return $this->images;
+        return $this->articles;
     }
 
-    public function addImage(Image $image): self
+    public function addArticle(Article $article): self
     {
-        if (!$this->images->contains($image)) {
-            $this->images[] = $image;
-            $image->addCategory($this);
+        if (!$this->articles->contains($article)) {
+            $this->articles[] = $article;
+            $article->addImage($this);
         }
 
         return $this;
     }
 
-    public function removeImage(Image $image): self
+    public function removeArticle(Article $article): self
     {
-        if ($this->images->removeElement($image)) {
-            $image->removeCategory($this);
+        if ($this->articles->removeElement($article)) {
+            $article->removeImage($this);
         }
 
         return $this;
