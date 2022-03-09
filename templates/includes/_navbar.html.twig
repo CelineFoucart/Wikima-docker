@@ -22,10 +22,40 @@
                     </a>
                 </li>
                 {% if is_granted('ROLE_EDITOR') or is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item pe-2">
-                        <a class="btn btn-outline-light" href="{{ path('app_edit_dashboard') }}">
-                            <i class="bi bi-pencil-square me-1"></i> Edition
+                     <li class="nav-item dropdown me-3">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Actions
                         </a>
+                        <ul class="dropdown-menu text-lowercase" aria-labelledby="navbarDropdown">
+                            <li>
+                                <a class="dropdown-item fw-bold text-muted" href="{{ path('app_edit_dashboard') }}">
+                                    <i class="bi bi-pencil-square me-1"></i> Panneau d'édition
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_edit_category_index') }}">
+                                    <i class="bi bi-folder-fill me-1"></i> Catégories
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_edit_portal_index') }}">
+                                    <i class="bi bi-tag-fill me-1"></i> Portails
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_edit_article_index') }}">
+                                    <i class="bi bi-file-earmark-text me-1"></i> Articles
+                                </a>
+                            </li>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item fw-bold text-muted" href="#">
+                                        <i class="bi bi-gear-fill"></i> Panneau d'administration
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
                     </li>
                 {% endif %}
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}

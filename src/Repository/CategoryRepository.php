@@ -3,10 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Category;
+use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 
 /**
  * @method Category|null find($id, $lockMode = null, $lockVersion = null)
@@ -16,9 +18,12 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CategoryRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private PaginatorService $paginatorService;
+
+    public function __construct(ManagerRegistry $registry, PaginatorService $paginatorService)
     {
         parent::__construct($registry, Category::class);
+        $this->paginatorService = $paginatorService;
     }
 
     /**
@@ -45,7 +50,6 @@ class CategoryRepository extends ServiceEntityRepository
         }
     }
 
-
     /**
      * Finds a category and its portals
      */
@@ -58,5 +62,12 @@ class CategoryRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
+    }
+
+    public function findPaginated(int $page): PaginationInterface
+    {
+        $builder = $this->createQueryBuilder('c');
+
+        return $this->paginatorService->paginate($builder, $page);
     }
 }

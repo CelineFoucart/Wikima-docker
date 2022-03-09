@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des catégories{% endblock %}
+
+{% block body %}
+    <header class="bg-default-light border-bottom">
+        <div class="container">
+            <div class="item-heading d-flex justify-content-between align-items-center">
+                <h1 class="mb-1"><i class="bi bi-folder-fill me-1"></i> Gérer les catégories</h1>
+                <a href="{{ path('app_edit_category_new') }}" class="btn btn-outline-primary">
+                    Ajouter une catégorie
+                </a>
+                
+            </div>
+            <p class="text-muted lead mt-5 mb-4 text-center">Bienvenue sur cette page où vous allez pouvoir éditer ou ajouter des catégories.</p>
+        </div>
+    </header>
+
+    <section class="container mt-4 mb-3">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{{ knp_pagination_sortable(categories, 'Id', 'c.id') }}</th>
+                    <th>{{ knp_pagination_sortable(categories, 'Titre', 'c.title') }}</th>
+                    <th>{{ knp_pagination_sortable(categories, 'Slug', 'c.slug') }}</th>
+                    <th>{{ knp_pagination_sortable(categories, 'Création', 'c.createdAt') }}</th>
+                    <th>{{ knp_pagination_sortable(categories, 'Mise à jour', 'c.updatedAt') }}</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td>{{ category.id }}</td>
+                    <td>{{ category.title }}</td>
+                    <td>{{ category.slug }}</td>
+                    <td>{{ category.createdAt ? category.createdAt|date('d/m/Y à H:i') : '' }}</td>
+                    <td>{{ category.updatedAt ? category.updatedAt|date('d/m/Y à H:i') : '' }}</td>
+                    <td>
+                        <a href="{{ path('app_category', {slug: category.slug}) }}" class="btn btn-primary">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <a href="{{ path('app_edit_category_edit', {'id': category.id}) }}" class="btn btn-success">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Aucun résultat</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="navigation">
+            {{ knp_pagination_render(categories) }}
+        </div>
+
+    </section>
+{% endblock %}

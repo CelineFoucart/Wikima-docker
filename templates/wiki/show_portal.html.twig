@@ -22,7 +22,14 @@
                 </div>
                 <div class="col-md-6">{{ include('includes/_search.html.twig') }}</div>
             </div>
-            <div class="item-heading">
+            <div class="item-heading position-relative">
+                {% if is_granted('ROLE_EDITOR') or is_granted('ROLE_ADMIN') %}
+                    <div class="p-2 position-absolute top-0" style="right:-20px">
+                        <a href="{{ path('app_edit_portal_edit', {'id': portal.id}) }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                    </div>
+                {% endif %}
                 <h1 class="mb-3">{{ portal.title|capitalize }}</h1>
                 <p class="lead mb-4">{{ portal.description }}</p>
 

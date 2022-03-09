@@ -6,6 +6,7 @@ use App\Entity\Article;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use App\Security\Voter\VoterHelper;
+use App\Service\EditorService;
 use DateTime;
 use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,12 +18,8 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route('/edit/article')]
 class EditArticleController extends AbstractController
 {
-    private SluggerInterface $slugger;
-
-    public function __construct(SluggerInterface $slugger)
-    {
-        $this->slugger = $slugger;
-    }
+    public function __construct(private EditorService $editorService)
+    { }
 
     #[Route('/', name: 'app_edit_article_index', methods: ['GET'])]
     public function index(ArticleRepository $articleRepository, Request $request): Response
@@ -44,9 +41,7 @@ class EditArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $article->setCreatedAt(new DateTimeImmutable());
-            $article->setAuthor($this->getUser());
-            $article->setSlug($this->slugger->slug($article->getTitle()));
+            $article = $this->editorService->prepareCreation($article);
             $articleRepository->add($article);
 
             return $this->redirectToRoute(
@@ -70,8 +65,7 @@ class EditArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $article->setSlug($this->slugger->slug($article->getTitle()));
-            $article->setUpdatedAt(new DateTime());
+            $article = $this->editorService->prepareEditing($article);
             $articleRepository->add($article);
 
             return $this->redirectToRoute(
