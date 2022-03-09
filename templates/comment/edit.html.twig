@@ -3,11 +3,11 @@
 {% block title %}Editer un commentaire{% endblock %}
 
 {% block body %}
-    {% include "components/article/_comment_header.html.twig" with {'article': article} only  %} 
+    {% include "comment/components/_comment_header.html.twig" with {'article': article} only  %} 
 
     <article class="container">
 
         <h3 class="h4 my-4">Editer mon commentaire</h3>
-        {{ include('comment/_form.html.twig') }}
+        {{ include('comment/components/_form.html.twig') }}
     </article>
 {% endblock %}

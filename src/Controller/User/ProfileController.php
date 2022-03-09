@@ -3,8 +3,8 @@
 namespace App\Controller\User;
 
 use App\Entity\User;
-use App\Form\AccountType;
-use App\Form\ChangePasswordType;
+use App\Form\User\AccountType;
+use App\Form\User\EditPasswordType;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,7 +32,7 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('app_profile');
         }
 
-        $passwordForm = $this->createForm(ChangePasswordType::class, $user);
+        $passwordForm = $this->createForm(EditPasswordType::class, $user);
         $passwordForm->handleRequest($request);
         
         if ($passwordForm->isSubmitted() && $passwordForm->isValid()) { 

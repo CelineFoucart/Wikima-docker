@@ -1,14 +1,17 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Portal;
 
+use App\Entity\Data\SearchData;
+use App\Form\SearchType;
 use App\Repository\ArticleRepository;
 use App\Repository\PortalRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class PortalController extends AbstractWikiController
+final class PortalController extends AbstractController
 {
     public function __construct(
         private PortalRepository $portalRepository,
@@ -28,7 +31,7 @@ final class PortalController extends AbstractWikiController
         return $this->render('wiki/show_portal.html.twig', [
             'portal' => $portal,
             'articles' => $articles,
-            'form' => $this->getSearchForm()->createView(),
+            'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
         ]);
     }
 
@@ -39,7 +42,7 @@ final class PortalController extends AbstractWikiController
 
         return $this->render('wiki/index_portal.html.twig', [
             'portals' => $this->portalRepository->findPaginated($page),
-            'form' => $this->getSearchForm()->createView(),
+            'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
         ]);
     }
 }

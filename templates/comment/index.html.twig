@@ -7,7 +7,7 @@
 {% block body %}
 <article>
     <header class="pt-4 bg-item header-item border-bottom">
-       {{ include('components/article/_header.html.twig', {comments:true}) }}
+       {{ include('article/components/_header.html.twig', {comments:true}) }}
     </header>
 
     <section class="container py-5 px-4">
@@ -20,20 +20,20 @@
         {% endfor %}
 
         {% for comment in comments %}
-           {{ include('components/article/_comment.html.twig') }}
+           {{ include('comment/components/_comment.html.twig') }}
         {% else %}
             <p class="my-5 fw-bold text-center">Il n'y a aucun commentaire.</p>
         {% endfor %}
 
         <hr class="my-5 mx-5">
-        <div class="navigation overflow-scroll">
+        <div class="navigation">
             {{ knp_pagination_render(comments) }}
         </div>
 
         <article class="mx-5">
             <h3 class="h4 mb-4">Laisser un commentaire</h3>
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                {{ include('comment/_form.html.twig') }}
+                {{ include('comment/components/_form.html.twig') }}
             {% else %}
                 <p class="text-center">
                     Veuillez vous <a href="{{ path('app_login') }}">connecter</a> pour laisser un commentaire.

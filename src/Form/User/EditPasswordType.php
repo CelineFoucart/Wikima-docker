@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\User;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
@@ -13,13 +13,13 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Class ChangePasswordType
+ * Class EditPasswordType
  * 
- * ChangePasswordType represents an form for updating password.
+ * EditPasswordType represents an form for updating password.
  * 
  * @author Céline Foucart <celinefoucart@yahoo.fr>
  */
-class ChangePasswordType extends AbstractType
+class EditPasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

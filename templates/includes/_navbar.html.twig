@@ -21,6 +21,13 @@
                         Portails
                     </a>
                 </li>
+                {% if is_granted('ROLE_EDITOR') or is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item pe-2">
+                        <a class="btn btn-outline-light" href="{{ path('app_edit_dashboard') }}">
+                            <i class="bi bi-pencil-square me-1"></i> Edition
+                        </a>
+                    </li>
+                {% endif %}
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <li class="nav-item pe-2">
                         <a class="btn btn-outline-light" href="{{ path('app_profile') }}">

@@ -15,7 +15,7 @@ final class ArticleController extends AbstractArticleController
     {
         $article = $this->getArticle($slug);
 
-        return $this->render('wiki/show_article.html.twig', [
+        return $this->render('article/show_article.html.twig', [
             'article' => $article,
         ]);
     }
@@ -29,7 +29,7 @@ final class ArticleController extends AbstractArticleController
         $form = $this->createForm(AdvancedSearchType::class, $search);
         $form->handleRequest($request);
 
-        return $this->render('wiki/index_article.html.twig', [
+        return $this->render('article/index_article.html.twig', [
             'articles' => $this->articleRepository->search($search),
             'form' => $form->createView(),
         ]);

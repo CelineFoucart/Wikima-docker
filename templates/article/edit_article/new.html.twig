@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un article{% endblock %}
+
+{% block body %}
+    <section class="container mt-2">
+        <header class="bg-dark rounded-3 p-3 shasow-sm d-flex justify-content-between">
+            <h1>Créer un article</h1>
+            <a href="{{ path('app_edit_article_index') }}" class="btn btn-outline-light">Retour à l'index</a>
+        </header>
+
+        <div class="my-3">
+            {{ include('article/edit_article/_form.html.twig') }}
+        </div>
+    </section>
+{% endblock %}

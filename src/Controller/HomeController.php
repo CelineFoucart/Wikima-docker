@@ -3,14 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Data\SearchData;
-use App\Form\AdvancedSearchType;
+use App\Form\SearchType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class HomeController extends AbstractWikiController
+final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
     public function index(CategoryRepository $categoryRepository, ArticleRepository $articleRepository): Response
@@ -21,7 +21,7 @@ final class HomeController extends AbstractWikiController
         return $this->render('home/index.html.twig', [
             'categories' => $categories,
             'articles' => $articles,
-            'form' => $this->getSearchForm()->createView(),
+            'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
         ]);
     }
 }

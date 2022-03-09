@@ -5,10 +5,10 @@
 {% block page_title %} <h2 class="display-4">Supprimer un commentaire</h2> {% endblock %}
 
 {% block body %}
-    {% include "components/article/_comment_header.html.twig" with {'article': article} only  %} 
+    {% include "comment/components/_comment_header.html.twig" with {'article': article} only  %} 
 
     <article class="container py-5 px-4">
-        {{ include('components/article/_comment.html.twig') }}
+        {{ include('comment/components/_comment.html.twig') }}
     </article>
 
     <article class="text-center mt-3">

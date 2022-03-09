@@ -14,24 +14,16 @@ class VoterHelper
 
     public const VIEW = 'view';
 
+    public const CREATE = 'create';
+
     public function canModerate(User $user): bool
     {
         return in_array("ROLE_ADMIN", $user->getRoles());
     }
 
-    /**
-     * @param User $user
-     * @param Comment|Article $subject
-     * 
-     * @return bool
-     */
-    public function canEdit(User $user, $subject): bool
+    public function isEditor(User $user): bool
     {
-        if ($this->canModerate($user)) {
-            return true;
-        }
-        
-        return $user->getId() === $subject->getAuthor()->getId();
+        return in_array("ROLE_EDITOR", $user->getRoles());
     }
 
     /**
@@ -40,8 +32,29 @@ class VoterHelper
      * 
      * @return bool
      */
-    public function canDelete(User $user, $subject): bool
+    public function canEdit(User $user, $subject, $forEditor = false): bool
     {
-        return $this->canEdit($user, $subject);
+        if ($this->canModerate($user)) {
+            return true;
+        }
+        
+        $isAuthor = $user->getId() === $subject->getAuthor()->getId();
+
+        if ($forEditor) {
+            return $isAuthor && $this->isEditor($user);
+        }
+
+        return $isAuthor;
+    }
+
+    /**
+     * @param User $user
+     * @param Comment|Article $subject
+     * 
+     * @return bool
+     */
+    public function canDelete(User $user, $subject, $forEditor = false): bool
+    {
+        return $this->canEdit($user, $subject, $forEditor);
     }
 }

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Panneau de contrôle de l'éditeur{% endblock %}
+
+{% block body %}
+    <section class="container my-2">
+        <h1>Créer et éditer le contenu textuel de l'encyclopédie</h1>
+    
+        <h2><i class="bi bi-file-earmark-text me-1"></i> Gérer les articles</h2>
+        <ul>
+            <li><a href="{{ path('app_edit_article_new') }}">Créer un article</a></li>
+            <li><a href="{{ path('app_edit_article_index') }}">Gérer mes articles</a></li>
+        </ul>
+    </section>
+    
+{% endblock %}

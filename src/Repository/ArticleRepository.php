@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Article;
 use App\Entity\Data\SearchData;
+use App\Entity\User;
 use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -107,6 +108,16 @@ class ArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
+    }
+
+    public function findByUser(User $user, int $page): PaginationInterface
+    {
+        $builder = $this->getDefaultQueryBuilder()
+            ->andWhere('a.author = :user')
+            ->setParameter('user', $user)
+        ;
+
+        return $this->paginatorService->setLimit(12)->paginate($builder, $page);
     }
 
     public function search(SearchData $search, int $limit = 10): PaginationInterface

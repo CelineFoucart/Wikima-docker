@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Category;
 
-use App\Entity\Category;
 use App\Entity\Data\SearchData;
 use App\Form\SearchType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class CategoryController extends AbstractWikiController
+final class CategoryController extends AbstractController
 {
     public function __construct(
         private CategoryRepository $categoryRepository,
@@ -33,7 +33,7 @@ final class CategoryController extends AbstractWikiController
         return $this->render('wiki/show_category.html.twig', [
             'category' => $category,
             'articles' => $articles,
-            'form' => $this->getSearchForm()->createView(),
+            'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
         ]);
     }
 }
