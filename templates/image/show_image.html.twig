@@ -71,10 +71,8 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-md-7">
-                <a href="{{ vich_uploader_asset(image) }}">
-                    <img src="{{ vich_uploader_asset(image) }}" class="img-fluid rounded" alt="{{ image.title }}">
-                </a>
+            <div class="col-md-7 d-flex justify-content-center align-items-center">
+                {% include "image/components/_medium.html.twig" with {image:image} %}
             </div>
         </div>
     </section>

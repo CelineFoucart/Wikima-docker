@@ -6,6 +6,7 @@
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /public/uploads/
+/public/media/
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
@@ -26,3 +27,7 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> liip/imagine-bundle ###
+/public/media/cache/
+###< liip/imagine-bundle ###
