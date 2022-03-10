@@ -3,27 +3,52 @@
 namespace App\Controller;
 
 use App\Entity\Data\SearchData;
+use App\Form\AdvancedSearchType;
 use App\Form\SearchType;
+use App\Repository\ImageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ImageController extends AbstractController
 {
+    public function __construct(private ImageRepository $imageRepository)
+    { }
+
     #[Route('/images', name: 'app_image')]
-    public function gallery(): Response
+    public function gallery(Request $request): Response
     {
-        // formulaire de recherche avancée
+        $search = (new SearchData())
+            ->setPage($request->query->getInt('page', 1))
+        ;
+        $imageForm = $this->createForm(AdvancedSearchType::class, $search);
+        $imageForm->handleRequest($request);
+        
+        if ($imageForm->isSubmitted() && $imageForm->isValid()) { 
+            $images = $this->imageRepository->search($search);
+        } else {
+            $images = $this->imageRepository->findPaginated($search->getPage());
+        }
 
         return $this->render('image/gallery.html.twig', [
             'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
+            'images' => $images,
+            'imageForm' => $imageForm->createView(),
         ]);
     }
+
     #[Route('/images/{slug}', name: 'app_image_show')]
     public function show(string $slug): Response
     {
+        $image = $this->imageRepository->findBySlug($slug);
+        
+        if ($image === null) {
+            throw $this->createNotFoundException();
+        }
 
-        return $this->render('image/gallery.html.twig', [
+        return $this->render('image/show_image.html.twig', [
+            'image' => $image,
         ]);
     }
 

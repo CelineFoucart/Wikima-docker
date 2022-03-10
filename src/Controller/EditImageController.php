@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Data\SearchData;
 use App\Entity\Image;
+use App\Form\ImageType;
 use App\Form\SearchType;
 use App\Form\UploadedImageType;
 use App\Repository\ImageRepository;
@@ -51,9 +52,20 @@ class EditImageController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_edit_image_edit')]
-    public function edit(Image $image): Response
+    public function edit(Image $image, Request $request, ImageRepository $imageRepository): Response
     {
-        return $this->render('$0.html.twig', []);
+        $form = $this->createForm(ImageType::class, $image);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) { 
+            $imageRepository->add($image);
+
+            return $this->redirectToRoute('app_edit_image_index');
+        }
+
+        return $this->render('image/edit_image/edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     

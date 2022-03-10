@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Data\SearchData;
 use App\Entity\Image;
 use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -49,11 +50,51 @@ class ImageRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
+
+    public function findBySlug(string $slug): ?Image
+    {
+        return $this->createQueryBuilder('i')
+            ->leftJoin('i.portals', 'p')->addSelect('p')
+            ->leftJoin('i.categories', 'c')->addSelect('c')
+            ->andWhere('i.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
     
     public function findPaginated(int $page): PaginationInterface
     {
         $builder = $this->createQueryBuilder('i')->orderBy('i.title', 'ASC');
 
         return $this->paginatorService->paginate($builder, $page);
+    }
+
+    public function search(SearchData $search): PaginationInterface
+    {
+        $builder = $this->createQueryBuilder('i')
+            ->orderBy('i.title', 'ASC')
+            ->leftJoin('i.portals', 'p')->addSelect('p')
+        ;
+
+        if (strlen($search->getQuery()) >= 3 AND $search->getQuery() !== null) {
+            $builder
+                ->andWhere('i.title LIKE :q_1')
+                ->setParameter('q_1', '%' . $search->getQuery() . '%')
+                ->orWhere('i.description LIKE :q_2')
+                ->setParameter('q_2', '%' . $search->getQuery() . '%')
+                ->orWhere('i.keywords LIKE :q_3')
+                ->setParameter('q_3', '%' . $search->getQuery() . '%')
+            ;
+        }
+
+        if (!empty($search->getPortals())) {
+            $builder
+                ->andWhere('p.id IN (:portals)')
+                ->setParameter('portals', $search->getPortals())
+            ;
+        }
+
+        return $this->paginatorService->paginate($builder, $search->getPage());
     }
 }

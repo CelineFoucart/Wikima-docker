@@ -5,27 +5,8 @@
 {% block body %}
     <section class="container mt-5">
         <div class="row justify-content-between">
-            <div class="col-md-4 mt-3 position-relative">
-                <aside class="bg-light p-4 rounded-3">
-                    <h2 class="h4 mb-4">Recherche</h2>
-                    <p class="text-muted">Rechercher des articles par mot clé ou par portail en remplissant ce formulaire.</p>
-                    {{ form_start(form) }}
-                        <h3 class="h6 mt-4 mb-3">Par mot clé</h3>
-                        <div class="search-row">
-                            {{ form_widget(form.query) }}
-                        </div>
-
-                        <h3 class="h6 mt-4 mb-3">Par portail</h3>
-                        {{ form_widget(form.portals) }}
-
-                        <div class="text-center mt-3">
-                            <button type="submit" class="btn btn-outline-secondary rounded-pill">
-                                <i class="bi bi-search"></i> Rechercher
-                            </button>
-                        </div>
-
-                    {{ form_end(form) }}
-                </aside>
+            <div class="col-md-4 mt-3">
+                {% include "components/layout/_advance_search_form.html.twig" %}
             </div>
             <div class="col-md-8">
                 <h1 class="text-center display-4 mb-4">Les articles</h1>

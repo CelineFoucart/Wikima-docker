@@ -1,0 +1,25 @@
+{% set plural = images.getTotalItemCount > 1 ? 's' : '' %}
+
+<h3 class="border-bottom display-6 mb-2 mt-0">{{ gallery_label|default('Galerie de Wikima') }}</h3>
+<p class="mb-4">
+    <span class="fw-bold">{{ images.getTotalItemCount }}</span> 
+    image{{ plural }} trouvée{{ plural }}.
+</p>
+
+<div class="row g-3">
+    {% for image in images %}
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+            <div class="image-container m-auto">
+                <a href="{{ path('app_image_show', {slug: image.slug}) }}">
+                    <img src="{{ vich_uploader_asset(image) }}" alt="{{ image.title }}">
+                </a>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-danger">Aucune image n'a été trouvée.</div>
+    {% endfor %}
+</div>
+
+<div class="navigation">
+    {{ knp_pagination_render(images) }}
+</div>
