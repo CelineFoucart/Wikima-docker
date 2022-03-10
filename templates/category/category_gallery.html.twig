@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Galerie de {{ category.title }} | Catégorie {% endblock %}
+
+{% block description %}{{ category.description }}{% endblock %}
+
+{% block body %}
+{% include "category/components/_header.html.twig" with {images: true} %}
+<div class="container">
+    <section class="row justify-content-between">
+        <article class="col-md-7 p-4">
+            <h2 class="list-title">Les images de cette catégorie</h1>
+
+            {% include "image/components/_list.html.twig" with {images: images} only %}
+            
+        </article>
+        <aside class="col-md-4 aside">
+            <h3 class="h4 mb-4">Portails de cette catégorie</h3>
+            {{ include('components/layout/_tag_list.html.twig', {items: category.portals, path: 'app_portal'}) }}
+        </aside>
+    </section>
+</div>
+{% endblock %}

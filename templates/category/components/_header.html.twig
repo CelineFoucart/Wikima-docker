@@ -1,11 +1,11 @@
-{% extends 'base.html.twig' %}
+{% if articles is not defined %}
+    {% set articles = false %}
+{% endif %}
+{% if images is not defined %}
+    {% set images = false %}
+{% endif %}
 
-{% block title %}{{ category.title }} | Catégorie {% endblock %}
-
-{% block description %}{{ category.description }}{% endblock %}
-
-{% block body %}
-<header class="pt-4 pb-1 bg-item header-item">
+<header class="pt-4 pb-0 bg-item header-item border-bottom">
     <div class="container">
         <div class="row border-bottom pb-4 pb-md-3 align-items-center">
             <div class="col-md-6">
@@ -29,24 +29,18 @@
             <h1 class="mb-3">{{ category.title|capitalize }}</h1>
             <p class="lead mb-3">{{ category.description }}</p>
         </div>
+
+        <ul class="nav nav-tabs border-bottom-0">
+            <li class="nav-item">
+                <a class="nav-link {{ articles ? 'active': '' }}" href="{{ path('app_category', {slug:category.slug}) }}">
+                    Articles
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ images ? 'active': '' }}" href="{{ path('app_category_gallery', {slug:category.slug}) }}">
+                    Galerie d'images
+                </a>
+            </li>
+        </ul>
     </div>
 </header>
-<div class="container">
-    <section class="row justify-content-between">
-        <article class="col-md-7 p-4">
-            <h2 class="list-title">Les articles de cette catégorie</h1>
-
-            {{ include('components/layout/_single_col_list.html.twig',{path: 'app_article', items: articles}) }}
-
-            <div class="navigation">
-                {{ knp_pagination_render(articles) }}
-            </div>
-            
-        </article>
-        <aside class="col-md-4 aside">
-            <h3 class="h4 mb-4">Portails de cette catégorie</h3>
-            {{ include('components/layout/_tag_list.html.twig', {items: category.portals, path: 'app_portal'}) }}
-        </aside>
-    </section>
-</div>
-{% endblock %}

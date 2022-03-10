@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\Data\SearchData;
 use App\Entity\Image;
+use App\Entity\Portal;
 use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -66,6 +68,30 @@ class ImageRepository extends ServiceEntityRepository
     public function findPaginated(int $page): PaginationInterface
     {
         $builder = $this->createQueryBuilder('i')->orderBy('i.title', 'ASC');
+
+        return $this->paginatorService->paginate($builder, $page);
+    }
+    
+    public function findByCategory(Category $category, int $page): PaginationInterface
+    {
+        $builder = $this->createQueryBuilder('i')
+            ->leftJoin('i.categories', 'c')
+            ->orderBy('i.title', 'ASC')
+            ->andWhere('c.id IN (:categories)')
+            ->setParameter('categories', [$category->getId()])
+        ;
+
+        return $this->paginatorService->paginate($builder, $page);
+    }
+
+    public function findByPortal(Portal $portal, int $page): PaginationInterface
+    {
+        $builder = $this->createQueryBuilder('i')
+            ->leftJoin('i.portals', 'p')
+            ->orderBy('i.title', 'ASC')
+            ->andWhere('p.id IN (:portals)')
+            ->setParameter('portals', [$portal->getId()])
+        ;
 
         return $this->paginatorService->paginate($builder, $page);
     }

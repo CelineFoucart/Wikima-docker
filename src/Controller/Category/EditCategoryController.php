@@ -24,7 +24,7 @@ class EditCategoryController extends AbstractController
     {
         $page = $request->query->getInt('page', 1);
 
-        return $this->render('wiki/edit_category/index.html.twig', [
+        return $this->render('category/edit_category/index.html.twig', [
             'categories' => $categoryRepository->findPaginated($page),
         ]);
     }
@@ -47,7 +47,7 @@ class EditCategoryController extends AbstractController
             );
         }
 
-        return $this->renderForm('wiki/edit_category/new.html.twig', [
+        return $this->renderForm('category/edit_category/new.html.twig', [
             'category' => $category,
             'form' => $form,
         ]);
@@ -70,7 +70,7 @@ class EditCategoryController extends AbstractController
             );
         }
 
-        return $this->renderForm('wiki/edit_category/edit.html.twig', [
+        return $this->renderForm('category/edit_category/edit.html.twig', [
             'category' => $category,
             'form' => $form,
         ]);

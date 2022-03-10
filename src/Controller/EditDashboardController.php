@@ -12,7 +12,7 @@ class EditDashboardController extends AbstractController
     #[Route('/edit', name: 'app_edit_dashboard')]
     public function dashboard(): Response
     {
-        return $this->render('wiki/edit_dashboard.html.twig', [
+        return $this->render('home/edit_dashboard.html.twig', [
             
         ]);
     }

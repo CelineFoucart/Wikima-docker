@@ -22,7 +22,7 @@ class EditPortalController extends AbstractController
     {
         $page = $request->query->getInt('page', 1);
 
-        return $this->render('wiki/edit_portal/index.html.twig', [
+        return $this->render('portal/edit_portal/index.html.twig', [
             'portals' => $portalRepository->findPaginated($page),
         ]);
     }
@@ -40,7 +40,7 @@ class EditPortalController extends AbstractController
             return $this->redirectToRoute('app_edit_portal_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('wiki/edit_portal/new.html.twig', [
+        return $this->renderForm('portal/edit_portal/new.html.twig', [
             'portal' => $portal,
             'form' => $form,
         ]);
@@ -58,7 +58,7 @@ class EditPortalController extends AbstractController
             return $this->redirectToRoute('app_edit_portal_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('wiki/edit_portal/edit.html.twig', [
+        return $this->renderForm('portal/edit_portal/edit.html.twig', [
             'portal' => $portal,
             'form' => $form,
         ]);

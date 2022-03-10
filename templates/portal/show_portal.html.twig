@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ portal.title }} | Portail{% endblock %}
+
+{% block description %}{{ portal.description }}{% endblock %}
+
+{% block body %}
+<article>
+    {% include "portal/components/_header.html.twig" with {articles:true}   %}
+
+    <div class="container py-5 px-4">
+        <div class="grid-2">
+            {{ include('components/layout/_single_col_list.html.twig',{path: 'app_article', items: articles}) }}
+        </div>
+
+        <div class="navigation">
+            {{ knp_pagination_render(articles) }}
+        </div>
+    </div>
+</article>
+{% endblock %}

@@ -14,6 +14,10 @@
         <div class="article-content">
             {{ article.content|nl2br }}
         </div>
+
+        <hr class="mt-5">
+        <h3 class="mt-4 h5 mb-2 mt-0">Images associées à cet article</h3>
+        {% include "image/components/_not_paginated_list.html.twig" with {images: article.images} %}
     </section>
 </article>
 {% endblock %}
