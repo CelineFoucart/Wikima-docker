@@ -65,9 +65,13 @@ class ImageRepository extends ServiceEntityRepository
         ;
     }
     
-    public function findPaginated(int $page): PaginationInterface
+    public function findPaginated(int $page, array $excludes = []): PaginationInterface
     {
         $builder = $this->createQueryBuilder('i')->orderBy('i.title', 'ASC');
+
+        if (!empty($excludes)) {
+            $builder->andWhere('i.id NOT IN (:excludes)')->setParameter('excludes', $excludes);
+        }
 
         return $this->paginatorService->paginate($builder, $page);
     }

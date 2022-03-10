@@ -7,7 +7,7 @@
 
 <section class="container mt-5">
     <header class="text-center">
-        <h2 class="h4">Bienvenue sur la galerie d'image de Wikima !</h2>
+        <h2 class="h4">Bienvenue sur la galerie d'image de {{ website_name() }} !</h2>
         <p class="w-75 m-auto pt-3 lh-lg text-muted">Ici, vous pouvez voir l'ensemble des images chargées sur {{ website_name() }}. Pour accéder à la page d'information de l'image et l'afficher en plus grand, il suffit de cliquer sur la miniature.</p>
     </header>
 
@@ -18,7 +18,7 @@
         </div>
 
         <article class="col-md-8">
-            <h3 class="border-bottom display-6 mb-2 mt-0">Galerie de Wikima</h3>
+            <h3 class="border-bottom display-6 mb-2 mt-0">Galerie de {{ website_name() }}</h3>
             {% include "image/components/_list.html.twig" with {images: images} only %}
         </article>
     </div>

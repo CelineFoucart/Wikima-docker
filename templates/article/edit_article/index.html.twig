@@ -35,15 +35,18 @@
                     <td>{{ article.createdAt ? article.createdAt|date('d/m/Y à H:i') : '' }}</td>
                     <td>{{ article.updatedAt ? article.updatedAt|date('d/m/Y à H:i') : '' }}</td>
                     <td>
-                        <a href="{{ path('app_article', {slug: article.slug}) }}" class="btn btn-primary">
+                        <a href="{{ path('app_article', {slug: article.slug}) }}" class="btn btn-primary" title="Voir">
                             <i class="bi bi-eye"></i>
                         </a>
-                        <a href="{{ path('app_edit_article_edit', {'id': article.id}) }}" class="btn btn-success">
+                        <a href="{{ path('app_edit_article_gallery', {id: article.id}) }}" class="btn btn-success" title="modifier la galerie">
+                            <i class="bi bi-image"></i>
+                        </a>
+                        <a href="{{ path('app_edit_article_edit', {'id': article.id}) }}" class="btn btn-success" title="éditer l'article">
                             <i class="bi bi-pencil-square"></i>
                         </a>
                         <form method="post" action="{{ path('app_edit_article_delete', {'id': article.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer cet article ?');" style="display:inline-block">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
-                            <button class="btn btn-danger">
+                            <button class="btn btn-danger" title="supprimer">
                                 <i class="bi bi-trash-fill"></i>
                             </button>
                         </form>
