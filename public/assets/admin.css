@@ -1,0 +1,9 @@
+.dashboard-title {
+    border-bottom: 1px solid #d2d6de;
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+
+.description {
+    margin-bottom: 15px;
+}

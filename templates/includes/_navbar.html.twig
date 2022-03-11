@@ -60,7 +60,7 @@
                             {% if is_granted('ROLE_ADMIN') %}
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item fw-bold text-muted" href="#">
+                                    <a class="dropdown-item fw-bold text-muted" href="{{ path('sonata_admin_dashboard') }}">
                                         <i class="bi bi-gear-fill"></i> Panneau d'administration
                                     </a>
                                 </li>

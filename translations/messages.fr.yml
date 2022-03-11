@@ -26,9 +26,28 @@ Email: Email
 Subject: Sujet
 Content: Contenu
 Portal: Portail
-Slug: slug
+Slug: Slug
 Keywords: Mots clés
 Portals: Portails
 Description: Description
 Categories: Catégories
 Image file: Fichier de l'image
+Category List: Liste des catégories
+Category Create: Création de catégorie
+Portal List: Liste des portails
+Relations: Relations
+Updated At: Mise à jour
+Meta Data: Méta données
+Children:	Enfants
+Articles:	Articles
+Parents:	Parents
+Status: Statut
+Users: Membres
+User: Membre
+Is Verified: Confirmé
+User List: Liste des utilisateurs
+Informations: Informations
+Roles: Roles
+Administrator: Administrateur
+Editor: Contributeur
+General: Général

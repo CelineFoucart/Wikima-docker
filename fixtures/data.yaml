@@ -46,4 +46,4 @@ App\Entity\User:
     email: '<email()>'
     password: '<hashPassword("password123")>'
     createdAt: '<dateTimeBetween("-100 days", "now")>'
-    roles: '["ROLE_USER"]'
+    roles: '[ROLE_USER]'
