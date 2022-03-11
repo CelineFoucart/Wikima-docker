@@ -27,7 +27,11 @@ final class CategoryAdmin extends AbstractAdmin
 
     protected function configureDatagridFilters(DatagridMapper $datagrid): void
     {
-        $datagrid->add('title')->add("createdAt")->add("updatedAt");
+        $datagrid
+            ->add('title')
+            ->add("keywords")
+            ->add("description")
+        ;
     }
 
     protected function configureListFields(ListMapper $list): void
@@ -40,7 +44,15 @@ final class CategoryAdmin extends AbstractAdmin
             ])
             ->add('updatedAt', null, [
                 'format' => 'd/m/Y à H:i',
-            ]);
+            ])
+            ->add(ListMapper::NAME_ACTIONS, null, [
+                'actions' => [
+                    'edit' => [],
+                    'show' => [],
+                    'delete' => [],
+                ]
+            ])
+        ;
     }
 
     protected function configureShowFields(ShowMapper $show): void

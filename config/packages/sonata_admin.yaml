@@ -1,5 +1,7 @@
 sonata_admin:
     title: 'Administration'
+    templates:
+        layout: Admin/extend_layout.html.twig
     dashboard:
         blocks:
              -

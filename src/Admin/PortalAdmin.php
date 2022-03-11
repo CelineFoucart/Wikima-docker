@@ -44,6 +44,8 @@ final class PortalAdmin extends AbstractAdmin
         $datagrid
             ->add('title')
             ->add("slug")
+            ->add("keywords")
+            ->add("description")
             ->add('categories', null, [
                 'field_type' => EntityType::class,
                 'field_options' => [
@@ -64,6 +66,13 @@ final class PortalAdmin extends AbstractAdmin
             ])
             ->add('updatedAt', null, [
                 'format' => 'd/m/Y à H:i',
+            ])
+            ->add(ListMapper::NAME_ACTIONS, null, [
+                'actions' => [
+                    'edit' => [],
+                    'show' => [],
+                    'delete' => [],
+                ]
             ])
         ;
     }

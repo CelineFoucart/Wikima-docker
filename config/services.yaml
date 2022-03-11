@@ -30,6 +30,8 @@ services:
             - { name: sonata.admin, model_class: App\Entity\Portal, manager_type: orm, label: Portals, group: Encyclopédie}
     admin.user:
         class: App\Admin\UserAdmin
+        calls:
+            - [setTemplate, ['edit', 'Admin/user_edit.html.twig']]
         tags:
             - { name: sonata.admin, model_class: App\Entity\User, manager_type: orm, label: Users, group: Utilisateurs}
 
