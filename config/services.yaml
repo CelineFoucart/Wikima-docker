@@ -8,6 +8,7 @@ parameters:
     app.website.description: "L'encyclopédie sans parti pris et complète"
     app.contact.mail: 'contact@wikima.com' 
     app.contact.name: 'Wikima Mail Bot'
+    app.backup.folder: '%kernel.project_dir%/backup'
     locale: fr
 
 services:
@@ -20,6 +21,7 @@ services:
             $websiteDescription: '%app.website.description%'
             $contactMail: '%app.contact.mail%'
             $contactName: '%app.contact.name%'
+            $backupFolder: '%app.backup.folder%'
     
     admin.category:
         class: App\Admin\CategoryAdmin

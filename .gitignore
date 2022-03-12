@@ -1,5 +1,6 @@
 
 ###> symfony/framework-bundle ###
+/backup
 /.env.local
 /.env.local.php
 /.env.*.local
