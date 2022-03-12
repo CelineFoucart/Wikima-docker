@@ -4,6 +4,12 @@ liip_imagine:
     driver: "gd"
 
     filter_sets:
+        icon_image:
+            filters:
+                thumbnail:
+                    size: [35, 25]
+                    mode: outbound
+
         gallery_thumbnail:
             filters:
                 thumbnail:

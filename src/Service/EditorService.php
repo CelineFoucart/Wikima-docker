@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Article;
 use App\Entity\Category;
+use App\Entity\Image;
 use App\Entity\Portal;
 use DateTime;
 use DateTimeImmutable;
@@ -32,9 +33,9 @@ class EditorService
     }
 
     /**
-     * @param Article|Category|Portal $entity
+     * @param Article|Category|Portal|Image $entity
      * 
-     * @return Article|Category|Portal
+     * @return Article|Category|Portal|Image
      */
     public function prepareEditing($entity)
     {

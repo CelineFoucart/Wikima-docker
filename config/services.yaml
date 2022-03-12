@@ -33,7 +33,11 @@ services:
         class: App\Admin\ArticleAdmin
         tags:
             - { name: sonata.admin, model_class: App\Entity\Article, manager_type: orm, label: Articles, group: Encyclopédie}
-    
+    admin.image:
+        class: App\Admin\ImageAdmin
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Image, manager_type: orm, label: Image, group: Encyclopédie}
+        
     admin.user:
         class: App\Admin\UserAdmin
         calls:

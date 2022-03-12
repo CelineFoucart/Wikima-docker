@@ -19,7 +19,7 @@ class UploadedImageType extends ImageType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
-        $builder->add('imageFile', VichImageType::class) ;
+        $builder->add('imageFile', VichImageType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
