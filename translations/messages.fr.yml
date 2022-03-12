@@ -33,7 +33,7 @@ Description: Description
 Categories: Catégories
 Image file: Fichier de l'image
 Category List: Liste des catégories
-Category Create: Création de catégorie
+Category Create: Création d'une catégorie
 Portal List: Liste des portails
 Relations: Relations
 Updated At: Mise à jour
@@ -51,3 +51,8 @@ Roles: Roles
 Administrator: Administrateur
 Editor: Contributeur
 General: Général
+Article List: Liste des articles
+Article Create: Création d'un article
+Portal Create: Création d'un portail
+Comments: Commentaires
+Comment List: Liste des commentaires

@@ -20,6 +20,7 @@ services:
             $websiteDescription: '%app.website.description%'
             $contactMail: '%app.contact.mail%'
             $contactName: '%app.contact.name%'
+    
     admin.category:
         class: App\Admin\CategoryAdmin
         tags:
@@ -28,13 +29,21 @@ services:
         class: App\Admin\PortalAdmin
         tags:
             - { name: sonata.admin, model_class: App\Entity\Portal, manager_type: orm, label: Portals, group: Encyclopédie}
+    admin.article:
+        class: App\Admin\ArticleAdmin
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Article, manager_type: orm, label: Articles, group: Encyclopédie}
+    
     admin.user:
         class: App\Admin\UserAdmin
         calls:
             - [setTemplate, ['edit', 'Admin/user_edit.html.twig']]
         tags:
             - { name: sonata.admin, model_class: App\Entity\User, manager_type: orm, label: Users, group: Utilisateurs}
-
+    admin.comment:
+        class: App\Admin\CommentAdmin
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Comment, manager_type: orm, label: Comments, group: Utilisateurs}
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:

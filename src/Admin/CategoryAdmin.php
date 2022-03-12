@@ -49,6 +49,7 @@ final class CategoryAdmin extends AbstractAdmin
                 'actions' => [
                     'edit' => [],
                     'show' => [],
+                    'read' => ['template' => 'Admin/show.html.twig'],
                     'delete' => [],
                 ]
             ])

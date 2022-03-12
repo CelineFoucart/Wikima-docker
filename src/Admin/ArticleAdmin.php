@@ -3,6 +3,7 @@
 namespace App\Admin;
 
 use App\Entity\Category;
+use App\Entity\Portal;
 use App\Service\EditorService;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -13,7 +14,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-final class PortalAdmin extends AbstractAdmin
+final class ArticleAdmin extends AbstractAdmin
 {
     public function __construct(private EditorService $editorService)
     { }
@@ -25,10 +26,15 @@ final class PortalAdmin extends AbstractAdmin
                 ->add('title', TextType::class)
                 ->add('keywords', TextType::class)
                 ->add('description', TextareaType::class)
+                ->add('content', TextareaType::class, [
+                    'attr' => [
+                        'rows' => '15'
+                    ]
+                ])
             ->end()
             ->with('Relations', ['class' => 'col-md-3'])
-                ->add('categories', EntityType::class, [
-                    'class' => Category::class,
+                ->add('portals', EntityType::class, [
+                    'class' => Portal::class,
                     'choice_label' => 'title',
                     'multiple' => true,
                 ])
@@ -43,10 +49,10 @@ final class PortalAdmin extends AbstractAdmin
             ->add("slug")
             ->add("keywords")
             ->add("description")
-            ->add('categories', null, [
+            ->add('portals', null, [
                 'field_type' => EntityType::class,
                 'field_options' => [
-                    'class' => Category::class,
+                    'class' => Portal::class,
                     'choice_label' => 'title',
                 ],
             ])
@@ -78,40 +84,32 @@ final class PortalAdmin extends AbstractAdmin
     protected function configureShowFields(ShowMapper $show): void
     {
         $show
-            ->tab('Portal')
-                ->with('Content', ['class' => 'col-md-9'])
-                    ->add('title')
-                    ->add("slug")
-                    ->add("keywords")
-                    ->add('description')
-                ->end()
-                ->with('Meta data', ['class' => 'col-md-3'])
-                    ->add('createdAt', null, [
-                        'format' => 'd/m/Y à H:i',
-                    ])
-                    ->add('updatedAt', null, [
-                        'format' => 'd/m/Y à H:i',
-                    ])
-                ->end()
+            ->with('Content', ['class' => 'col-md-9'])
+                ->add('title')
+                ->add("slug")
+                ->add("keywords")
+                ->add('description')
+                ->add('content')
             ->end()
-            ->tab('Relations')
-                ->with('Children', ['class' => 'col-md-6'])
-                    ->add('articles')
-                ->end()
-                ->with('Parents', ['class' => 'col-md-6'])
-                    ->add('categories')
-                ->end()
+            ->with('Meta data', ['class' => 'col-md-3'])
+                ->add('createdAt', null, [
+                    'format' => 'd/m/Y à H:i',
+                ])
+                ->add('updatedAt', null, [
+                    'format' => 'd/m/Y à H:i',
+                ])
+                ->add('portals')
             ->end()
         ;
     }
 
-    public function preUpdate(object $portal): void
+    public function preUpdate(object $article): void
     {
-        $this->editorService->prepareEditing($portal);
+        $this->editorService->prepareEditing($article);
     }
     
-    public function prePersist(object $portal): void
+    public function prePersist(object $article): void
     {
-        $this->editorService->prepareCreation($portal);
+        $this->editorService->prepareCreation($article);
     }
 }
