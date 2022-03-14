@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Admin;
 
-use App\Entity\Category;
 use App\Entity\Portal;
 use App\Service\EditorService;
 use Sonata\AdminBundle\Admin\AbstractAdmin;

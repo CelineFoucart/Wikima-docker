@@ -2,17 +2,20 @@
 
 namespace App\Service;
 
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Ifsnop\Mysqldump\Mysqldump;
 
 /**
  * Class BackupService
  * 
- * BackupService creates a backup of the database of a Symfony application.
+ * BackupService creates a backup of the database in a Symfony application.
  * 
- * @method self        save()         Process the backup and creates an sql file in the backup folder
- * @method string|null getFilename()  Get the backup filename if the file has been created
- * @method array       getErrors()    Get errors
+ * @method self                    save()            Creates an sql file in the backup folder
+ * @method string|null             getFilename()     Get the backup filename if the file has been created
+ * @method string                  getBackupFolder() Get the path to the backup folder
+ * @method DateTimeImmutable|null  getDate()         Get the creation date of the backup
+ * @method array                   getErrors()      Get errors
  * 
  * @author Céline Foucart <celinefoucart@yahoo.fr>
  */
@@ -24,6 +27,7 @@ class BackupService
     private string  $user;
     private string  $password;
     private ?string $filename = null;
+    private ?DateTimeImmutable $date = null;
     private array   $errors = [];
 
     /**
@@ -118,9 +122,18 @@ class BackupService
         if ($this->dbname === null) {
             $this->errors['settings'] = 'settings error: the database name is invalid';
         } else {
-            $this->filename = $this->dbname . '-' . date('Y-m-d-H-i-s') . ".sql";
+            $this->date = new DateTimeImmutable();
+            $this->filename = $this->dbname . '-' . $this->date->format('Y-m-d-H-i-s') . ".sql";
         }
 
         return $this;
+    }
+
+    /**
+     * Get the value of date
+     */ 
+    public function getDate(): ?DateTimeImmutable
+    {
+        return $this->date;
     }
 }

@@ -6,7 +6,6 @@ use App\Entity\Data\SearchData;
 use App\Form\SearchType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
-use App\Service\BackupService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,15 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(CategoryRepository $categoryRepository, ArticleRepository $articleRepository, BackupService $backupService): Response
+    public function index(CategoryRepository $categoryRepository, ArticleRepository $articleRepository): Response
     {
-        $filename = $backupService->save()->getFilename();
-        if ($filename === null) {
-            dd($backupService->getErrors());
-        } else {
-            dd($filename);
-        }
-
         $categories = $categoryRepository->findAll();
         $articles = $articleRepository->findLastArticles();
 

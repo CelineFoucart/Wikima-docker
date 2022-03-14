@@ -67,3 +67,7 @@ services:
     App\DataFixtures\HashPasswordProvider:
         tags: [ { name: nelmio_alice.faker.provider } ]
 
+    admin.backup:
+        class: App\Admin\BackupAdmin
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Backup, controller: App\Controller\BackupAdminController, manager_type: orm, group: Administration, label: Backup }

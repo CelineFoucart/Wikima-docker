@@ -1,5 +1,16 @@
 {% extends '@SonataAdmin/standard_layout.html.twig' %}
 
+{% block sonata_head_title %}
+    {% if _title is not empty %}
+        {{ _title|striptags|raw }}
+    {% else %}
+        {% if action is defined %}
+            {{ render_breadcrumbs_for_title(admin, action) }}
+        {% endif %}
+    {% endif %}
+    
+{% endblock %}
+
 {% block side_bar_after_nav_content %}
     <ul class="sidebar-menu tree">     
         <li class="first treeview">
