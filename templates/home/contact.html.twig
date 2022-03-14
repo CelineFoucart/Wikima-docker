@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page de contact | {{ website_name() }}{% endblock %}
+
+{% block body %}
+   <header class="bg-default p-5 text-white index-header">
+    <div class="container">
+        <div class="heading">
+            <h1 class="heading-title">Page de contact</h1>
+            <p class="lead text-center">Veuillez remplir le formulaire suivant pour contacter l'administrateur.</p>
+        </div>
+    </div>
+</header>
+<section class="container my-5">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-primary mt-2">Envoyer</button> 
+    {{ form_end(form) }}
+
+</section>
+
+
+{% endblock %}

@@ -4,6 +4,23 @@
             <h1 class="heading-title">{{ website_name() }}</h1>
             <p class="lead text-center">{{ website_description() }}</p>
         </div>
+        <div class="row">
+            <div class="col-md-5 text-end">
+                <a href="{{ path('app_portal_index') }}" class="text-white text-decoration-none fw-bold">
+                    <i class="bi bi-tag-fill me-1"></i> Tous les portails
+                </a>
+            </div>
+            <div class="col-md-2 text-center">
+                <a href="{{ path('app_article_index') }}" class="text-white text-decoration-none fw-bold">
+                    <i class="bi bi-file-earmark-text me-1"></i> Tous les articles
+                </a>
+            </div>
+            <div class="col-md-5">
+                <a href="{{ path('app_image') }}" class="text-white text-decoration-none fw-bold">
+                    <i class="bi bi-image me-1"></i> Galerie de {{ website_name() }}
+                </a>
+            </div>
+        </div>
         <div class="mt-5 mb-4">
             {{ include('includes/_search.html.twig') }}
         </div>

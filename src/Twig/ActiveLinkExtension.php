@@ -25,6 +25,7 @@ class ActiveLinkExtension extends AbstractExtension
     {
         return [
             new TwigFunction('active_link', [$this, 'isActive']),
+            new TwigFunction('active_links', [$this, 'areActive']),
         ];
     }
 
@@ -33,15 +34,40 @@ class ActiveLinkExtension extends AbstractExtension
      */
     public function isActive(Request $request, string $routeName, bool $strict = true): string
     {
+        $isActive = $this->isLinkActive($request, $routeName, $strict);
+
+        return ($isActive) ? 'active' : '';
+    }
+
+    /**
+     * Determines if a there is an active link in a group of links.
+     */
+    public function areActive(Request $request, array $routes, bool $strict = true): string
+    {
+        foreach ($routes as $routeName) {
+
+            $isActive = $this->isLinkActive($request, $routeName, $strict);
+
+            if ($isActive) {
+                return 'active';
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * Determines if a link is active.
+     */
+    private function isLinkActive(Request $request, string $routeName, bool $strict = true): bool
+    {
         $route = $this->urlGenerator->generate($routeName);
         $currentUrl = $request->getPathInfo();
 
         if ($strict) {
-            $isActive = $currentUrl === $route;
+            return $currentUrl === $route;
         } else {
-            $isActive = $route === substr($currentUrl, 0, strlen($route));
+            return $route === substr($currentUrl, 0, strlen($route));
         }
-
-        return ($isActive) ? 'active' : '';
     }
 }
