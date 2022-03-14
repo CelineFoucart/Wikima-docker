@@ -23,7 +23,7 @@ class VoterHelper
 
     public function isEditor(User $user): bool
     {
-        return in_array("ROLE_EDITOR", $user->getRoles());
+        return in_array("ROLE_EDITOR", $user->getRoles()) || $this->canModerate($user);
     }
 
     /**
