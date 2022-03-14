@@ -29,10 +29,6 @@ class Image
     private $title;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\Length(
-        min: 2,
-        max:255
-    )]
     private $slug;
 
     #[ORM\Column(type: 'string', length: 255)]

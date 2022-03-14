@@ -19,3 +19,8 @@
 .image-block img {
     max-width: 490px;
 }
+
+blockquote {
+    font-size: inherit;
+    font-style: italic;
+}

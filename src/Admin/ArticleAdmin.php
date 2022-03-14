@@ -6,6 +6,7 @@ namespace App\Admin;
 
 use App\Entity\Portal;
 use App\Service\EditorService;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -23,17 +24,19 @@ final class ArticleAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $form): void
     {
         $form
-            ->with('Content', ['class' => 'col-md-9'])
-                ->add('title', TextType::class)
-                ->add('keywords', TextType::class)
-                ->add('description', TextareaType::class)
-                ->add('content', TextareaType::class, [
-                    'attr' => [
-                        'rows' => '15'
-                    ]
+            ->with('Article body', ['class' => 'col-md-8'])
+                ->add('content', CKEditorType::class, [
+                    'config' => ['toolbar' => 'full'],
                 ])
             ->end()
-            ->with('Relations', ['class' => 'col-md-3'])
+            ->with('Meta Data', ['class' => 'col-md-4'])
+                ->add('title', TextType::class)
+                ->add('keywords', TextType::class)
+                ->add('description', TextareaType::class, [
+                    'attr' => [
+                        'style' => "height:115px"
+                    ]
+                ])
                 ->add('portals', EntityType::class, [
                     'class' => Portal::class,
                     'choice_label' => 'title',
@@ -89,7 +92,9 @@ final class ArticleAdmin extends AbstractAdmin
                 ->add("slug")
                 ->add("keywords")
                 ->add('description')
-                ->add('content')
+                ->add('content', null, [
+                    'safe' => true
+                ])
             ->end()
             ->with('Meta data', ['class' => 'col-md-3'])
                 ->add('createdAt', null, [

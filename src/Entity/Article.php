@@ -26,11 +26,6 @@ class Article
     private $title;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\Length(
-        min: 3,
-        max: 255
-    )]
     private $slug;
 
     #[ORM\Column(type: 'string', length: 255)]
