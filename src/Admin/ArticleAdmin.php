@@ -64,7 +64,6 @@ final class ArticleAdmin extends AbstractAdmin
     {
         $list
             ->addIdentifier('title')
-            ->add('slug')
             ->add('createdAt', null, [
                 'format' => 'd/m/Y à H:i',
             ])

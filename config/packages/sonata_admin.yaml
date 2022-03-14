@@ -14,6 +14,26 @@ sonata_admin:
                         <p class="description">Bienvenue sur le panneau d'administration. 
                         Ici, vous allez pouvoir administrer l'encyclopédie et ses membres.</p>
              - { type: sonata.admin.block.admin_list, position: left }
+             -
+                position: right
+                type:     sonata.admin.block.admin_preview
+                settings:
+                    code:  admin.article
+                    icon:  fas fa-magic
+                    limit: 7
+                    text:  Latest Edited Articles
+                    filters:
+                        _sort_by:    createdAt
+                        _sort_order: DESC
+             -
+                position: right
+                type:     sonata.admin.block.stats
+                settings:
+                    code:  admin.article
+                    icon:  fas fa-magic
+                    text:  published articles
+                    color: bg-blue
+
     assets:
         extra_stylesheets: [ assets/admin.css ]
             
