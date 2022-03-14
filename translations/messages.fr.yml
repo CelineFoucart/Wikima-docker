@@ -6,6 +6,8 @@ You should agree to our terms.: Vous devez accepter nos conditions.
 Please enter a password: Veuillez entrer un mot de passe
 This value name must be at least 10 characters long: Cette valeur doit faire au moins 10 caractères
 Your password should be at least 6 characters: Votre mot de passe doit faire au moins 6 caractères
+There is already an account with this username: Il y a déjà un compte avec ce nom d'utilisateur
+There is already a page with this title: Il y a déjà une page avec ce titre
 Password: Mot de passe
 New password: Nouveau mot de passe
 Current password: Mot de passe actuel
@@ -67,3 +69,8 @@ Backup List: Historique des sauvegardes
 Latest Edited Articles: Derniers articles édités
 batch: sélectionner
 published articles: articles publiés
+Pages: Pages
+Page List: Liste des pages
+Page Create: Création d'une page
+Id: Id
+Actions: Actions
