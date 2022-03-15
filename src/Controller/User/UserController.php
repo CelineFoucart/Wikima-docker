@@ -32,10 +32,10 @@ class UserController extends AbstractController
     }
 
     #[Route('/users/{id}', name: 'app_user_show')]
-    public function show(int $id): Response
+    public function show(User $user): Response
     {
-        return $this->render('user/list.html.twig', [
-
+        return $this->render('user/show.html.twig', [
+            'user' => $user,
         ]);
     }
 }

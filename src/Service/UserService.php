@@ -31,7 +31,7 @@ final class UserService
 
         foreach ($this->availableRoles as $key => $role) {
             if (in_array($role, $roles)) {
-                $userRoles[] =$this->translator->trans($key);
+                $userRoles[] = $this->translator->trans($key);
             }
         }
 
