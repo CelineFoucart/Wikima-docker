@@ -50,5 +50,12 @@
                 </a>
             </li>
         {% endif %}
+        {% if is_granted('ROLE_ADMIN') %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('admin_app_article_edit', {id:article.id}) }}">
+                    Administrer
+                </a>
+            </li>
+        {% endif %}
     </ul>
 </div>

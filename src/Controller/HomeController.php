@@ -70,8 +70,9 @@ final class HomeController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        return $this->render('home/index.html.twig', [
+        return $this->render('home/page.html.twig', [
             'page' => $page,
+            'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
         ]);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin;
 
+use App\Service\UserService;
 use DateTimeImmutable;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -26,8 +27,11 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 final class UserAdmin extends AbstractAdmin
 {
 
-    public function __construct(private UserPasswordHasherInterface $userPasswordHasher)
-    { }
+    public function __construct(
+        private UserPasswordHasherInterface $userPasswordHasher,
+        private UserService $userService
+    ) { 
+    }
 
     protected function configureFormFields(FormMapper $form): void
     {
@@ -40,11 +44,7 @@ final class UserAdmin extends AbstractAdmin
             ->end()
             ->with('Status', ['class' => 'col-md-4'])
                 ->add('roles', ChoiceType::class, [
-                    'choices' => [
-                        'User' => 'ROLE_USER',
-                        'Editor' => 'ROLE_EDITOR',
-                        'Administrator' => 'ROLE_ADMIN'
-                    ],
+                    'choices' => $this->userService->getAvailableRoles(),
                     'multiple' => true,
                 ])
                 ->add('isVerified', BooleanType::class)

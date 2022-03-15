@@ -42,7 +42,7 @@ class ActiveLinkExtension extends AbstractExtension
     /**
      * Determines if a there is an active link in a group of links.
      */
-    public function areActive(Request $request, array $routes, bool $strict = true): string
+    public function areActive(Request $request, array $routes, bool $strict = true, bool $pages = true): string
     {
         foreach ($routes as $routeName) {
 
@@ -53,15 +53,30 @@ class ActiveLinkExtension extends AbstractExtension
             }
         }
 
-        return '';
+        if (!$pages) {
+            return '';
+        }
+
+        $isActivePage = $this->isLinkActive($request, 'app_page', $strict, $pages);  
+        
+        if ($isActivePage) {
+            return 'active';
+        } else {
+            return '';
+        }
     }
 
     /**
      * Determines if a link is active.
      */
-    private function isLinkActive(Request $request, string $routeName, bool $strict = true): bool
+    private function isLinkActive(Request $request, string $routeName, bool $strict = true,  bool $slug = false): bool
     {
-        $route = $this->urlGenerator->generate($routeName);
+        if ($slug) {
+            $route = $this->urlGenerator->generate($routeName, ['slug' => "active"]);
+        } else {
+            $route = $this->urlGenerator->generate($routeName);
+        }
+        
         $currentUrl = $request->getPathInfo();
 
         if ($strict) {

@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contributeurs de {{ website_name() }}{% endblock %}
+
+{% block body %}
+<header class="bg-default p-5 text-white index-header">
+    <div class="container">
+        <div class="heading">
+            <h1 class="heading-title">Liste des membres de {{ website_name() }}</h1>
+            <p class="lead text-center">Cliquez sur un pseudo pour obtenir plus d'information sur le membre.</p>
+        </div>
+    </div>
+</header>
+<section class="container my-5">
+    <h2>Les contributeurs de {{ website_name() }}</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Pseudo</th>
+                <th>Roles</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>
+                        <a href="{{ path('app_user_show', {id:user.id}) }}">{{ user.username }}</a>
+                    </td>
+                    <td>
+                        {{ format_roles(user.roles) }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2" class="text-center">Aucun membre trouvé</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(users) }}
+    </div>
+</section>
+{% endblock %}

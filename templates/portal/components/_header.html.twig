@@ -24,7 +24,12 @@
         <div class="item-heading position-relative">
             {% if is_granted('ROLE_EDITOR') or is_granted('ROLE_ADMIN') %}
                 <div class="p-2 position-absolute top-0" style="right:-20px">
-                    <a href="{{ path('app_edit_portal_edit', {'id': portal.id}) }}" class="btn btn-outline-secondary">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('admin_app_portal_edit', {id:portal.id}) }}" class="btn btn-outline-secondary" title="administrer">
+                            <i class="bi bi-gear-fill"></i>
+                        </a>
+                    {% endif %}
+                    <a href="{{ path('app_edit_portal_edit', {'id': portal.id}) }}" class="btn btn-outline-secondary" title="éditer">
                         <i class="bi bi-pencil-fill"></i>
                     </a>
                 </div>

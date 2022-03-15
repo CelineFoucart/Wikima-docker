@@ -36,6 +36,7 @@
                                 Galerie
                             </a>
                         </li>
+                        {{ get_pages() }}
                     </ul>
                 </li>
                 {% if is_granted('ROLE_EDITOR') or is_granted('ROLE_ADMIN') %}
