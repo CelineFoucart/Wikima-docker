@@ -98,6 +98,10 @@
     max-width: 150px;
 }
 
+.form-article-title {
+    border: 1px solid #d1d1d1;
+}
+
 @media (min-width: 768px) {
     .list-title {
         font-size: 2.9rem;

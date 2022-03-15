@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page.title }} | {{ website_name() }}{% endblock %}
+
+{% block body %}
+   <header class="bg-default p-5 text-white index-header">
+        <div class="container">
+            <div class="heading">
+                <h1 class="heading-title">{{ page.title }}</h1>
+                <p class="lead text-center">{{ page.description }}</p>
+            </div>
+            {{ include('home/_links.html.twig') }}
+            <div class="mt-5 mb-4">
+                {{ include('includes/_search.html.twig') }}
+            </div>
+        </div>
+    </header>
+    <article class="container mt-5">
+        {{ page.content }}
+    </article>
+{% endblock %}

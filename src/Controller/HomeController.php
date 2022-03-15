@@ -8,6 +8,7 @@ use App\Form\ContactType;
 use App\Form\SearchType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
+use App\Repository\PageRepository;
 use App\Service\ContactService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -57,6 +58,20 @@ final class HomeController extends AbstractController
 
         return $this->render('home/contact.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/page/{slug}', name: 'app_page', requirements: ['slug' => '[a-z\-]*'])]
+    public function page(string $slug, PageRepository $pageRepository): Response
+    {
+        $page = $pageRepository->findOneBy(['slug' => $slug]);
+        
+        if ($page === null) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render('home/index.html.twig', [
+            'page' => $page,
         ]);
     }
 }

@@ -16,7 +16,6 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "ckeditor4": "^4.17.2",
         "file-loader": "^6.2.0"
     }
 }
