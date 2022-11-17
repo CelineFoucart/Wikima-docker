@@ -1,10 +1,10 @@
 :root {
-    --primary:  #FFFFFF;
+    --primary: #FFFFFF;
     --secondary: #3087C9;
     --secondary-light: #F3FAFE;
 }
 
 body {
     height: 100vh;
+    background-color: rgb(245, 247, 250, .5);
 }
-

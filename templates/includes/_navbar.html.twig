@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-default text-uppercase">
-    <div class="container">
+    <div class="container-fluid">
         <a class="navbar-brand" href="{{ path('app_home') }}">{{ website_name() }}</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -40,7 +40,7 @@
                     </ul>
                 </li>
                 {% if is_granted('ROLE_EDITOR') or is_granted('ROLE_ADMIN') %}
-                     <li class="nav-item dropdown me-3">
+                    <li class="nav-item dropdown me-3">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Actions
                         </a>
@@ -113,8 +113,11 @@
                         </a>
                     </li>
                 {% else %}
-                    <li class="nav-item">
+                    <li class="nav-item pe-1">
                         <a class="btn btn-outline-light" href="{{ path('app_login') }}">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light" href="{{ path('app_register') }}">Inscription</a>
                     </li>
                 {% endif %}
             </ul>

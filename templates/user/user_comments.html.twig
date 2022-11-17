@@ -4,19 +4,17 @@
 
 {% block body %}
     <header class="bg-default p-5 text-white index-header">
-        <div class="container">
-            <div class="heading">
-                <h1 class="heading-title">Mes commentaires</h1>
-            </div>
+        <div class="heading">
+            <h1 class="heading-title">Mes commentaires</h1>
         </div>
     </header>
-    <section class="container my-5">
+    <section class="m-5">
         <h2 class="mb-4">
             {{ comments.getTotalItemCount }} commentaire{{comments.getTotalItemCount > 1 ? 's':'' }}
         </h2>
 
         {% for comment in comments %}
-           {{ include('components/article/_comment.html.twig') }}
+            {{ include('comment/components/_comment.html.twig') }}
             <p class="text-center mb-4">
                 <i class="bi bi-file-earmark-fill me-1"></i>
                 <a href="{{ path('app_comment', {slug: comment.article.slug}) }}" class="text-decoration-none">

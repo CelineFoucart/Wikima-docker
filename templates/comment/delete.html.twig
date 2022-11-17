@@ -7,7 +7,7 @@
 {% block body %}
     {% include "comment/components/_comment_header.html.twig" with {'article': article} only  %} 
 
-    <article class="container py-5 px-4">
+    <article class="py-5 px-4">
         {{ include('comment/components/_comment.html.twig') }}
     </article>
 

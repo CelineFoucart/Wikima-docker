@@ -5,8 +5,7 @@
 {% block body %}
     {% include "comment/components/_comment_header.html.twig" with {'article': article} only  %} 
 
-    <article class="container">
-
+    <article class="p-5">
         <h3 class="h4 my-4">Editer mon commentaire</h3>
         {{ include('comment/components/_form.html.twig') }}
     </article>

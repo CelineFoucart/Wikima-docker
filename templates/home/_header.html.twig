@@ -1,12 +1,11 @@
-<header class="bg-default p-5 text-white index-header">
-    <div class="container">
-        <div class="heading">
-            <h1 class="heading-title">{{ website_name() }}</h1>
-            <p class="lead text-center">{{ website_description() }}</p>
-        </div>
-        {{ include('home/_links.html.twig') }}
-        <div class="mt-5 mb-4">
-            {{ include('includes/_search.html.twig') }}
-        </div>
+<header class="index-header">
+    <div class="heading">
+        <h1 class="heading-title">{{ website_name() }}</h1>
+        <p class="lead text-center">{{ website_description() }}</p>
     </div>
+    <div class="mb-5">
+        {{ include('includes/_search.html.twig') }}
+    </div>
+    <div class="img-header-left"></div>
+    <div class="img-header-right"></div>
 </header>

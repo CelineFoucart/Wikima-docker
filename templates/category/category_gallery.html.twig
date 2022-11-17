@@ -6,7 +6,6 @@
 
 {% block body %}
 {% include "category/components/_header.html.twig" with {images: true} %}
-<div class="container">
     <section class="row justify-content-between">
         <article class="col-md-7 p-4">
             <h2 class="list-title">Les images de cette catégorie</h1>
@@ -19,5 +18,4 @@
             {{ include('components/layout/_tag_list.html.twig', {items: category.portals, path: 'app_portal'}) }}
         </aside>
     </section>
-</div>
 {% endblock %}

@@ -10,6 +10,17 @@
     background-color: var(--secondary-light);
 }
 
+.bg-main {
+    background-color: #fff;
+}
+
+.border-item,
+.navbar.navbar-expand-lg,
+footer {
+    border-left: 1px solid #ECECEC;
+    border-right: 1px solid #ECECEC;
+}
+
 .grid-2 {
     display: grid;
     grid-template-columns: 1fr;

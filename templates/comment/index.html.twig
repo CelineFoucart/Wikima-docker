@@ -7,10 +7,10 @@
 {% block body %}
 <article>
     <header class="pt-4 bg-item header-item border-bottom">
-       {{ include('article/components/_header.html.twig', {comments:true}) }}
+        {{ include('article/components/_header.html.twig', {comments:true}) }}
     </header>
 
-    <section class="container py-5 px-4">
+    <section class="p-5 px-4">
         <h2 class="display-6 mb-4">
             {{ comments.getTotalItemCount }} commentaire{{comments.getTotalItemCount > 1 ? 's':'' }}
         </h2>
@@ -20,7 +20,7 @@
         {% endfor %}
 
         {% for comment in comments %}
-           {{ include('comment/components/_comment.html.twig') }}
+            {{ include('comment/components/_comment.html.twig') }}
         {% else %}
             <p class="my-5 fw-bold text-center">Il n'y a aucun commentaire.</p>
         {% endfor %}

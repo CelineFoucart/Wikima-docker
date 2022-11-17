@@ -7,10 +7,10 @@
 {% block body %}
 <article>
     <header class="pt-4 bg-item header-item border-bottom">
-       {{ include('article/components/_header.html.twig', {reading:true}) }}
+        {{ include('article/components/_header.html.twig', {reading:true}) }}
     </header>
 
-    <section class="container py-5 px-4">
+    <section class="py-5 px-4">
         <div class="article-content">
             {{ article.content|raw }}
         </div>

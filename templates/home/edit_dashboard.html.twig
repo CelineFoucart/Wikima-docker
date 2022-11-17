@@ -5,32 +5,32 @@
 {% block body %}
 
 <div class="bg-default-light h-100">
-    <section class="container-fluid h-100">
-        <div class="row h-100">
+    <section class="h-100">
+        <div class="row h-100 container-fluid pe-0 m-0 ps-1">
             <aside class="col-md-2 py-5 text-end">
                 <p class="article-link">
-                    <a href="{{ path('app_edit_image_index') }}" class="ms-2">
+                    <a href="{{ path('app_edit_image_index') }}">
                         <i class="bi bi-image me-1"></i>
                         Gestion des images
                     </a>
                     <i class="bi bi-chevron-right fw-bold"></i>
                 </p>
-                <p class="article-link">
-                    <a href="{{ path('app_edit_category_index') }}" class="ms-2">
+                <p class="article-link ms-2">
+                    <a href="{{ path('app_edit_category_index') }}">
                         <i class="bi bi-folder-fill me-1"></i>
                         Les catégories
                     </a>
                     <i class="bi bi-chevron-right fw-bold"></i>
                 </p>
-                <p class="article-link">
-                    <a href="{{ path('app_edit_portal_index') }}" class="ms-2">
+                <p class="article-link ms-2">
+                    <a href="{{ path('app_edit_portal_index') }}">
                         <i class="bi bi-tag-fill me-1"></i>
                         Les portails
                     </a>
                     <i class="bi bi-chevron-right fw-bold"></i>
                 </p>
-                <p class="article-link">
-                    <a href="{{ path('app_edit_article_index') }}" class="ms-2">
+                <p class="article-link ms-2">
+                    <a href="{{ path('app_edit_article_index') }}">
                         <i class="bi bi-file-earmark-text me-1"></i>
                         Mes articles
                     </a>
@@ -38,7 +38,7 @@
                 </p>
             </aside>
 
-            <div class="col-md-10 bg-white h-100">
+            <div class="col-md-10 bg-white">
                 <header class="bg-light border p-3 my-3">
                     <h1 class="h2 text-muted">Créer et éditer le contenu de l'encyclopédie</h1>
                 </header>
@@ -115,8 +115,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        
+        </div> 
     </section>
 </div>
     

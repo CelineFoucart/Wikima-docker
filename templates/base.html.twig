@@ -18,11 +18,11 @@
         {% endblock %}
     </head>
     <body>
-        <div class="d-flex flex-column h-100">
+        <div class="container d-flex flex-column h-100 p-0">
             
             {{ include('includes/_navbar.html.twig') }}
             
-            <main class="flex-fill">
+            <main class="flex-fill bg-main border-item">
                 {% block body %}{% endblock %}
             </main>
             

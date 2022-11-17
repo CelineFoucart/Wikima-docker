@@ -3,28 +3,32 @@
 {% block title %}Page de contact | {{ website_name() }}{% endblock %}
 
 {% block body %}
-   <header class="bg-default p-5 text-white index-header">
-    <div class="container">
+    <header class="bg-default p-5 text-white index-header">
         <div class="heading">
             <h1 class="heading-title">Page de contact</h1>
             <p class="lead text-center">Veuillez remplir le formulaire suivant pour contacter l'administrateur.</p>
         </div>
-    </div>
-</header>
-<section class="container my-5">
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger">{{ message }}</div>
-    {% endfor %}
+    </header>
+    <section class="py-5 row justify-content-center">
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button type="submit" class="btn btn-primary mt-2">Envoyer</button> 
-    {{ form_end(form) }}
-
-</section>
+        <div class="col-12 col-md-9 col-lg-7">
+            <div class="card shadow mx-5 border-0 radius-3">
+                <div class="card-body">
+                    <h2 class="text-uppercase text-center mb-5">Formulaire</h2>
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endfor %}
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger">{{ message }}</div>
+                    {% endfor %}
+                    {{ form_start(form) }}
+                        {{ form_widget(form) }}
+                        <button type="submit" class="btn btn-default mt-2">Envoyer</button> 
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </section>
 
 
 {% endblock %}

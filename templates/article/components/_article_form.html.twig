@@ -1,28 +1,26 @@
-<section class="container-fluid my-4">
-    
+<div class="my-4">
+
     {{ form_start(form) }}
-        <div class="row">
-            <div class="col-md-7">
-                <h2 class="mb-2 text-muted h4">Article</h2>
-                <div class="border rounded-3 p-4">
+        <nav class="border-bottom">
+            <div class="nav nav-tabs px-2 border-bottom-0" id="nav-tab" role="tablist">
+                <button class="nav-link active fw-bold" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Contenu</button>
+                <button class="nav-link fw-bold" id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about" type="button" role="tab" aria-controls="nav-about" aria-selected="false">Meta données</button>
+            </div>
+        </nav>
+
+        <div class="tab-content container-fluid" id="nav-tabContent">
+            <div class="tab-pane fade show active pt-2" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                 {{ form_row(form.title, {'attr': {'class': 'rounded-0 form-article-title'}}) }}
-                    {{ form_row(form.content) }}
-                </div>
+                {{ form_row(form.content) }}
             </div>
-            <div class="col-md-5">
-                <h2 class="mb-2 text-muted h4">Informations sur l'article</h2>
-                <div class="border rounded-3 p-4">
-                    {{ form_row(form.keywords) }}
-                    {{ form_row(form.description) }}
-                    {{ form_row(form.portals) }}
-                </div>
-            </div>
-            <div class="col-md-12 mt-3">
-                <div class="border rounded-3 p-2">
-                    <button class="btn btn-secondary">{{ button_label|default('Sauvegarder') }}</button>
-                </div>
+            <div class="tab-pane fade pt-2" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
+                {{ form_row(form.keywords) }}
+                {{ form_row(form.description) }}
+                {{ form_row(form.portals) }}
             </div>
         </div>
+        <div class="p-2">
+            <button class="btn btn-secondary">{{ button_label|default('Sauvegarder') }}</button>
+        </div>
     {{ form_end(form) }}
-
-</section>
+</div>

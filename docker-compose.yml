@@ -9,11 +9,6 @@ services:
     ports:
       - '3306'
 
-  mailer:
-    image: schickling/mailcatcher
-    ports: [1025, 1080]
-    
 volumes:
-###> doctrine/doctrine-bundle ###
-  db-data:
-###< doctrine/doctrine-bundle ###
+  ###> doctrine/doctrine-bundle ###
+  db-data: ###< doctrine/doctrine-bundle ###
