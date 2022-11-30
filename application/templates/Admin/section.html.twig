@@ -1,0 +1,230 @@
+{% extends 'Admin/extend_layout.html.twig' %}
+
+{% block sonata_head_title %}
+    Gérer "{{ article.title }}"
+{% endblock sonata_head_title %}
+
+{% block sonata_breadcrumb %}
+    <div class="hidden-xs">
+        <ol class="nav navbar-top-links breadcrumb">
+            <li><a href="{{ path('sonata_admin_dashboard') }}"><i class="fa fa-home"></i></a></li>
+            <li><a href="{{ path('admin_app_article_list') }}">Liste des articles</a></li>
+            <li><a href="{{ path('admin_app_article_show', {id: article.id}) }}">{{ article.title }}</a></li>
+            <li class="active"><span>Gérer les sections</span></li>
+        </ol>
+    </div>
+{% endblock sonata_breadcrumb %}
+
+{% block sonata_page_content_nav %}
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Gérer "{{ article.title }}"</a>
+            </div>
+
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown sonata-actions">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Liste d'actions <b class="caret"></b></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a class="sonata-action-element" href="{{ path('admin_app_article_create') }}">
+                                    <i class="fas fa-plus-circle" aria-hidden="true"></i>
+                                    Ajouter
+                                </a>
+                            </li>
+                            <li>
+                                <a class="sonata-action-element" href="{{ path('admin_app_article_show', {id: article.id}) }}">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                    Afficher
+                                </a>
+                            </li>
+                            <li>
+                                <a class="sonata-action-element" href="{{ path('app_article', {slug: article.slug}) }}">
+                                    <i class="fas fa-book-reader" aria-hidden="true"></i>
+                                    Consulter
+                                </a>
+                            </li>
+                            <li>
+                                <a class="sonata-action-element" href="{{ path('admin_app_article_list') }}">
+                                    <i class="fas fa-list" aria-hidden="true"></i>
+                                    Retourner à la liste
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock sonata_page_content_nav %}
+
+{% block sonata_admin_content %}
+    <div class="sonata-ba-show">
+        <div class="sonata-ba-view">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-pills" role="tablist">
+                    <li class="active">
+                        <a href="#tab_1" class="changer-tab" aria-controls="tab_1" data-toggle="tab"
+                            aria-expanded="true">
+                            Gérer les sections
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="#tab_2" class="changer-tab" aria-controls="tab_2" data-toggle="tab"
+                            aria-expanded="false">
+                            Modifier l'article
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" aria-label="Fermer">
+                        ×
+                    </button>
+                    {{message}}
+                </div>
+            {% endfor %}
+
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="tab_1">
+                    <div class="row" style="margin-top:15px">
+                        <div class="col-md-6 col-lg-7">
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h3 class="box-title">Modifier ou ajouter une section</h4>
+                                </div>
+                                <div class="box-body">
+                                    {{ form_start(sectionForm) }}
+                                        {{ form_widget(sectionForm) }}
+                                        <button type="submit" class="btn btn-success" style="margin-top:10px;">
+                                            <i class="fas fa-save" aria-hidden="true"></i> Sauvegarder
+                                        </button>
+                                    {{ form_end(sectionForm) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-5">
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h3 class="box-title">Sections de l'article</h3>
+                                </div>
+                                {% if article.sections is empty %}
+                                <div class="box-body">
+                                    <p>Aucune section</p>
+                                </div>
+                                {% else %}
+                                <div class="box-body table-responsive no-padding">
+                                    <table class="table">
+                                        <tbody>
+                                            {% for section in article.sections %}
+                                            <tr class="sonata-ba-view-container">
+                                                <td>
+                                                    <div class="pull-right">
+                                                        <a href="{{ path('admin_app_article_section', {id:article.id, section: section.id}) }}"
+                                                        class="btn btn-default" title="Editer">
+                                                            <i class="fas fa-edit" aria-hidden="true"></i>
+                                                        </a>
+                                                        <a href="" class="btn btn-danger">
+                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                        </a>
+                                                    </div>
+                                                    <h4>{{ section.title }}</h4>
+                                                    {{ section.content|raw }}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="tab_2">
+                    {{ form_start(form) }}
+                        <div class="row" style="margin-top:15px">
+                            <div class="col-md-8">
+                                <div class="box">
+                                    <div class="box-header">
+                                        <h3 class="box-title">Contenu introductif</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            {{ form_row(form.content) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="box">
+                                    <div class="box-header">
+                                        <h3 class="box-title">Méta données</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            {{ form_row(form.title) }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_row(form.keywords) }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_row(form.description, {'attr': {"style": "height:115px"}}) }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_row(form.portals) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_rest(form) }}
+
+                        <div class="well well-small form-actions">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save" aria-hidden="true"></i> Mettre à jour
+                            </button>
+                            ou
+                            <a class="btn btn-danger" href="{{ path('admin_app_article_delete', {id: article.id}) }}">
+                                <i class="fas fa-minus-circle" aria-hidden="true"></i> Supprimer
+                            </a>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // affiche l'élement dont l'id est dans l'url
+        window.onload = () => {
+            const search = window.location.search.substring(1);
+            if (search.length > 1) {
+                const parameters = search.substring(1).split('=');
+                if(parameters[0] !== "_tab") {
+                    return;
+                }
+                const id = parameters[1];
+
+                const target = document.querySelector(`#${id}`);
+                if(target) {
+                    document.querySelectorAll('.active').forEach(item => {
+                        item.classList.remove('active');
+                        item.classList.remove('in');
+                    });
+                    
+                    target.classList.add("active");
+                    target.classList.add("in");
+                    const tabs = document.querySelector(`a[href="#${id}"]`).parentElement;
+                    tabs.classList.add('active');
+                }
+            }
+        }
+    </script>
+{% endblock %}

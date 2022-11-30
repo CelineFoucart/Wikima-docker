@@ -3,24 +3,27 @@
 Un projet de wiki développé en symfony pour gérer du contenu textuel et des images.
 
 ## Environnement de développement
-
 ### Prérequis
-
-* PHP 8.0
-* Composer
-* Symfony CLI
 * Docker
-* Docker-compose
+* Docker Compose
 
-### Lancer l'environnement de développement
-
+### Installation
 ```bash
-docker-compose up -d
-symfony serve -d
+docker compose up -d
 ```
 
-### Création des fixtures
-
+### Initialisation du projet en environnement de dev
+Dans le container de l'appli
 ```bash
-symfony console hautelook:fixtures:load
+sh deploy.sh
+```
+
+## Consommer les messages avec Messenger de Symfony
+```bash
+$ php bin/console messenger:consume async
+```
+
+Pour voir les détails :
+```bash
+$ php bin/console messenger:consume async -vv
 ```

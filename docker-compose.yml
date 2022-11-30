@@ -1,14 +1,57 @@
 version: '3'
 
 services:
+  nginx:
+    container_name: wiki_server
+    build: ./docker/nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./application:/var/www
+      - ./logs:/var/log/nginx
+      - ./docker/nginx/nginx.conf:/etc/nginx/default.conf
+    depends_on:
+      - php
+    networks:
+      - network-wiki
+
+  php:
+    container_name: wiki_app
+    build: ./docker/php
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./application:/var/www
+    environment:
+      - DATABASE_URL=mysql://root:root@wiki_database:3306/main?serverVersion=5.7
+      - MAILER_DSN=smtp://wiki_maildev:1025
+    working_dir: /var/www
+    networks:
+      - network-wiki
+
   database:
-    image: 'mysql:latest'
+    image: mysql:latest
+    container_name: wiki_database
+    volumes:
+      - db-data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: main
     ports:
       - '3306'
+    networks:
+      - network-wiki
+
+  mailer:
+    image: schickling/mailcatcher
+    container_name: wiki_maildev
+    ports: [ 1025, 1080 ]
+    networks:
+      - network-wiki
 
 volumes:
-  ###> doctrine/doctrine-bundle ###
-  db-data: ###< doctrine/doctrine-bundle ###
+  db-data:
+
+
+networks:
+  network-wiki:

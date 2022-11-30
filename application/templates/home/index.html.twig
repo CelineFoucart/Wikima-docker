@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil | {{ website_name() }}{% endblock %}
+
+{% block body %}
+    {{ include('home/_header.html.twig') }}
+    <article class="mt-5">
+        <aside class="text-center">
+            {{ get_statistics() }} 
+        </aside>
+
+        <div class="row justify-content-between">
+            <div class="col-md-7">
+                <section class="overview">
+                    <h2 class="overview__title">Présentation générale</h2>
+                    <div class="overview__content">Odio repellendus fuga aut voluptas voluptatem repudiandae. Excepturi ullam qui qui quis facere. Iusto voluptatem necessitatibus quaerat tempora hic. Reprehenderit cumque dignissimos qui assumenda voluptatem beatae dolores. <br>
+                    Aut ducimus officiis deleniti sequi. Molestiae quo quo nulla saepe quia. Debitis quisquam fuga ex minima ea odit laborum nesciunt. Animi sapiente dolorum quidem hic doloremque illum voluptate laborum.  Quia autem fugiat aut. <br>
+                    Voluptas quo ab quidem vel in reiciendis qui. Voluptates debitis rerum consequatur sed et consequatur eius. Perspiciatis possimus est alias neque. Sunt corporis vel necessitatibus quaerat. Facilis eligendi et omnis non saepe quia blanditiis culpa. Esse iure omnis magni est.</div>
+
+                    <div class="row mt-4">
+                        <div class="col-4 text-end">
+                            <a href="{{ path('app_portal_index') }}" class="text-decoration-none fw-bold">
+                                <i class="bi bi-tag-fill me-1"></i> Tous les portails
+                            </a>
+                        </div>
+                        <div class="col-4 text-center">
+                            <a href="{{ path('app_article_index') }}" class="text-decoration-none fw-bold">
+                                <i class="bi bi-file-earmark-text me-1"></i> Tous les articles
+                            </a>
+                        </div>
+                        <div class="col-4">
+                            <a href="{{ path('app_image') }}" class="text-decoration-none fw-bold">
+                                <i class="bi bi-image me-1"></i> Galerie de {{ website_name() }}
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-md-4">
+                <aside class="category-section">
+                    <h2 class="h4">Catégories</h2>
+                    <ul class="list-unstyled">
+                        {% for category in categories %}
+                            <li>
+                                <a href="{{ path('app_category', {slug: category.slug}) }}" class="text-decoration-none">
+                                    <i class="bi bi-folder-fill me-1"></i> 
+                                    {{ category.title }}
+                                </a>
+                            </li>
+                        {% else %}
+                            <li>Aucune catégorie</li>
+                        {% endfor %}
+                    </ul>
+                </aside>
+            </div>
+        </div>
+    </article>
+    <hr class="m-5">
+    <article class="my-5 px-5">
+        <h2 class="mb-5">Articles récents</h2>
+        {{ include('components/layout/_row_link_list.html.twig', {path: 'app_article', items: articles}) }}
+    </article>
+{% endblock %}
