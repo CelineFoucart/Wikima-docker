@@ -9,54 +9,13 @@
         <ol class="nav navbar-top-links breadcrumb">
             <li><a href="{{ path('sonata_admin_dashboard') }}"><i class="fa fa-home"></i></a></li>
             <li><a href="{{ path('admin_app_article_list') }}">Liste des articles</a></li>
-            <li><a href="{{ path('admin_app_article_show', {id: article.id}) }}">{{ article.title }}</a></li>
-            <li class="active"><span>Gérer les sections</span></li>
+            <li class="active"><span>{{ article.title }}</span></li>
         </ol>
     </div>
 {% endblock sonata_breadcrumb %}
 
 {% block sonata_page_content_nav %}
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">Gérer "{{ article.title }}"</a>
-            </div>
-
-            <div class="navbar-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown sonata-actions">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Liste d'actions <b class="caret"></b></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a class="sonata-action-element" href="{{ path('admin_app_article_create') }}">
-                                    <i class="fas fa-plus-circle" aria-hidden="true"></i>
-                                    Ajouter
-                                </a>
-                            </li>
-                            <li>
-                                <a class="sonata-action-element" href="{{ path('admin_app_article_show', {id: article.id}) }}">
-                                    <i class="fas fa-eye" aria-hidden="true"></i>
-                                    Afficher
-                                </a>
-                            </li>
-                            <li>
-                                <a class="sonata-action-element" href="{{ path('app_article', {slug: article.slug}) }}">
-                                    <i class="fas fa-book-reader" aria-hidden="true"></i>
-                                    Consulter
-                                </a>
-                            </li>
-                            <li>
-                                <a class="sonata-action-element" href="{{ path('admin_app_article_list') }}">
-                                    <i class="fas fa-list" aria-hidden="true"></i>
-                                    Retourner à la liste
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    {% include "Admin/components/_article_top_navigation.html.twig" %}
 {% endblock sonata_page_content_nav %}
 
 {% block sonata_admin_content %}
@@ -76,17 +35,21 @@
                             Modifier l'article
                         </a>
                     </li>
+                    <li class="">
+                        <a href="#tab_3" class="changer-tab" aria-controls="tab_3" data-toggle="tab"
+                            aria-expanded="false">
+                            Information sur l'article
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="{{ path('admin_app_article_gallery', {id: article.id}) }}" class="changer-tab">
+                            Gérer la galerie
+                        </a>
+                    </li>
                 </ul>
             </div>
 
-            {% for message in app.flashes('success') %}
-                <div class="alert alert-success alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" aria-label="Fermer">
-                        ×
-                    </button>
-                    {{message}}
-                </div>
-            {% endfor %}
+            {% include "Admin/components/_flashes.html.twig" %}
 
             <div class="tab-content">
                 <div class="tab-pane fade active in" id="tab_1">
@@ -127,9 +90,12 @@
                                                         class="btn btn-default" title="Editer">
                                                             <i class="fas fa-edit" aria-hidden="true"></i>
                                                         </a>
-                                                        <a href="" class="btn btn-danger">
-                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                                        </a>
+                                                        <form method="post" action="{{ path('admin_app_section_delete', {'id': section.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer cet élément ?');" style="display:inline-block">
+                                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ section.id) }}">
+                                                            <button class="btn btn-danger" title="Supprimer">
+                                                                <i class="fa fa-trash-o"></i>
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                     <h4>{{ section.title }}</h4>
                                                     {{ section.content|raw }}
@@ -193,6 +159,88 @@
                             </a>
                         </div>
                     {{ form_end(form) }}
+                </div>
+                <div class="tab-pane fade" id="tab_3">
+                    <div class="row">      
+                        <div class="col-md-9 ">
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h4 class="box-title">Contenu</h4>
+                                </div>
+                                <div class="box-body table-responsive no-padding">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr class="sonata-ba-view-container">
+                                                <th>Titre</th>
+                                                <td>{{ article.title }}</td>
+                                            </tr>
+                                            <tr class="sonata-ba-view-container">
+                                                <th>Slug</th>
+                                                <td>{{ article.slug }}</td>
+                                            </tr>
+                                            <tr class="sonata-ba-view-container">
+                                                <th>Mots clés</th>
+                                                <td>{{ article.keywords }}</td>
+                                            </tr>
+                                            <tr class="sonata-ba-view-container">
+                                                <th>Description</th>
+                                                <td>{{ article.description }}</td>
+                                            </tr>
+                                            <tr class="sonata-ba-view-container">
+                                                <th>Contenu</th>
+                                                <td>{{ article.content|raw }}</td>
+                                            </tr>                                             
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h4 class="box-title">Méta données</h4>
+                                </div>
+                                <div class="box-body table-responsive no-padding">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr class="sonata-ba-view-container">
+                                                <th>Création</th>
+                                                <td>
+                                                    <time datetime="{{ article.createdAt|date('c', 'UTC') }}" title="{{ article.createdAt|date('c', 'UTC') }}">
+                                                        {{ article.createdAt|date('d/m/Y H:i') }}
+                                                    </time>
+                                                </td>
+                                            </tr>
+                                            <tr class="sonata-ba-view-container">
+                                                <th>Mise à jour</th>
+                                                <td>
+                                                    {% if article.updatedAt is not null %}
+                                                        <time datetime="{{ article.updatedAt|date('c', 'UTC') }}" title="{{ article.updatedAt|date('c', 'UTC') }}">
+                                                        {{ article.updatedAt|date('d/m/Y H:i') }}
+                                                    </time>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr class="sonata-ba-view-container">
+                                                <th>Portails</th>
+                                                <td>
+                                                    {% if article.portals is not empty %}
+                                                        <ul class="sonata-ba-show-many-to-many">
+                                                            {% for portal in article.portals %}
+                                                                <li>
+                                                                    <a href="{{ path('admin_app_portal_show', {id:portal.id}) }}">{{ portal.title }}</a>
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

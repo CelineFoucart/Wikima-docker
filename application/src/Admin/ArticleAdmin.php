@@ -12,7 +12,6 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
-use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -68,7 +67,10 @@ final class ArticleAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $list): void
     {
         $list
-            ->addIdentifier('title')
+            ->add('title', null, [
+                'template' => 'Admin/article_list_title.html.twig',
+            ])
+            ->add('keywords')
             ->add('createdAt', null, [
                 'format' => 'd/m/Y à H:i',
             ])
@@ -77,41 +79,11 @@ final class ArticleAdmin extends AbstractAdmin
             ])
             ->add(ListMapper::NAME_ACTIONS, null, [
                 'actions' => [
-                    'sections' => ['template' => 'Admin/section_manager_link.html.twig'],
-                    'show' => [],
+                    'sections' => ['template' => 'Admin/article_edit_links.html.twig'],
                     'read' => ['template' => 'Admin/show.html.twig'],
                     'delete' => [],
                 ],
             ])
-        ;
-    }
-
-    protected function configureShowFields(ShowMapper $show): void
-    {
-        $show
-            ->with('Content', ['class' => 'col-md-9'])
-                ->add('title')
-                ->add('slug')
-                ->add('keywords')
-                ->add('description')
-                ->add('content', null, [
-                    'safe' => true,
-                ])
-                ->add('sections', null,
-                    [
-                        'template' => 'Admin/section_manager_row.html.twig',
-                    ]
-                )
-            ->end()
-            ->with('Meta data', ['class' => 'col-md-3'])
-                ->add('createdAt', null, [
-                    'format' => 'd/m/Y à H:i',
-                ])
-                ->add('updatedAt', null, [
-                    'format' => 'd/m/Y à H:i',
-                ])
-                ->add('portals')
-            ->end()
         ;
     }
 
@@ -128,6 +100,9 @@ final class ArticleAdmin extends AbstractAdmin
     protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection
-            ->add('section', $this->getRouterIdParameter().'/section');
+            ->add('section', $this->getRouterIdParameter().'/section')
+            ->add('gallery', $this->getRouterIdParameter().'/gallery')
+            ->remove('edit')
+            ->remove('show');
     }
 }

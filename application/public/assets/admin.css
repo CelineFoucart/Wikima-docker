@@ -24,3 +24,20 @@ blockquote {
     font-size: inherit;
     font-style: italic;
 }
+
+.image-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.image-block {
+    max-width: 170px;
+    background-color: #f8f8f8;
+    border: 1px solid #e7e7e7;
+    padding: 10px;
+}
+
+.image-block form {
+    padding-top: 5px;
+}
