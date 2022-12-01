@@ -32,7 +32,7 @@
                     <td>{{ article.createdAt ? article.createdAt|date('d/m/Y à H:i') : '' }}</td>
                     <td>{{ article.updatedAt ? article.updatedAt|date('d/m/Y à H:i') : '' }}</td>
                     <td>
-                        <a href="{{ path('app_article', {slug: article.slug}) }}" class="btn btn-primary" title="Voir">
+                        <a href="{{ path('app_article_show', {slug: article.slug}) }}" class="btn btn-primary" title="Voir">
                             <i class="bi bi-eye"></i>
                         </a>
                         <a href="{{ path('app_edit_article_edit', {'id': article.id}) }}" class="btn btn-success" title="éditer l'article">

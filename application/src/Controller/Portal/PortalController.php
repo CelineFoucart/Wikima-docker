@@ -18,14 +18,15 @@ final class PortalController extends AbstractController
     public function __construct(
         private PortalRepository $portalRepository,
         private ArticleRepository $articleRepository
-    ) { }
+    ) {
+    }
 
-    #[Route('/portals/{slug}', name: 'app_portal', requirements: ['slug' => '[a-z\-]*'])]
+    #[Route('/portals/{slug}', name: 'app_portal_show', requirements: ['slug' => '[a-z\-]*'])]
     public function portal(string $slug, Request $request): Response
     {
         $portal = $this->findPortal($slug);
 
-        $page = $request->query->getInt('page', 1);;
+        $page = $request->query->getInt('page', 1);
         $articles = $this->articleRepository->findByPortals([$portal], $page, 16);
 
         return $this->render('portal/show_portal.html.twig', [
@@ -63,7 +64,7 @@ final class PortalController extends AbstractController
     {
         $portal = $this->portalRepository->findBySlug($slug);
 
-        if ($portal === null) {
+        if (null === $portal) {
             throw $this->createNotFoundException();
         }
 

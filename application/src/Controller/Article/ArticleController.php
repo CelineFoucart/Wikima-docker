@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class ArticleController extends AbstractArticleController
 {
-    #[Route('/articles/{slug}', name: 'app_article', requirements: ['slug' => '[a-z\-]*'])]
+    #[Route('/articles/{slug}', name: 'app_article_show', requirements: ['slug' => '[a-z\-]*'])]
     public function article(string $slug): Response
     {
         $article = $this->getArticle($slug);

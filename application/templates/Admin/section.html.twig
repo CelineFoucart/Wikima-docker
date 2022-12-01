@@ -153,10 +153,12 @@
                             <button type="submit" class="btn btn-success">
                                 <i class="fas fa-save" aria-hidden="true"></i> Mettre à jour
                             </button>
-                            ou
-                            <a class="btn btn-danger" href="{{ path('admin_app_article_delete', {id: article.id}) }}">
-                                <i class="fas fa-minus-circle" aria-hidden="true"></i> Supprimer
-                            </a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                ou
+                                <a class="btn btn-danger" href="{{ path('admin_app_article_delete', {id: article.id}) }}">
+                                    <i class="fas fa-minus-circle" aria-hidden="true"></i> Supprimer
+                                </a>
+                            {% endif %}
                         </div>
                     {{ form_end(form) }}
                 </div>
@@ -220,6 +222,10 @@
                                                     </time>
                                                     {% endif %}
                                                 </td>
+                                            </tr>
+                                            <tr class="sonata-ba-view-container">
+                                                <th>Auteur</th>
+                                                <th>{{ article.author ? article.author.username : '' }}</th>
                                             </tr>
                                             <tr class="sonata-ba-view-container">
                                                 <th>Portails</th>

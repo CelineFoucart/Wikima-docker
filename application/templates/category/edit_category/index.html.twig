@@ -34,7 +34,7 @@
                     <td>{{ category.createdAt ? category.createdAt|date('d/m/Y à H:i') : '' }}</td>
                     <td>{{ category.updatedAt ? category.updatedAt|date('d/m/Y à H:i') : '' }}</td>
                     <td>
-                        <a href="{{ path('app_category', {slug: category.slug}) }}" class="btn btn-primary">
+                        <a href="{{ path('app_category_show', {slug: category.slug}) }}" class="btn btn-primary">
                             <i class="bi bi-eye"></i>
                         </a>
                         <a href="{{ path('app_edit_category_edit', {'id': category.id}) }}" class="btn btn-success">

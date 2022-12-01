@@ -31,11 +31,45 @@ security:
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
+    
+    role_hierarchy:
+    
+        ROLE_EDITOR: 
+            - ROLE_ADMIN_CATEGORY_LIST
+            - ROLE_ADMIN_CATEGORY_SHOW
+            - ROLE_ADMIN_ARTICLE_LIST
+            - ROLE_ADMIN_ARTICLE_CREATE
+            - ROLE_ADMIN_ARTICLE_SECTION
+            - ROLE_ADMIN_PORTAL_LIST
+            - ROLE_ADMIN_PORTAL_SHOW
+            - ROLE_ADMIN_IMAGE_LIST
+            - ROLE_ADMIN_IMAGE_SHOW
+            - ROLE_ADMIN_IMAGE_EDIT
+            - ROLE_ADMIN_IMAGE_CREATE
+        ROLE_ADMIN: 
+            - ROLE_ADMIN_ARTICLE_ALL
+            - ROLE_ADMIN_CATEGORY_ALL
+            - ROLE_ADMIN_PORTAL_ALL
+            - ROLE_ADMIN_IMAGE_ALL
+            - ROLE_ADMIN_USER_ALL
+        ROLE_SUPER_ADMIN:
+            - ROLE_ADMIN_ARTICLE_ALL
+            - ROLE_ADMIN_CATEGORY_ALL
+            - ROLE_ADMIN_PORTAL_ALL
+            - ROLE_ADMIN_IMAGE_ALL
+            - ROLE_ADMIN_USER_ALL
+            - ROLE_ADMIN_BACKUP_ALL
+            - ROLE_ALLOWED_TO_SWITCH
+            - ROLE_ADMIN
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_EDITOR, ROLE_SUPER_ADMIN] }
+        - { path: ^/admin/app/article, roles: [ROLE_ADMIN, ROLE_EDITOR, ROLE_SUPER_ADMIN] }
+        - { path: ^/admin/app/category, roles: [ROLE_ADMIN, ROLE_EDITOR, ROLE_SUPER_ADMIN] }
+        - { path: ^/admin/app/portal, roles: [ROLE_ADMIN, ROLE_EDITOR, ROLE_SUPER_ADMIN] }
+        - { path: ^/admin/app/image, roles: [ROLE_ADMIN, ROLE_EDITOR, ROLE_SUPER_ADMIN] }
         - { path: ^/edit, roles: [ROLE_EDITOR, ROLE_ADMIN] }
         - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/comment, roles: ROLE_USER }

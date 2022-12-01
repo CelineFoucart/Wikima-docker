@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-#[Security("is_granted('ROLE_ADMIN')")]
 class ArticleAdminController extends CRUDController
 {
     public function __construct(

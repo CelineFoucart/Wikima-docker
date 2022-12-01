@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Admin;
 
 use App\Entity\Portal;
+use App\Entity\User;
 use App\Service\EditorService;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
@@ -54,6 +55,13 @@ final class ArticleAdmin extends AbstractAdmin
             ->add('slug')
             ->add('keywords')
             ->add('description')
+            ->add('author', null, [
+                'field_type' => EntityType::class,
+                'field_options' => [
+                    'class' => User::class,
+                    'choice_label' => 'username',
+                ],
+            ])
             ->add('portals', null, [
                 'field_type' => EntityType::class,
                 'field_options' => [
@@ -77,10 +85,14 @@ final class ArticleAdmin extends AbstractAdmin
             ->add('updatedAt', null, [
                 'format' => 'd/m/Y à H:i',
             ])
+            ->add('author', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => 'username',
+            ])
             ->add(ListMapper::NAME_ACTIONS, null, [
                 'actions' => [
-                    'sections' => ['template' => 'Admin/article_edit_links.html.twig'],
                     'read' => ['template' => 'Admin/show.html.twig'],
+                    'sections' => ['template' => 'Admin/article_edit_links.html.twig'],
                     'delete' => [],
                 ],
             ])

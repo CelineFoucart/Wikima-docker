@@ -6,8 +6,6 @@ use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use App\Service\EditorService;
-use DateTime;
-use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class EditCategoryController extends AbstractController
 {
     public function __construct(private EditorService $editorService)
-    { }
+    {
+    }
 
     #[Route('/', name: 'app_edit_category_index', methods: ['GET'])]
     public function index(CategoryRepository $categoryRepository, Request $request): Response
@@ -41,8 +40,8 @@ class EditCategoryController extends AbstractController
             $categoryRepository->add($category);
 
             return $this->redirectToRoute(
-                'app_category', 
-                ['slug' => $category->getSlug()], 
+                'app_category_show',
+                ['slug' => $category->getSlug()],
                 Response::HTTP_SEE_OTHER
             );
         }
@@ -64,8 +63,8 @@ class EditCategoryController extends AbstractController
             $categoryRepository->add($category);
 
             return $this->redirectToRoute(
-                'app_category', 
-                ['slug' => $category->getSlug()], 
+                'app_category_show',
+                ['slug' => $category->getSlug()],
                 Response::HTTP_SEE_OTHER
             );
         }

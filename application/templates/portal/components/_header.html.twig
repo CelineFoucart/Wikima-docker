@@ -39,7 +39,7 @@
 
             <p class="mb-0">
                 {% for category in portal.categories %}
-                    <a href="{{ path('app_category', {slug: category.slug}) }}" class="label mx-1">
+                    <a href="{{ path('app_category_show', {slug: category.slug}) }}" class="label mx-1">
                         <i class="bi bi-folder-fill me-1"></i>
                         {{ category.title }}
                     </a>
@@ -49,7 +49,7 @@
 
         <ul class="nav nav-tabs border-bottom-0 mt-3">
             <li class="nav-item">
-                <a class="nav-link {{ articles ? 'active': '' }}" href="{{ path('app_portal', {slug:portal.slug}) }}">
+                <a class="nav-link {{ articles ? 'active': '' }}" href="{{ path('app_portal_show', {slug:portal.slug}) }}">
                     Articles
                 </a>
             </li>

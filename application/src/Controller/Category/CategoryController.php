@@ -18,9 +18,10 @@ final class CategoryController extends AbstractController
     public function __construct(
         private CategoryRepository $categoryRepository,
         private ArticleRepository $articleRepository
-    ) { }
+    ) {
+    }
 
-    #[Route('/category/{slug}', name: 'app_category', requirements: ['slug' => '[a-z\-]*'])]
+    #[Route('/category/{slug}', name: 'app_category_show', requirements: ['slug' => '[a-z\-]*'])]
     public function category(string $slug, Request $request): Response
     {
         $category = $this->getCategory($slug);
@@ -51,8 +52,8 @@ final class CategoryController extends AbstractController
     private function getCategory(string $slug): Category
     {
         $category = $this->categoryRepository->findOneBy(['slug' => $slug]);
-        
-        if ($category === null) {
+
+        if (null === $category) {
             throw $this->createNotFoundException();
         }
 

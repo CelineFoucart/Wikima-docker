@@ -9,7 +9,7 @@
     <div class="border-bottom pb-3 pb-md-2">
         <span class="label-title">Portails : </span>
         {% for portal in article.portals %}
-            {{ include('components/utils/_tag_link.html.twig', {item: portal, path: 'app_portal'}) }}
+            {{ include('components/utils/_tag_link.html.twig', {item: portal, path: 'app_portal_show'}) }}
         {% endfor %}
     </div>
     <div class="item-heading">
@@ -32,7 +32,7 @@
 
     <ul class="nav nav-tabs border-bottom-0">
         <li class="nav-item">
-            <a class="nav-link {{ reading ? 'active': '' }}" href="{{ path('app_article', {slug:article.slug}) }}">
+            <a class="nav-link {{ reading ? 'active': '' }}" href="{{ path('app_article_show', {slug:article.slug}) }}">
                 Lecture
             </a>
         </li>

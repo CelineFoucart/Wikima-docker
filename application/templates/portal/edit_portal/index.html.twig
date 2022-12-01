@@ -34,7 +34,7 @@
                     <td>{{ portal.createdAt ? portal.createdAt|date('d/m/Y à H:i') : '' }}</td>
                     <td>{{ portal.updatedAt ? portal.updatedAt|date('d/m/Y à H:i') : '' }}</td>
                     <td>
-                        <a href="{{ path('app_portal', {slug: portal.slug}) }}" class="btn btn-primary">
+                        <a href="{{ path('app_portal_show', {slug: portal.slug}) }}" class="btn btn-primary">
                             <i class="bi bi-eye"></i>
                         </a>
                         <a href="{{ path('app_edit_portal_edit', {'id': portal.id}) }}" class="btn btn-success">

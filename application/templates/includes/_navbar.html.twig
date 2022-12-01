@@ -46,58 +46,30 @@
                         </a>
                         <ul class="dropdown-menu text-lowercase" aria-labelledby="navbarDropdown">
                             <li>
-                                <a class="dropdown-item fw-bold text-muted" href="{{ path('app_edit_dashboard') }}">
-                                    <i class="bi bi-pencil-square me-1"></i> Panneau d'édition
+                                <a class="dropdown-item fw-bold text-muted" href="{{ path('sonata_admin_dashboard') }}">
+                                    <i class="bi bi-pencil-square me-1"></i> Tableau de bord
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ path('app_edit_category_index') }}">
+                                <a class="dropdown-item" href="{{ path('admin_app_category_list') }}">
                                     <i class="bi bi-folder-fill me-1"></i> Catégories
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ path('app_edit_portal_index') }}">
+                                <a class="dropdown-item" href="{{ path('admin_app_portal_list') }}">
                                     <i class="bi bi-tag-fill me-1"></i> Portails
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ path('app_edit_article_index') }}">
-                                    <i class="bi bi-file-earmark-text me-1"></i> Mes articles
+                                <a class="dropdown-item" href="{{ path('admin_app_article_list') }}">
+                                    <i class="bi bi-file-earmark-text me-1"></i> Articles
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ path('app_edit_image_index') }}">
+                                <a class="dropdown-item" href="{{ path('admin_app_image_list') }}">
                                     <i class="bi bi-image me-1"></i> Images
                                 </a>
                             </li>
-                            {% if is_granted('ROLE_ADMIN') %}
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item fw-bold text-muted" href="{{ path('sonata_admin_dashboard') }}">
-                                        <i class="bi bi-gear-fill"></i> Panneau d'administration
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ path('admin_app_category_list') }}">
-                                        <i class="bi bi-folder-fill me-1"></i> Catégories
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ path('admin_app_portal_list') }}">
-                                        <i class="bi bi-tag-fill me-1"></i> Portails
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ path('admin_app_article_list') }}">
-                                        <i class="bi bi-file-earmark-text me-1"></i> Articles
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ path('admin_app_image_list') }}">
-                                        <i class="bi bi-image me-1"></i> Images
-                                    </a>
-                                </li>
-                            {% endif %}
                         </ul>
                     </li>
                 {% endif %}

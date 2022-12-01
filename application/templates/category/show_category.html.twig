@@ -10,7 +10,7 @@
         <article class="col-md-7 p-4">
             <h2 class="list-title">Les articles de cette catégorie</h1>
 
-            {{ include('components/layout/_single_col_list.html.twig',{path: 'app_article', items: articles}) }}
+            {{ include('components/layout/_single_col_list.html.twig',{path: 'app_article_show', items: articles}) }}
 
             <div class="navigation">
                 {{ knp_pagination_render(articles) }}
@@ -19,7 +19,7 @@
         </article>
         <aside class="col-md-4 aside">
             <h3 class="h4 mb-4">Portails de cette catégorie</h3>
-            {{ include('components/layout/_tag_list.html.twig', {items: category.portals, path: 'app_portal'}) }}
+            {{ include('components/layout/_tag_list.html.twig', {items: category.portals, path: 'app_portal_show'}) }}
         </aside>
     </section>
 {% endblock %}

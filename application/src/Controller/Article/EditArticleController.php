@@ -43,7 +43,7 @@ class EditArticleController extends AbstractController
             $this->articleRepository->add($article);
 
             return $this->redirectToRoute(
-                'app_article',
+                'app_article_show',
                 ['slug' => $article->getSlug()],
                 Response::HTTP_SEE_OTHER
             );
@@ -67,7 +67,7 @@ class EditArticleController extends AbstractController
             $this->articleRepository->add($article);
 
             return $this->redirectToRoute(
-                'app_article',
+                'app_article_show',
                 ['slug' => $article->getSlug()],
                 Response::HTTP_SEE_OTHER
             );

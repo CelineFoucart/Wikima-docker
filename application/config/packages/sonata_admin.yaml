@@ -1,4 +1,7 @@
 sonata_admin:
+    security:
+        handler: sonata.admin.security.handler.role
+
     title: 'Administration'
     templates:
         layout: Admin/extend_layout.html.twig
@@ -12,7 +15,7 @@ sonata_admin:
                     content: >
                         <h1 class="dashboard-title">Tableau de bord</h1>
                         <p class="description">Bienvenue sur le panneau d'administration. 
-                        Ici, vous allez pouvoir administrer l'encyclopédie et ses membres.</p>
+                        Ici, vous allez pouvoir gérer l'encyclopédie et son contenu.</p>
              - { type: sonata.admin.block.admin_list, position: left }
              -
                 position: right
