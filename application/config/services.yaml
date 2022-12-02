@@ -4,10 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    app.website.name: 'Wikima'
-    app.website.description: "L'encyclopédie sans parti pris et complète"
-    app.contact.mail: 'contact@wikima.com' 
-    app.contact.name: 'Wikima Mail Bot'
+    app.website.name: '%env(WIKI_NAME)%'
+    app.contact.mail: '%env(CONTACT_EMAIL)%' 
+    app.contact.name: '%env(CONTACT_NAME)%'
     app.backup.folder: '%kernel.project_dir%/backup'
     locale: fr
 
@@ -18,7 +17,6 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
             $websiteName: '%app.website.name%'
-            $websiteDescription: '%app.website.description%'
             $contactMail: '%app.contact.mail%'
             $contactName: '%app.contact.name%'
             $backupFolder: '%app.backup.folder%'
@@ -75,4 +73,4 @@ services:
     admin.backup:
         class: App\Admin\BackupAdmin
         tags:
-            - { name: sonata.admin, model_class: App\Entity\Backup, controller: App\Controller\BackupAdminController, manager_type: orm, group: Administration, label: Backup }
+            - { name: sonata.admin, model_class: App\Entity\Backup, controller: App\Controller\Admin\BackupAdminController, manager_type: orm, group: Administration, label: Backup }

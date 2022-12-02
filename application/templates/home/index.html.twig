@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil | {{ website_name() }}{% endblock %}
+{% block title %}Accueil | {{ app_name }}{% endblock %}
 
 {% block body %}
     {{ include('home/_header.html.twig') }}
@@ -13,10 +13,13 @@
             <div class="col-md-7">
                 <section class="overview">
                     <h2 class="overview__title">Présentation générale</h2>
-                    <div class="overview__content">Odio repellendus fuga aut voluptas voluptatem repudiandae. Excepturi ullam qui qui quis facere. Iusto voluptatem necessitatibus quaerat tempora hic. Reprehenderit cumque dignissimos qui assumenda voluptatem beatae dolores. <br>
-                    Aut ducimus officiis deleniti sequi. Molestiae quo quo nulla saepe quia. Debitis quisquam fuga ex minima ea odit laborum nesciunt. Animi sapiente dolorum quidem hic doloremque illum voluptate laborum.  Quia autem fugiat aut. <br>
-                    Voluptas quo ab quidem vel in reiciendis qui. Voluptates debitis rerum consequatur sed et consequatur eius. Perspiciatis possimus est alias neque. Sunt corporis vel necessitatibus quaerat. Facilis eligendi et omnis non saepe quia blanditiis culpa. Esse iure omnis magni est.</div>
-
+                    <div class="overview__content">
+                        {% if overview is null %}
+                            Renseignez une présentation de l'encyclopédie
+                        {% else %}
+                            {{ overview.content|raw }}
+                        {% endif %}
+                    </div>
                     <div class="row mt-4">
                         <div class="col-4 text-end">
                             <a href="{{ path('app_portal_index') }}" class="text-decoration-none fw-bold">
@@ -30,7 +33,7 @@
                         </div>
                         <div class="col-4">
                             <a href="{{ path('app_image') }}" class="text-decoration-none fw-bold">
-                                <i class="bi bi-image me-1"></i> Galerie de {{ website_name() }}
+                                <i class="bi bi-image me-1"></i> Galerie de {{ app_name }}
                             </a>
                         </div>
                     </div>

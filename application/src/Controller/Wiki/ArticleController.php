@@ -1,20 +1,28 @@
 <?php
 
-namespace App\Controller\Article;
+namespace App\Controller\Wiki;
 
+use App\Entity\Article;
 use App\Entity\Data\SearchData;
 use App\Form\AdvancedSearchType;
+use App\Repository\ArticleRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class ArticleController extends AbstractArticleController
+final class ArticleController extends AbstractController
 {
-    #[Route('/articles/{slug}', name: 'app_article_show', requirements: ['slug' => '[a-z\-]*'])]
-    public function article(string $slug): Response
-    {
-        $article = $this->getArticle($slug);
+    public function __construct(
+        private ArticleRepository $articleRepository
+    ) {
+    }
 
+    #[Route('/articles/{slug}', name: 'app_article_show', requirements: ['slug' => '[a-z\-]*'])]
+    #[Entity('article', expr: 'repository.findBySlug(slug)')]
+    public function article(Article $article): Response
+    {
         return $this->render('article/show_article.html.twig', [
             'article' => $article,
         ]);

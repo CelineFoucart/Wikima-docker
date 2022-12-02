@@ -1,42 +1,48 @@
 <?php
 
-namespace App\Controller\Article;
+namespace App\Controller\Wiki;
 
+use App\Entity\Article;
 use App\Entity\Comment;
 use App\Form\CommentType;
+use App\Repository\ArticleRepository;
 use App\Repository\CommentRepository;
 use App\Security\Voter\VoterHelper;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class CommentController extends AbstractArticleController
+final class CommentController extends AbstractController
 {
+    public function __construct(
+        private ArticleRepository $articleRepository
+    ) {
+    }
+
     #[Route('/articles/{slug}/comment', name: 'app_comment')]
-    public function index(string $slug, Request $request, CommentRepository $commentRepository): Response
+    #[Entity('article', expr: 'repository.findBySlug(slug)')]
+    public function index(Article $article, Request $request, CommentRepository $commentRepository): Response
     {
-        $article = $this->getArticle($slug);
         $page = $request->query->getInt('page', 1);
         $user = $this->getUser();
         $comment = new Comment();
 
-        if ($user !== null) {
+        if (null !== $user) {
             $comment->setAuthor($user)->setArticle($article);
         }
 
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
-        
-        if ($form->isSubmitted() && $form->isValid() && $user !== null) { 
+
+        if ($form->isSubmitted() && $form->isValid() && null !== $user) {
             $comment->setCreatedAt(new DateTimeImmutable());
             $commentRepository->add($comment, true);
-            $this->addFlash(
-               'success',
-               'Votre commentaire a bien été enregistré.'
-            );
-            
+            $this->addFlash('success', 'Votre commentaire a bien été enregistré.');
+
             return $this->redirectToRoute('app_comment', ['slug' => $article->getSlug()]);
         }
 
@@ -54,21 +60,18 @@ final class CommentController extends AbstractArticleController
 
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
-        
-        if ($form->isSubmitted() && $form->isValid()) { 
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash(
-               'success',
-               'Votre message a bien été modifié.'
-            );
+            $this->addFlash('success', 'Votre message a bien été modifié.');
 
             return $this->redirectToRoute(
-                'app_comment', 
+                'app_comment',
                 ['slug' => $comment->getArticle()->getSlug()]
             );
         }
 
-        return $this->render('comment/edit.html.twig',[
+        return $this->render('comment/edit.html.twig', [
             'form' => $form->createView(),
             'article' => $comment->getArticle(),
         ]);
@@ -80,7 +83,7 @@ final class CommentController extends AbstractArticleController
         $article = $comment->getArticle();
         if ($this->isCsrfTokenValid('delete'.$comment->getId(), $request->request->get('_token'))) {
             $commentRepository->remove($comment);
-            $this->addFlash('success', "Le commentaire a bien été supprimée.");
+            $this->addFlash('success', 'Le commentaire a bien été supprimée.');
 
             return $this->redirectToRoute('app_comment', ['slug' => $article->getSlug()]);
         }

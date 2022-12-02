@@ -3,13 +3,7 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
-
-<header class="bg-default p-5 text-white index-header">
-    <div class="heading">
-        <h1 class="heading-title">Profil</h1>
-        <p class="lead text-center">Bienvenue sur votre profil où vous pourrez modifier vos informations.</p>
-    </div>
-</header>
+{{ include('home/_header.html.twig', { heading_title: 'Profil', heading_description: "Bienvenue sur votre profil où vous pourrez modifier vos informations." }) }}
 <section class="m-5">
     {% for message in app.flashes('success') %}
         <div class="alert alert-success" role="alert">{{ message }}</div>

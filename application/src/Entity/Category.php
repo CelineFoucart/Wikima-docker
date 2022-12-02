@@ -55,10 +55,14 @@ class Category
     #[ORM\ManyToMany(targetEntity: Image::class, mappedBy: 'categories')]
     private $images;
 
+    #[ORM\ManyToMany(targetEntity: Page::class, mappedBy: 'categories')]
+    private $pages;
+
     public function __construct()
     {
         $this->portals = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->pages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -199,5 +203,32 @@ class Category
     public function __toString()
     {
         return $this->title;
+    }
+
+    /**
+     * @return Collection<int, Page>
+     */
+    public function getPages(): Collection
+    {
+        return $this->pages;
+    }
+
+    public function addPage(Page $page): self
+    {
+        if (!$this->pages->contains($page)) {
+            $this->pages[] = $page;
+            $page->addCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removePage(Page $page): self
+    {
+        if ($this->pages->removeElement($page)) {
+            $page->removeCategory($this);
+        }
+
+        return $this;
     }
 }

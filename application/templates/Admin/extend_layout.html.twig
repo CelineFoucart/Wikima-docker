@@ -15,14 +15,20 @@
     {% endif %}
 {% endblock %}
 
-{% set dashboard_route = app.request.attributes.get('_route') %}
+{% set current_route = app.request.attributes.get('_route') %}
 
 {% block side_bar_before_nav %}
     <ul class="sidebar-menu tree ">
-        <li class="first treeview {{ dashboard_route == 'sonata_admin_dashboard' ? 'active' : '' }}">
+        <li class="first treeview {{ current_route == 'sonata_admin_dashboard' ? 'active' : '' }}">
             <a href="{{ path('sonata_admin_dashboard') }}">
                 <i class="fa fa-tachometer" aria-hidden="true"></i>
                 <span>Tableau de bord</span>
+            </a>
+        </li>
+        <li class="treeview {{ current_route == 'admin_app_overview' ? 'active' : '' }}">
+            <a href="{{ path('admin_app_overview') }}">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                <span>Informations</span>
             </a>
         </li>
     </ul>
@@ -33,7 +39,7 @@
         <li class="first treeview">
             <a href="{{ path('app_home') }}">
                 <i class="fas fa-globe" aria-hidden="true"></i>
-                <span>Index de {{ website_name() }}</span>
+                <span>Index de {{ app_name }}</span>
             </a>
         </li>
 

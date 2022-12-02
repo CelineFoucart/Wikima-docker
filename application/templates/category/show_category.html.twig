@@ -7,6 +7,17 @@
 {% block body %}
 {% include "category/components/_header.html.twig" with {articles: true} %}
     <section class="row justify-content-between">
+        {% if category.pages is not empty %}
+            <div class="col-md-12">
+                <p class="text-end m-2">
+                    {% for page in category.pages %}
+                        <a href="{{ path('app_page', {slug: page.slug}) }}" class="label mx-1">
+                            <i class="bi bi-file-earmark-text"></i> {{ page.title }}
+                        </a>
+                    {% endfor %}
+                </p>
+            </div>
+        {% endif %}
         <article class="col-md-7 p-4">
             <h2 class="list-title">Les articles de cette catégorie</h1>
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\Entity\Backup;
 use App\Repository\BackupRepository;
@@ -13,12 +13,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-final class BackupAdminController extends CRUDController 
+final class BackupAdminController extends CRUDController
 {
     public function __construct(
         private BackupService $backupService,
         private BackupRepository $backupRepository
-    ) {  
+    ) {
     }
 
     /**
@@ -29,8 +29,8 @@ final class BackupAdminController extends CRUDController
         $this->admin->checkAccess('create');
 
         $filename = $this->backupService->save()->getFilename();
-        
-        if ($filename === null) {
+
+        if (null === $filename) {
             $this->addFlash(
                 'sonata_flash_error',
                 join('<br>', $this->backupService->getErrors())
@@ -50,24 +50,24 @@ final class BackupAdminController extends CRUDController
 
         return $this->redirectToList();
     }
-    
+
     public function downloadAction(int $id): Response
     {
         $backup = $this->backupRepository->find($id);
 
-        if ($backup === null) {
+        if (null === $backup) {
             throw $this->createNotFoundException("Ce fichier n'existe pas.");
         }
 
         $folder = $this->backupService->getBackupFolder();
-        $file = $folder . DIRECTORY_SEPARATOR . $backup->getFilename();
+        $file = $folder.DIRECTORY_SEPARATOR.$backup->getFilename();
 
         $response = new BinaryFileResponse($file);
         $response->setContentDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
             $backup->getFilename()
         );
-        
+
         return $response;
     }
 }

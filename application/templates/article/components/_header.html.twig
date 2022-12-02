@@ -45,15 +45,8 @@
         {% if (is_granted('ROLE_EDITOR') and article.author is not null and article.author.id == app.user.id) 
             or is_granted('ROLE_ADMIN') %}   
             <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_edit_article_edit', {id:article.id}) }}">
-                    Editer
-                </a>
-            </li>
-        {% endif %}
-        {% if is_granted('ROLE_ADMIN') %}
-            <li class="nav-item">
                 <a class="nav-link" href="{{ path('admin_app_article_section', {id:article.id}) }}">
-                    Administrer
+                    Gérer
                 </a>
             </li>
         {% endif %}

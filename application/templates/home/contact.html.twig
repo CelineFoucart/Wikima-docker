@@ -1,16 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Page de contact | {{ website_name() }}{% endblock %}
+{% block title %}Page de contact | {{ app_name }}{% endblock %}
 
 {% block body %}
-    <header class="bg-default p-5 text-white index-header">
-        <div class="heading">
-            <h1 class="heading-title">Page de contact</h1>
-            <p class="lead text-center">Veuillez remplir le formulaire suivant pour contacter l'administrateur.</p>
-        </div>
-    </header>
-    <section class="py-5 row justify-content-center">
+    {{ include('home/_header.html.twig', { heading_title: 'Page de contact', heading_description: "Veuillez remplir le formulaire suivant pour contacter l'administrateur." }) }}
 
+    <section class="py-5 row justify-content-center">
         <div class="col-12 col-md-9 col-lg-7">
             <div class="card shadow mx-5 border-0 radius-3">
                 <div class="card-body">

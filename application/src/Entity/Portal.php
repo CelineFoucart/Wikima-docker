@@ -58,12 +58,16 @@ class Portal
     #[ORM\ManyToMany(targetEntity: Image::class, mappedBy: 'portals')]
     private $images;
 
+    #[ORM\ManyToMany(targetEntity: Page::class, mappedBy: 'portals')]
+    private $pages;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->articles = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->pages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -225,6 +229,33 @@ class Portal
     {
         if ($this->images->removeElement($image)) {
             $image->removePortal($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Page>
+     */
+    public function getPages(): Collection
+    {
+        return $this->pages;
+    }
+
+    public function addPage(Page $page): self
+    {
+        if (!$this->pages->contains($page)) {
+            $this->pages[] = $page;
+            $page->addPortal($this);
+        }
+
+        return $this;
+    }
+
+    public function removePage(Page $page): self
+    {
+        if ($this->pages->removeElement($page)) {
+            $page->removePortal($this);
         }
 
         return $this;

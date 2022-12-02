@@ -3,65 +3,61 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
-<header class="bg-default p-5 text-white index-header">
-    <div class="heading">
-        <h1 class="heading-title">Page de connexion</h1>
-        <p class="lead text-center">Veuillez vous connecter pour contribuer.</p>
-    </div>
-</header>
-<section class="p-5 container-fluid">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-image"></div>
-        </div>
-        <div class="col-md-6">
-            <div class="divider d-flex align-items-center my-4">
-                <h2 class="text-center fw-bold mx-3 mb-0 h5 text-muted">Formulaire de connexion</p>
+    {{ include('home/_header.html.twig', { heading_title: 'Page de connexion', heading_description: "Veuillez vous connecter pour contribuer" }) }}
+
+    <section class="p-5 container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-image"></div>
             </div>
+            <div class="col-md-6">
+                <div class="divider d-flex align-items-center my-4">
+                    <h2 class="text-center fw-bold mx-3 mb-0 h5 text-muted">Formulaire de connexion</p>
+                </div>
 
-            <form method="post">
-                {% if error %}
-                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                {% endif %}
-                <label for="inputUsername" class="text-muted">Pseudo</label>
-                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" autocomplete="username" required autofocus>
-                <label for="inputPassword" class="mt-3 text-muted">Mot de passe</label>
-                <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-                <input type="hidden" name="_csrf_token"
-                    value="{{ csrf_token('authenticate') }}"
-                >
+                <form method="post">
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
+                    <label for="inputUsername" class="text-muted">Pseudo</label>
+                    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" autocomplete="username" required autofocus>
+                    <label for="inputPassword" class="mt-3 text-muted">Mot de passe</label>
+                    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                    <input type="hidden" name="_csrf_token"
+                        value="{{ csrf_token('authenticate') }}"
+                    >
 
-                <div class="row mt-2">
-                    <div class="col-md-6">
-                        {# Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-                        See https://symfony.com/doc/current/security/remember_me.html #}
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            {# Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+                            See https://symfony.com/doc/current/security/remember_me.html #}
 
-                        {# <div class="checkbox mb-3 text-muted">
-                            <label>
-                                <input type="checkbox" name="_remember_me"> Se souvenir de moi
-                            </label>
-                        </div> #}
+                            {# <div class="checkbox mb-3 text-muted">
+                                <label>
+                                    <input type="checkbox" name="_remember_me"> Se souvenir de moi
+                                </label>
+                            </div> #}
+                        </div>
+                        <div class="col-md-6">
+                            <p class="text-end">
+                                <a href="{{ path('app_forgot_password_request') }}" class="text-muted text-decoration-none">
+                                    Mon mot de passe oublié ?
+                                </a>
+                            </p>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <p class="text-end">
-                            <a href="{{ path('app_forgot_password_request') }}" class="text-muted text-decoration-none">
-                                Mon mot de passe oublié ?
-                            </a>
+                    <div class="my-4">
+                        <button class="btn btn-default" type="submit">
+                            Connexion
+                        </button>
+                        <p class="fw-bold mt-2">
+                        <small>
+                            Pas de compte ? <a href="{{ path('app_register') }}" class="text-danger">Inscrivez-vous</a>
+                        </small>
                         </p>
                     </div>
-                </div>
-                <div class="my-4">
-                    <button class="btn btn-default" type="submit">
-                        Connexion
-                    </button>
-                    <p class="fw-bold mt-2">
-                    <small>
-                        Pas de compte ? <a href="{{ path('app_register') }}" class="text-danger">Inscrivez-vous</a>
-                    </small>
-                    </p>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 {% endblock %}

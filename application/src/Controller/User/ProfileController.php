@@ -23,19 +23,22 @@ class ProfileController extends AbstractController
     ): Response {
         $user = $this->getUser();
         assert($user instanceof User);
+
         $accountForm = $this->createForm(AccountType::class, $user);
         $accountForm->handleRequest($request);
-        
-        if ($accountForm->isSubmitted() && $accountForm->isValid()) { 
+
+        if ($accountForm->isSubmitted() && $accountForm->isValid()) {
+            $entityManager->persist($user);
             $entityManager->flush();
             $this->addFlash('success', 'Vos informations ont été mises à jour.');
+
             return $this->redirectToRoute('app_profile');
         }
 
         $passwordForm = $this->createForm(EditPasswordType::class, $user);
         $passwordForm->handleRequest($request);
-        
-        if ($passwordForm->isSubmitted() && $passwordForm->isValid()) { 
+
+        if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
             $user->setPassword(
             $userPasswordHasher->hashPassword(
                     $user,
@@ -44,6 +47,7 @@ class ProfileController extends AbstractController
             );
             $entityManager->flush();
             $this->addFlash('success', 'Votre mot de passe a été mis à jour.');
+
             return $this->redirectToRoute('app_profile');
         }
 

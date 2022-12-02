@@ -3,12 +3,7 @@
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
-    <header class="bg-default p-5 text-white index-header">
-        <div class="heading">
-            <h1 class="heading-title">Page d'inscription</h1>
-            <p class="lead text-center">Veuillez vous créer un compte pour poster des commentaires.</p>
-        </div>
-    </header>
+    {{ include('home/_header.html.twig', { heading_title: "Page d'inscription", heading_description: "Veuillez vous créer un compte pour poster des commentaires." }) }}
     <section class="p-5 row justify-content-center">
         {% for flash_error in app.flashes('verify_email_error') %}
             <div class="col-12">

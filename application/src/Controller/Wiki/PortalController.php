@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Portal;
+namespace App\Controller\Wiki;
 
 use App\Entity\Data\SearchData;
 use App\Entity\Portal;

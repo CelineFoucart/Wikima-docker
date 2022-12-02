@@ -23,15 +23,9 @@ class AdminSectionController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$section->getId(), $request->request->get('_token'))) {
             $sectionRepository->remove($section);
 
-            $this->addFlash(
-                'success',
-                'La section a bien été supprimée.'
-            );
+            $this->addFlash('success', 'La section a bien été supprimée.');
         } else {
-            $this->addFlash(
-                'error',
-                'La suppression a échouée.'
-            );
+            $this->addFlash('error', 'La suppression a échouée.');
         }
 
         return $this->redirectToRoute('admin_app_article_section', ['id' => $id], Response::HTTP_SEE_OTHER);

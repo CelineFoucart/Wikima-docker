@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PageRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -43,6 +45,18 @@ class Page
         min: 20
     )]
     private $content;
+
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'pages')]
+    private $categories;
+
+    #[ORM\ManyToMany(targetEntity: Portal::class, inversedBy: 'pages')]
+    private $portals;
+
+    public function __construct()
+    {
+        $this->categories = new ArrayCollection();
+        $this->portals = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -100,5 +114,53 @@ class Page
     public function __toString()
     {
         return $this->title;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        $this->categories->removeElement($category);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Portal>
+     */
+    public function getPortals(): Collection
+    {
+        return $this->portals;
+    }
+
+    public function addPortal(Portal $portal): self
+    {
+        if (!$this->portals->contains($portal)) {
+            $this->portals[] = $portal;
+        }
+
+        return $this;
+    }
+
+    public function removePortal(Portal $portal): self
+    {
+        $this->portals->removeElement($portal);
+
+        return $this;
     }
 }

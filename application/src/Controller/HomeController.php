@@ -6,11 +6,11 @@ use App\Entity\Data\Contact;
 use App\Entity\Data\SearchData;
 use App\Form\ContactType;
 use App\Form\SearchType;
+use App\Repository\AboutRepository;
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\PageRepository;
 use App\Service\ContactService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(CategoryRepository $categoryRepository, ArticleRepository $articleRepository): Response
+    public function index(CategoryRepository $categoryRepository, ArticleRepository $articleRepository, AboutRepository $aboutRepository): Response
     {
         $categories = $categoryRepository->findAll();
         $articles = $articleRepository->findLastArticles();
@@ -28,6 +28,7 @@ final class HomeController extends AbstractController
             'categories' => $categories,
             'articles' => $articles,
             'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
+            'overview' => $aboutRepository->findAboutRow('overview'),
         ]);
     }
 
@@ -37,20 +38,14 @@ final class HomeController extends AbstractController
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
         $form->handleRequest($request);
-        
-        if ($form->isSubmitted() && $form->isValid()) { 
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $status = $contactService->notify($contact);
 
             if ($status) {
-                $this->addFlash(
-                   'success',
-                   'Votre email a bien été envoyé.'
-                );
+                $this->addFlash('success', 'Votre email a bien été envoyé.');
             } else {
-                $this->addFlash(
-                   'error',
-                   "L'envoi de votre email a échoué. Veuillez réessayer ultérieurement."
-                );
+                $this->addFlash('error', "L'envoi de votre email a échoué. Veuillez réessayer ultérieurement.");
             }
 
             return $this->redirectToRoute('app_contact');
@@ -65,8 +60,8 @@ final class HomeController extends AbstractController
     public function page(string $slug, PageRepository $pageRepository): Response
     {
         $page = $pageRepository->findOneBy(['slug' => $slug]);
-        
-        if ($page === null) {
+
+        if (null === $page) {
             throw $this->createNotFoundException();
         }
 

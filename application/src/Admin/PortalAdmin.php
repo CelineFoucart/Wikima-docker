@@ -7,8 +7,8 @@ namespace App\Admin;
 use App\Entity\Category;
 use App\Service\EditorService;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
-use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -18,7 +18,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class PortalAdmin extends AbstractAdmin
 {
     public function __construct(private EditorService $editorService)
-    { }
+    {
+    }
 
     protected function configureFormFields(FormMapper $form): void
     {
@@ -42,9 +43,9 @@ final class PortalAdmin extends AbstractAdmin
     {
         $datagrid
             ->add('title')
-            ->add("slug")
-            ->add("keywords")
-            ->add("description")
+            ->add('slug')
+            ->add('keywords')
+            ->add('description')
             ->add('categories', null, [
                 'field_type' => EntityType::class,
                 'field_options' => [
@@ -72,7 +73,7 @@ final class PortalAdmin extends AbstractAdmin
                     'show' => [],
                     'read' => ['template' => 'Admin/show.html.twig'],
                     'delete' => [],
-                ]
+                ],
             ])
         ;
     }
@@ -83,8 +84,8 @@ final class PortalAdmin extends AbstractAdmin
             ->tab('Portal')
                 ->with('Content', ['class' => 'col-md-9'])
                     ->add('title')
-                    ->add("slug")
-                    ->add("keywords")
+                    ->add('slug')
+                    ->add('keywords')
                     ->add('description')
                 ->end()
                 ->with('Meta data', ['class' => 'col-md-3'])
@@ -111,7 +112,7 @@ final class PortalAdmin extends AbstractAdmin
     {
         $this->editorService->prepareEditing($portal);
     }
-    
+
     public function prePersist(object $portal): void
     {
         $this->editorService->prepareCreation($portal);

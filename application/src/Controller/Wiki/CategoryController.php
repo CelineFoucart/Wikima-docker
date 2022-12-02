@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Category;
+namespace App\Controller\Wiki;
 
 use App\Entity\Category;
 use App\Entity\Data\SearchData;

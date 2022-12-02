@@ -1,16 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Contributeurs de {{ website_name() }}{% endblock %}
+{% block title %}Contributeurs de {{ app_name }}{% endblock %}
+
+{% set title_page = "Liste des membres de "~ app_name %}
 
 {% block body %}
-<header class="bg-default p-5 text-white index-header">
-    <div class="heading">
-        <h1 class="heading-title">Liste des membres de {{ website_name() }}</h1>
-        <p class="lead text-center">Cliquez sur un pseudo pour obtenir plus d'information sur le membre.</p>
-    </div>
-</header>
+{{ include('home/_header.html.twig', { heading_title: title_page, heading_description: "Cliquez sur un pseudo pour obtenir plus d'information sur le membre." }) }}
+
 <section class="py-5 container-fluid">
-    <h2>Les contributeurs de {{ website_name() }}</h2>
+    <h2>Les contributeurs de {{ app_name }}</h2>
     <table class="table">
         <thead>
             <tr>
