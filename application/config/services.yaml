@@ -4,6 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.enable.registration: '%env(bool:ENABLE_REGISTRATION)%' 
+    app.enable.contact: '%env(bool:ENABLE_CONTACT)%' 
+    app.enable.login: '%env(bool:ENABLE_LOGIN)%'  
     app.website.name: '%env(WIKI_NAME)%'
     app.contact.mail: '%env(CONTACT_EMAIL)%' 
     app.contact.name: '%env(CONTACT_NAME)%'
@@ -16,6 +19,9 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
+            $enableRegistration: '%app.enable.registration%'
+            $enableContact: '%app.enable.contact%'
+            $enableLogin: '%app.enable.login%'
             $websiteName: '%app.website.name%'
             $contactMail: '%app.contact.mail%'
             $contactName: '%app.contact.name%'

@@ -11,11 +11,13 @@
                         Accueil
                     </a>
                 </li>
-                <li class="nav-item me-3">
-                    <a class="nav-link {{ active_link(app.request, 'app_contact') }}" href="{{ path('app_contact') }}">
-                        Contact
-                    </a>
-                </li>
+                {% if enable_contact %}
+                    <li class="nav-item me-3">
+                        <a class="nav-link {{ active_link(app.request, 'app_contact') }}" href="{{ path('app_contact') }}">
+                            Contact
+                        </a>
+                    </li>
+                {% endif %}
                 <li class="nav-item dropdown me-3">
                     <a class="nav-link dropdown-toggle {{ active_links(app.request, ['app_article_index', 'app_portal_index', 'app_image'], false) }}" href="#" id="pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Encyclopédie
@@ -85,12 +87,16 @@
                         </a>
                     </li>
                 {% else %}
-                    <li class="nav-item pe-1">
-                        <a class="btn btn-outline-light" href="{{ path('app_login') }}">Connexion</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-light" href="{{ path('app_register') }}">Inscription</a>
-                    </li>
+                    {% if enable_login %}
+                        <li class="nav-item pe-1">
+                            <a class="btn btn-outline-light" href="{{ path('app_login') }}">Connexion</a>
+                        </li>
+                    {% endif %}
+                    {% if enable_registration %}
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light" href="{{ path('app_register') }}">Inscription</a>
+                        </li>
+                    {% endif %}
                 {% endif %}
             </ul>
         </div>

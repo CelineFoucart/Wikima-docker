@@ -33,8 +33,12 @@ final class HomeController extends AbstractController
     }
 
     #[Route('/contact', name: 'app_contact')]
-    public function contact(Request $request, ContactService $contactService): Response
+    public function contact(Request $request, ContactService $contactService, bool $enableContact): Response
     {
+        if (!$enableContact) {
+            throw $this->createNotFoundException("Cette page n'existe pas.");
+        }
+
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
         $form->handleRequest($request);

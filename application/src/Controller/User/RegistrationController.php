@@ -23,11 +23,15 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 class RegistrationController extends AbstractController
 {
     private EmailVerifier $emailVerifier;
-    private string $contactMail; 
+    private string $contactMail;
     private string $contactName;
 
-    public function __construct(EmailVerifier $emailVerifier, string $contactMail, string $contactName)
+    public function __construct(EmailVerifier $emailVerifier, string $contactMail, string $contactName, bool $enableRegistration)
     {
+        if (!$enableRegistration) {
+            throw $this->createNotFoundException("Cette page n'existe pas.");
+        }
+        
         $this->emailVerifier = $emailVerifier;
         $this->contactMail = $contactMail;
         $this->contactName = $contactName;
@@ -52,7 +56,7 @@ class RegistrationController extends AbstractController
 
             $entityManager->persist($user);
             $entityManager->flush();
-            
+
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
                     ->from(new Address($this->contactMail, $this->contactName))
