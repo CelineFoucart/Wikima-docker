@@ -6,11 +6,12 @@ use App\Entity\Article;
 use App\Entity\Category;
 use App\Entity\Image;
 use App\Entity\Portal;
+use App\Entity\Timeline;
 use DateTime;
 use DateTimeImmutable;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-class EditorService 
+class EditorService
 {
     private SluggerInterface $slugger;
 
@@ -20,9 +21,9 @@ class EditorService
     }
 
     /**
-     * @param Article|Category|Portal $entity
-     * 
-     * @return Article|Category|Portal
+     * @param Article|Category|Portal|Image|Timeline $entity
+     *
+     * @return Article|Category|Portal|Image|Timeline
      */
     public function prepareCreation($entity)
     {
@@ -33,9 +34,9 @@ class EditorService
     }
 
     /**
-     * @param Article|Category|Portal|Image $entity
-     * 
-     * @return Article|Category|Portal|Image
+     * @param Article|Category|Portal|Image|Timeline $entity
+     *
+     * @return Article|Category|Portal|Image|Timeline
      */
     public function prepareEditing($entity)
     {

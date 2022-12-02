@@ -61,6 +61,9 @@ class Portal
     #[ORM\ManyToMany(targetEntity: Page::class, mappedBy: 'portals')]
     private $pages;
 
+    #[ORM\ManyToMany(targetEntity: Timeline::class, mappedBy: 'portals')]
+    private $timelines;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
@@ -68,6 +71,7 @@ class Portal
         $this->comments = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->pages = new ArrayCollection();
+        $this->timelines = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -256,6 +260,33 @@ class Portal
     {
         if ($this->pages->removeElement($page)) {
             $page->removePortal($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Timeline>
+     */
+    public function getTimelines(): Collection
+    {
+        return $this->timelines;
+    }
+
+    public function addTimeline(Timeline $timeline): self
+    {
+        if (!$this->timelines->contains($timeline)) {
+            $this->timelines[] = $timeline;
+            $timeline->addPortal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTimeline(Timeline $timeline): self
+    {
+        if ($this->timelines->removeElement($timeline)) {
+            $timeline->removePortal($this);
         }
 
         return $this;

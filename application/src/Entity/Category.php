@@ -58,11 +58,15 @@ class Category
     #[ORM\ManyToMany(targetEntity: Page::class, mappedBy: 'categories')]
     private $pages;
 
+    #[ORM\ManyToMany(targetEntity: Timeline::class, mappedBy: 'categories')]
+    private $timelines;
+
     public function __construct()
     {
         $this->portals = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->pages = new ArrayCollection();
+        $this->timelines = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -227,6 +231,33 @@ class Category
     {
         if ($this->pages->removeElement($page)) {
             $page->removeCategory($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Timeline>
+     */
+    public function getTimelines(): Collection
+    {
+        return $this->timelines;
+    }
+
+    public function addTimeline(Timeline $timeline): self
+    {
+        if (!$this->timelines->contains($timeline)) {
+            $this->timelines[] = $timeline;
+            $timeline->addCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTimeline(Timeline $timeline): self
+    {
+        if ($this->timelines->removeElement($timeline)) {
+            $timeline->removeCategory($this);
         }
 
         return $this;

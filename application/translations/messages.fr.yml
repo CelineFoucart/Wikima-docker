@@ -58,6 +58,7 @@ Article Body: Corps de l'article
 Article Create: Création d'un article
 Portal Create: Création d'un portail
 Comments: Commentaires
+Comment: Commentaire
 Comment List: Liste des commentaires
 Image List: Liste des images
 Image File: Fichier de l'image
@@ -74,3 +75,7 @@ Page List: Liste des pages
 Page Create: Création d'une page
 Id: Id
 Actions: Actions
+Timeline: Chronologie
+Timeline List: Liste des chronologies
+Timeline Create: Création d'une chronologie
+Article: Article

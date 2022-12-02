@@ -43,6 +43,7 @@ security:
             - ROLE_ADMIN_PORTAL_LIST
             - ROLE_ADMIN_PORTAL_SHOW
             - ROLE_ADMIN_IMAGE_LIST
+            - ROLE_ADMIN_TIMELINE_LIST
             - ROLE_ADMIN_IMAGE_SHOW
             - ROLE_ADMIN_IMAGE_EDIT
             - ROLE_ADMIN_IMAGE_CREATE
@@ -51,12 +52,14 @@ security:
             - ROLE_ADMIN_CATEGORY_ALL
             - ROLE_ADMIN_PORTAL_ALL
             - ROLE_ADMIN_IMAGE_ALL
+            - ROLE_ADMIN_TIMELINE_ALL
             - ROLE_ADMIN_USER_ALL
         ROLE_SUPER_ADMIN:
             - ROLE_ADMIN_ARTICLE_ALL
             - ROLE_ADMIN_CATEGORY_ALL
             - ROLE_ADMIN_PORTAL_ALL
             - ROLE_ADMIN_IMAGE_ALL
+            - ROLE_ADMIN_TIMELINE_ALL
             - ROLE_ADMIN_USER_ALL
             - ROLE_ADMIN_BACKUP_ALL
             - ROLE_ALLOWED_TO_SWITCH
