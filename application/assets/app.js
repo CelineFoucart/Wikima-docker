@@ -11,6 +11,7 @@ import './styles/basics.css';
 import './styles/header.css';
 import './styles/index.css';
 import './styles/content.css';
+import './styles/timeline.css';
 import './styles/user-icon.css';
 
 // start the Stimulus application

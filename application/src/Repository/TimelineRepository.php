@@ -3,10 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Timeline;
+use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 
 /**
  * @method Timeline|null find($id, $lockMode = null, $lockVersion = null)
@@ -16,9 +18,12 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TimelineRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private PaginatorService $paginatorService;
+
+    public function __construct(ManagerRegistry $registry, PaginatorService $paginatorService)
     {
         parent::__construct($registry, Timeline::class);
+        $this->paginatorService = $paginatorService;
     }
 
     /**
@@ -45,32 +50,27 @@ class TimelineRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return Timeline[] Returns an array of Timeline objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Returns a pagination of Timeline.
+     */
+    public function findPaginated(int $page = 1, int $limit = 10): PaginationInterface
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $query = $this->createQueryBuilder('t')->orderBy('t.title', 'ASC');
 
-    /*
-    public function findOneBySomeField($value): ?Timeline
+        return $this->paginatorService->setLimit($limit)->paginate($query, $page);
+    }
+
+    public function findTimelineEventsBySlug(string $slug): ?Timeline
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
+            ->leftJoin('t.categories', 'c')->addSelect('c')
+            ->leftJoin('t.portals', 'p')->addSelect('p')
+            ->leftJoin('t.events', 'e')->addSelect('e')
+            ->orderBy('e.timelineOrder')
+            ->andWhere('t.slug = :slug')
+            ->setParameter('slug', $slug)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
 }
