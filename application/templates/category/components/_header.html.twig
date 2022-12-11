@@ -1,46 +1,48 @@
 {% if articles is not defined %}
-    {% set articles = false %}
+	{% set articles = false %}
 {% endif %}
 {% if images is not defined %}
-    {% set images = false %}
+	{% set images = false %}
 {% endif %}
 
 <header class="pt-4 pb-0 bg-item header-item border-bottom">
-    <div class="container-fluid">
-        <div class="row border-bottom pb-4 pb-md-3 align-items-center">
-            <div class="col-md-6">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Accueil</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ category.title|capitalize }}</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="col-md-6">{{ include('includes/_search.html.twig') }}</div>
-        </div>
-        <div class="item-heading position-relative">
-            {% if is_granted('ROLE_ADMIN') %}
-                <div class="p-2 position-absolute top-0" style="right:-10px">
-                    <a href="{{ path('admin_app_category_edit', {id:category.id}) }}" class="btn btn-outline-secondary" title="administrer">
-                        <i class="bi bi-gear-fill"></i>
-                    </a>
-                </div>
-            {% endif %}
-            <h1 class="mb-3">{{ category.title|capitalize }}</h1>
-            <p class="lead mb-3">{{ category.description }}</p>
-        </div>
+	<div class="container-fluid">
+		<div class="row border-bottom pb-4 pb-md-3 align-items-center">
+			<div class="col-md-6">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="{{ path('app_home') }}">Accueil</a>
+						</li>
+						<li class="breadcrumb-item active" aria-current="page">{{ category.title|capitalize }}</li>
+					</ol>
+				</nav>
+			</div>
+			<div class="col-md-6">{{ include('includes/_search.html.twig') }}</div>
+		</div>
+		<div class="item-heading position-relative">
+			{% if is_granted('ROLE_ADMIN') %}
+				<div class="p-2 position-absolute top-0" style="right:-10px">
+					<a href="{{ path('admin_app_category_edit', {id:category.id}) }}" class="btn btn-outline-secondary" title="administrer">
+						<i class="bi bi-pencil-fill"></i>
+					</a>
+				</div>
+			{% endif %}
+			<h1 class="mb-3">{{ category.title|capitalize }}</h1>
+			<p class="lead mb-3">{{ category.description }}</p>
+		</div>
 
-        <ul class="nav nav-tabs border-bottom-0">
-            <li class="nav-item">
-                <a class="nav-link {{ articles ? 'active': '' }}" href="{{ path('app_category_show', {slug:category.slug}) }}">
-                    Articles
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ images ? 'active': '' }}" href="{{ path('app_category_gallery', {slug:category.slug}) }}">
-                    Galerie d'images
-                </a>
-            </li>
-        </ul>
-    </div>
+		<ul class="nav nav-tabs border-bottom-0">
+			<li class="nav-item">
+				<a class="nav-link {{ articles ? 'active': '' }}" href="{{ path('app_category_show', {slug:category.slug}) }}">
+					Articles
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link {{ images ? 'active': '' }}" href="{{ path('app_category_gallery', {slug:category.slug}) }}">
+					Galerie d'images
+				</a>
+			</li>
+		</ul>
+	</div>
 </header>

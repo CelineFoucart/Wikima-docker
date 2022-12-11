@@ -11,6 +11,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -58,8 +59,10 @@ final class TimelineAdmin extends AbstractAdmin
             ])
             ->add(ListMapper::NAME_ACTIONS, null, [
                 'actions' => [
+                    'read' => ['template' => 'Admin/show.html.twig'],
                     'show' => [],
                     'edit' => [],
+                    'event' => ['template' => 'Admin/event_action.html.twig'],
                     'delete' => [],
                 ],
             ]);
@@ -113,5 +116,11 @@ final class TimelineAdmin extends AbstractAdmin
     public function prePersist(object $portal): void
     {
         $this->editorService->prepareCreation($portal);
+    }
+
+    protected function configureRoutes(RouteCollectionInterface $collection): void
+    {
+        $collection
+            ->add('event', $this->getRouterIdParameter().'/event');
     }
 }

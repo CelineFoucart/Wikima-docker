@@ -7,6 +7,7 @@ use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
@@ -62,15 +63,31 @@ class TimelineRepository extends ServiceEntityRepository
 
     public function findTimelineEventsBySlug(string $slug): ?Timeline
     {
+        return $this->getDefaultQuery()
+            ->andWhere('t.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function findTimelineEventsById(int $id): ?Timeline
+    {
+        return $this->getDefaultQuery()
+            ->andWhere('t.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    private function getDefaultQuery(): QueryBuilder
+    {
         return $this->createQueryBuilder('t')
             ->leftJoin('t.categories', 'c')->addSelect('c')
             ->leftJoin('t.portals', 'p')->addSelect('p')
             ->leftJoin('t.events', 'e')->addSelect('e')
             ->orderBy('e.timelineOrder')
-            ->andWhere('t.slug = :slug')
-            ->setParameter('slug', $slug)
-            ->getQuery()
-            ->getOneOrNullResult()
         ;
     }
 }

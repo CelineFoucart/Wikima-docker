@@ -24,7 +24,7 @@ class TimelineController extends AbstractController
 
     #[Route('/timeline/{slug}', name: 'app_timeline_show')]
     #[Entity('article', expr: 'repository.findTimelineEventsBySlug(slug)')]
-    public function show(Timeline $timeline): Response
+    public function show(Timeline $timeline, Request $request): Response
     {
         return $this->render('timeline/show.html.twig', [
             'timeline' => $timeline,

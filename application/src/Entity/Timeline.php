@@ -6,6 +6,7 @@ use App\Repository\TimelineRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TimelineRepository::class)]
 class Timeline
@@ -16,12 +17,21 @@ class Timeline
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 3,
+        max: 255
+    )]
     private $title;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $slug;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 3,
+        max: 255
+    )]
     private $description;
 
     #[ORM\Column(type: 'datetime_immutable')]

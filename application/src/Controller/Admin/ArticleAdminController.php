@@ -15,13 +15,12 @@ use App\Repository\SectionRepository;
 use App\Security\Voter\VoterHelper;
 use DateTime;
 use DateTimeImmutable;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ArticleAdminController extends CRUDController
+final class ArticleAdminController extends CRUDController
 {
     public function __construct(
         private SectionRepository $sectionRepository,
