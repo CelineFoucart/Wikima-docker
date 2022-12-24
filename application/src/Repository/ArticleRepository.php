@@ -99,6 +99,18 @@ class ArticleRepository extends ServiceEntityRepository
         return $this->getDefaultQueryBuilder()
             ->andWhere('a.slug = :slug')
             ->setParameter('slug', $slug)
+            ->orderBy('s.position')
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function findById(int $id): ?Article
+    {
+        return $this->getDefaultQueryBuilder()
+            ->andWhere('a.id = :id')
+            ->setParameter('id', $id)
+            ->orderBy('s.position')
             ->getQuery()
             ->getOneOrNullResult()
         ;

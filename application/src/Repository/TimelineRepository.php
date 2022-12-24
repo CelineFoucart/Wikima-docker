@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Data\SearchData;
 use App\Entity\Timeline;
 use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -59,6 +60,32 @@ class TimelineRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('t')->orderBy('t.title', 'ASC');
 
         return $this->paginatorService->setLimit($limit)->paginate($query, $page);
+    }
+
+    public function search(SearchData $search): PaginationInterface
+    {
+        $builder = $this->createQueryBuilder('t')
+            ->orderBy('t.title', 'ASC')
+            ->leftJoin('t.portals', 'p')->addSelect('p')
+        ;
+
+        if (strlen($search->getQuery()) >= 3 and null !== $search->getQuery()) {
+            $builder
+                ->andWhere('t.title LIKE :q_1')
+                ->setParameter('q_1', '%'.$search->getQuery().'%')
+                ->orWhere('t.description LIKE :q_2')
+                ->setParameter('q_2', '%'.$search->getQuery().'%')
+            ;
+        }
+
+        if (!empty($search->getPortals())) {
+            $builder
+                ->andWhere('p.id IN (:portals)')
+                ->setParameter('portals', $search->getPortals())
+            ;
+        }
+
+        return $this->paginatorService->paginate($builder, $search->getPage());
     }
 
     public function findTimelineEventsBySlug(string $slug): ?Timeline

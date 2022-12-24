@@ -34,6 +34,14 @@ final class TimelineAdminController extends CRUDController
         if ($form->isSubmitted() && $form->isValid()) {
             if (null === $event->getCreatedAt()) {
                 $event->setCreatedAt(new DateTimeImmutable());
+                $lastEvent = $timeline->getEvents()->last();
+                if ($lastEvent instanceof Event) {
+                    $timelineOrder = $lastEvent->getTimelineOrder() + 1;
+                } else {
+                    $timelineOrder = 0;
+                }
+
+                $event->setTimelineOrder($timelineOrder);
             }
             $event->setUpdatedAt(new DateTime());
 

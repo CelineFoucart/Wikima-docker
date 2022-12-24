@@ -109,7 +109,7 @@ final class ArticleAdminController extends CRUDController
      */
     private function getArticle(int $id): Article
     {
-        $article = $this->admin->getSubject();
+        $article = $this->articleRepository->findById($id);
 
         if (!$article instanceof Article) {
             throw new NotFoundHttpException(sprintf('unable to find the object with id: %s', $id));

@@ -25,6 +25,9 @@ class Section
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
 
+    #[ORM\Column(type: 'smallint', nullable: true)]
+    private $position;
+
     #[ORM\ManyToOne(targetEntity: Article::class, inversedBy: 'sections')]
     #[ORM\JoinColumn(nullable: false)]
     private $article;
@@ -78,6 +81,18 @@ class Section
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?int $position): self
+    {
+        $this->position = $position;
 
         return $this;
     }

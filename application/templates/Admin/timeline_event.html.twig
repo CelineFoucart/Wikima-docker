@@ -37,6 +37,12 @@
 								</a>
 							</li>
 							<li>
+								<a class="sonata-action-element" href="{{ path('app_timeline_show', {slug: timeline.slug}) }}">
+									<i class="fas fa-book-reader" aria-hidden="true"></i>
+									Consulter
+								</a>
+							</li>
+							<li>
 								<a class="sonata-action-element" href="{{ path('admin_app_timeline_list') }}">
 									<i class="fas fa-list" aria-hidden="true"></i>
 									Retourner à la liste
@@ -52,6 +58,14 @@
 
 {% block javascripts %}
 	{{ parent() }}
+	<script src="{{ asset('assets/sortable/Sortable.min.js') }}"></script>
+	<script src="{{ asset('assets/admin.js') }}"></script>
+	<script>
+		window.onload = () => {
+let url = "{{ path('api_timeline_event', {'id': timeline.id}) }}";
+sortable('#events', url);
+}
+	</script>
 {% endblock %}
 
 {% block sonata_admin_content %}
@@ -84,6 +98,14 @@
 					<div class="box box-primary">
 						<div class="box-header">
 							<h3 class="box-title">Evénements de "{{ timeline.title }}"</h3>
+							<div class="pull-right">
+								<div class="help">
+									<i class="fas fa-question-circle"></i>
+									<span class="help-body">
+										Glisser les événéments pour modifier leur ordre.
+									</span>
+								</div>
+							</div>
 						</div>
 						<div class="box-body">
 							{% if timeline.events is empty %}
@@ -91,9 +113,9 @@
 							{% else %}
 								<div class="box-body table-responsive no-padding">
 									<table class="table">
-										<tbody>
+										<tbody id="events">
 											{% for event in timeline.events %}
-												<tr class="sonata-ba-view-container" draggable="true" id="{{ event.id }}" data-order="{{ event.timelineOrder }}">
+												<tr class="sonata-ba-view-container handle" id="{{ event.id }}">
 													<td>
 														<div class="pull-right">
 															<a href="{{ path('admin_app_timeline_event', {id:timeline.id, event: event.id}) }}" class="btn btn-default btn-sm" title="Editer">
@@ -108,7 +130,7 @@
 														</div>
 														<h4>{{ event.title }}</h4>
 														<p>{{ event.duration }}</p>
-														{{ event.presentation|raw|u.truncate(190, '...', false) }}
+														{{ event.presentation|striptags|u.truncate(190, '...', false) }}
 													</td>
 												</tr>
 											{% endfor %}

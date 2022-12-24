@@ -8,7 +8,8 @@
 /public/bundles/
 /public/uploads/
 /public/media/
-/var/
+/var/cache/
+/var/log/
 /vendor/
 ###< symfony/framework-bundle ###
 
