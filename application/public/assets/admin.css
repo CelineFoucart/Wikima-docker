@@ -110,3 +110,11 @@ blockquote {
     background-color: #f8d7da;
     border-color: #f5c2c7;
 }
+
+.hidden-header .box-header {
+    display: none;
+}
+
+.hidden-header .box.box-primary {
+    border-top: none;
+}

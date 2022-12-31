@@ -48,6 +48,6 @@ class EditorService
 
     public function updateSlug(string $title): string
     {
-        return $this->slugger->slug(strtolower($title));
+        return (string) $this->slugger->slug(strtolower($title));
     }
 }

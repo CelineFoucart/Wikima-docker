@@ -9,6 +9,12 @@ RUN apt update \
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+COPY ./docker/dev/php.ini-development /usr/local/etc/php/php.ini-development 
+
+RUN apt install nodejs -y
+
+RUN apt install npm -y
+
 WORKDIR /var/www
 
 

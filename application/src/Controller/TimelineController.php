@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TimelineController extends AbstractController
 {
-    #[Route('/timeline', name: 'app_timeline_index')]
+    #[Route('/timelines', name: 'app_timeline_index')]
     public function index(TimelineRepository $timelineRepository, Request $request): Response
     {
         $page = $request->query->getInt('page', 1);

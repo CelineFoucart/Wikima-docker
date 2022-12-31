@@ -84,3 +84,8 @@ services:
         class: App\Admin\BackupAdmin
         tags:
             - { name: sonata.admin, model_class: App\Entity\Backup, controller: App\Controller\Admin\BackupAdminController, manager_type: orm, group: Administration, label: Backup }
+
+    admin.person:
+        class: App\Admin\PersonAdmin
+        tags:
+            - { name: sonata.admin, model_class: App\Entity\Person, controller: ~, manager_type: orm, group: Wiki, label: Person }

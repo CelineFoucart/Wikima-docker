@@ -67,7 +67,7 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param Portal[] $portals
+     * Returns a pagination of articles by portals.
      */
     public function findByPortals(array $portals, int $page, int $limit = 10): PaginationInterface
     {
@@ -82,7 +82,7 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
     /**
-     * Finds a pagination of 16 articles.
+     * Returns a pagination of 16 articles.
      */
     public function findPaginated(int $page): PaginationInterface
     {
