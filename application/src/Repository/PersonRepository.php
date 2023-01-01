@@ -61,6 +61,22 @@ class PersonRepository extends ServiceEntityRepository
         return $this->paginatorService->setLimit($limit)->paginate($query, $page);
     }
 
+    /**
+     * Undocumented function.
+     *
+     * @param Category|Portal $parent
+     *
+     * @return void
+     */
+    public function findByParent(string $parentType = 'category', $parent, int $page): PaginationInterface
+    {
+        $builder = $this->getDefaultQuery();
+        $where = ('category' === $parentType) ? 'c.id IN (:parents)' : 'pt.id IN (:parents)';
+        $builder->andWhere($where)->setParameter('parents', [$parent->getId()]);
+
+        return $this->paginatorService->paginate($builder, $page);
+    }
+
     public function findBySlug(string $slug): ?Person
     {
         return $this->getDefaultQuery()

@@ -8,6 +8,7 @@ services:
       - "9000:9000"
     volumes:
       - ./application:/var/www
+      - ./docker/dev/php.ini:/usr/local/etc/php/php.ini
     environment:
       - DATABASE_URL=mysql://root:root@wiki_database:3306/main?serverVersion=5.7
       - MAILER_DSN=smtp://wiki_maildev:1025

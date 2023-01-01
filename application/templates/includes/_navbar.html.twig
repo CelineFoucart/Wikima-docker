@@ -11,15 +11,8 @@
 						Accueil
 					</a>
 				</li>
-				{% if enable_contact %}
-					<li class="nav-item me-3">
-						<a class="nav-link {{ active_link(app.request, 'app_contact') }}" href="{{ path('app_contact') }}">
-							Contact
-						</a>
-					</li>
-				{% endif %}
 				<li class="nav-item dropdown me-3">
-					<a class="nav-link dropdown-toggle {{ active_links(app.request, ['app_article_index', 'app_portal_index', 'app_image'], false) }}" href="#" id="pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<a class="nav-link dropdown-toggle {{ active_links(app.request, ['app_article_index', 'app_portal_index'], false) }}" href="#" id="pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 						Encyclopédie
 					</a>
 					<ul class="dropdown-menu text-capitalize" aria-labelledby="pages">
@@ -38,17 +31,17 @@
 								Chronologies
 							</a>
 						</li>
-						<li>
-							<a class="dropdown-item" href="{{ path('app_image') }}">
-								Galerie
-							</a>
-						</li>
 						{{ get_pages() }}
 					</ul>
 				</li>
 				<li class="nav-item me-3">
 					<a class="nav-link {{ active_link(app.request, 'app_person_index') }}" href="{{ path('app_person_index') }}">
 						Personnages
+					</a>
+				</li>
+				<li class="nav-item me-3">
+					<a class="nav-link {{ active_link(app.request, 'app_image') }}" href="{{ path('app_image') }}">
+						Galerie
 					</a>
 				</li>
 				{% if is_granted('ROLE_EDITOR') or is_granted('ROLE_ADMIN') %}
@@ -93,6 +86,14 @@
 									Images
 								</a>
 							</li>
+							{% if is_granted('ROLE_ADMIN') %}
+								<li>
+									<a class="dropdown-item" href="{{ path('admin_app_person_list') }}">
+										<i class="bi bi-person-fill me-1"></i>
+										Personnages
+									</a>
+								</li>
+							{% endif %}
 						</ul>
 					</li>
 				{% endif %}

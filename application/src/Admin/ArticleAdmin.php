@@ -76,7 +76,7 @@ final class ArticleAdmin extends AbstractAdmin
     {
         $list
             ->add('title', null, [
-                'template' => 'Admin/article_list_title.html.twig',
+                'template' => 'Admin/article/article_list_title.html.twig',
             ])
             ->add('keywords')
             ->add('createdAt', null, [
@@ -92,7 +92,7 @@ final class ArticleAdmin extends AbstractAdmin
             ->add(ListMapper::NAME_ACTIONS, null, [
                 'actions' => [
                     'read' => ['template' => 'Admin/show.html.twig'],
-                    'sections' => ['template' => 'Admin/article_edit_links.html.twig'],
+                    'sections' => ['template' => 'Admin/article/article_edit_links.html.twig'],
                     'delete' => [],
                 ],
             ])

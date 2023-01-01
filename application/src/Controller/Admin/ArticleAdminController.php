@@ -60,7 +60,7 @@ final class ArticleAdminController extends CRUDController
             return $this->redirectToRoute('admin_app_article_section', ['id' => $article->getId()]);
         }
 
-        return $this->renderForm('Admin/section.html.twig', [
+        return $this->renderForm('Admin/article/section.html.twig', [
             'article' => $article,
             'sectionForm' => $sectionForm,
             'form' => $form,
@@ -83,7 +83,7 @@ final class ArticleAdminController extends CRUDController
             return $item->getId();
         }, $article->getImages()->toArray());
 
-        return $this->render('Admin/gallery.html.twig', [
+        return $this->render('Admin/article/gallery.html.twig', [
             'article' => $article,
             'images' => $this->imageRepository->findPaginated($page, $excludes),
         ]);

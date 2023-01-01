@@ -7,7 +7,9 @@ use App\Entity\Portal;
 use App\Form\SearchType;
 use App\Repository\ArticleRepository;
 use App\Repository\ImageRepository;
+use App\Repository\PersonRepository;
 use App\Repository\PortalRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,11 +23,10 @@ final class PortalController extends AbstractController
     ) {
     }
 
-    #[Route('/portals/{slug}', name: 'app_portal_show', requirements: ['slug' => '[a-z\-]*'])]
-    public function portal(string $slug, Request $request): Response
+    #[Route('/portals/{slug}', name: 'app_portal_show')]
+    #[Entity('portals', expr: 'repository.findBySlug(slug)')]
+    public function portal(Portal $portal, Request $request): Response
     {
-        $portal = $this->findPortal($slug);
-
         $page = $request->query->getInt('page', 1);
         $articles = $this->articleRepository->findByPortals([$portal], $page, 16);
 
@@ -47,10 +48,10 @@ final class PortalController extends AbstractController
         ]);
     }
 
-    #[Route('/portals/{slug}/gallery', name: 'app_portal_gallery', requirements: ['slug' => '[a-z\-]*'])]
-    public function gallery(string $slug, Request $request, ImageRepository $imageRepository): Response
+    #[Route('/portals/{slug}/gallery', name: 'app_portal_gallery')]
+    #[Entity('portals', expr: 'repository.findBySlug(slug)')]
+    public function gallery(Portal $portal, Request $request, ImageRepository $imageRepository): Response
     {
-        $portal = $this->findPortal($slug);
         $page = $request->query->getInt('page', 1);
 
         return $this->render('portal/gallery_portal.html.twig', [
@@ -60,14 +61,16 @@ final class PortalController extends AbstractController
         ]);
     }
 
-    private function findPortal(string $slug): Portal
+    #[Route('/portals/{slug}/persons', name: 'app_portal_persons')]
+    #[Entity('portals', expr: 'repository.findBySlug(slug)')]
+    public function persons(Portal $portal, Request $request, PersonRepository $personRepository): Response
     {
-        $portal = $this->portalRepository->findBySlug($slug);
+        $page = $request->query->getInt('page', 1);
 
-        if (null === $portal) {
-            throw $this->createNotFoundException();
-        }
-
-        return $portal;
+        return $this->render('portal/persons_portal.html.twig', [
+            'portal' => $portal,
+            'persons' => $personRepository->findByParent('category', $portal, $page),
+            'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
+        ]);
     }
 }

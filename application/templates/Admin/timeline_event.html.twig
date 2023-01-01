@@ -130,7 +130,7 @@ sortable('#events', url);
 														</div>
 														<h4>{{ event.title }}</h4>
 														<p>{{ event.duration }}</p>
-														{{ event.presentation|striptags|u.truncate(190, '...', false) }}
+														{{ event.presentation|striptags|raw|u.truncate(190, '...', false)|raw }}
 													</td>
 												</tr>
 											{% endfor %}

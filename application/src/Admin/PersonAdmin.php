@@ -12,6 +12,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -56,8 +57,9 @@ final class PersonAdmin extends AbstractAdmin
             ->add('description')
             ->add(ListMapper::NAME_ACTIONS, null, [
                 'actions' => [
-                    'show' => [],
                     'read' => ['template' => 'Admin/show.html.twig'],
+                    'show' => [],
+                    'image' => ['template' => 'Admin/person/image_action.html.twig'],
                     'edit' => [],
                     'delete' => [],
                 ],
@@ -74,7 +76,6 @@ final class PersonAdmin extends AbstractAdmin
                     ->add('lastname')
                     ->add('fullname')
                     ->add('parents')
-                    ->add('image')
                 ->end()
                 ->with('Status', ['class' => 'col-md-6'])
                     ->add('nationality')
@@ -142,7 +143,6 @@ final class PersonAdmin extends AbstractAdmin
                 ->add('lastname')
                 ->add('fullname')
                 ->add('slug')
-                ->add('image')
                 ->add('nationality')
                 ->add('job')
                 ->add('parents')
@@ -151,6 +151,7 @@ final class PersonAdmin extends AbstractAdmin
                 ->add('deathDate')
                 ->add('deathPlace')
                 ->add('description')
+                ->add('image', null, ['template' => 'Admin/person/image_show.html.twig'])
             ->end()
             ->with('Full Presentation', ['class' => 'col-md-12'])
                 ->add('presentation', null, [
@@ -182,5 +183,11 @@ final class PersonAdmin extends AbstractAdmin
         $lastname = $person->getLastname() ? ' '.$person->getLastname() : '';
 
         return (string) $this->slugger->slug(strtolower($firstname.$lastname));
+    }
+
+    protected function configureRoutes(RouteCollectionInterface $collection): void
+    {
+        $collection
+            ->add('image', $this->getRouterIdParameter().'/image');
     }
 }

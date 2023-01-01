@@ -111,7 +111,7 @@
 																</form>
 															</div>
 															<h4>{{ section.title }}</h4>
-															{{ section.content|striptags|u.truncate(190, '...', false) }}
+															{{ section.content|striptags|raw|u.truncate(190, '...', false)|raw }}
 														</td>
 													</tr>
 												{% endfor %}

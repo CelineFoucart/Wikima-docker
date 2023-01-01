@@ -118,3 +118,7 @@ blockquote {
 .hidden-header .box.box-primary {
     border-top: none;
 }
+
+img {
+    max-width: 100%;
+}

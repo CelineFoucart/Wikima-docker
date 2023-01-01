@@ -69,9 +69,9 @@ final class PortalAdmin extends AbstractAdmin
             ])
             ->add(ListMapper::NAME_ACTIONS, null, [
                 'actions' => [
+                    'read' => ['template' => 'Admin/show.html.twig'],
                     'edit' => [],
                     'show' => [],
-                    'read' => ['template' => 'Admin/show.html.twig'],
                     'delete' => [],
                 ],
             ])

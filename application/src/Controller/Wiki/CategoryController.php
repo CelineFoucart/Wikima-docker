@@ -8,6 +8,7 @@ use App\Form\SearchType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\ImageRepository;
+use App\Repository\PersonRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,11 +22,9 @@ final class CategoryController extends AbstractController
     ) {
     }
 
-    #[Route('/category/{slug}', name: 'app_category_show', requirements: ['slug' => '[a-z\-]*'])]
-    public function category(string $slug, Request $request): Response
+    #[Route('/category/{slug}', name: 'app_category_show')]
+    public function category(Category $category, Request $request): Response
     {
-        $category = $this->getCategory($slug);
-
         $page = $request->query->getInt('page', 1);
         $articles = $this->articleRepository->findByPortals($category->getPortals()->toArray(), $page);
 
@@ -36,10 +35,9 @@ final class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/category/{slug}/gallery', name: 'app_category_gallery', requirements: ['slug' => '[a-z\-]*'])]
-    public function gallery(string $slug, Request $request, ImageRepository $imageRepository): Response
+    #[Route('/category/{slug}/gallery', name: 'app_category_gallery')]
+    public function gallery(Category $category, Request $request, ImageRepository $imageRepository): Response
     {
-        $category = $this->getCategory($slug);
         $page = $request->query->getInt('page', 1);
 
         return $this->render('category/category_gallery.html.twig', [
@@ -49,14 +47,15 @@ final class CategoryController extends AbstractController
         ]);
     }
 
-    private function getCategory(string $slug): Category
+    #[Route('/category/{slug}/persons', name: 'app_category_persons')]
+    public function persons(Category $category, Request $request, PersonRepository $personRepository): Response
     {
-        $category = $this->categoryRepository->findOneBy(['slug' => $slug]);
+        $page = $request->query->getInt('page', 1);
 
-        if (null === $category) {
-            throw $this->createNotFoundException();
-        }
-
-        return $category;
+        return $this->render('category/category_persons.html.twig', [
+            'category' => $category,
+            'persons' => $personRepository->findByParent('category', $category, $page),
+            'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
+        ]);
     }
 }

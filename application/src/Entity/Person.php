@@ -6,6 +6,7 @@ use App\Repository\PersonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PersonRepository::class)]
 class Person
@@ -16,51 +17,104 @@ class Person
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 1,
+        max: 255
+    )]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 1,
+        max: 255
+    )]
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 1,
+        max: 255
+    )]
     private $fullname;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $slug;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $image;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 1,
+        max: 255
+    )]
     private $nationality;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 1,
+        max: 255
+    )]
     private $job;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 1,
+        max: 255
+    )]
     private $birthday;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 1,
+        max: 255
+    )]
     private $birthdayPlace;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 1,
+        max: 255
+    )]
     private $deathDate;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 1,
+        max: 255
+    )]
     private $deathPlace;
 
     #[ORM\Column(type: 'string', length: 1500, nullable: true)]
+    #[Assert\Length(
+        min: 1,
+        max: 255
+    )]
     private $parents;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 1,
+        max: 255
+    )]
     private $description;
 
     #[ORM\Column(type: 'string', length: 2500)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 1,
+        max: 2500
+    )]
     private $presentation;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Assert\Length(
+        min: 20
+    )]
     private $biography;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Assert\Length(
+        min: 20
+    )]
     private $personality;
 
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'people')]
@@ -68,6 +122,9 @@ class Person
 
     #[ORM\ManyToMany(targetEntity: Portal::class, inversedBy: 'people')]
     private $portals;
+
+    #[ORM\ManyToOne(targetEntity: Image::class, inversedBy: 'people')]
+    private $image;
 
     public function __construct()
     {
@@ -124,18 +181,6 @@ class Person
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
-
-        return $this;
-    }
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(?string $image): self
-    {
-        $this->image = $image;
 
         return $this;
     }
@@ -326,5 +371,17 @@ class Person
         $lastname = ($this->lastname) ? ' '.$this->lastname : '';
 
         return $firstname.$lastname;
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Image $image): self
+    {
+        $this->image = $image;
+
+        return $this;
     }
 }

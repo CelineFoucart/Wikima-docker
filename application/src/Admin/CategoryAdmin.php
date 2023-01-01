@@ -6,8 +6,8 @@ namespace App\Admin;
 
 use App\Service\EditorService;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
-use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -16,7 +16,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class CategoryAdmin extends AbstractAdmin
 {
     public function __construct(private EditorService $editorService)
-    { }
+    {
+    }
 
     protected function configureFormFields(FormMapper $form): void
     {
@@ -31,8 +32,8 @@ final class CategoryAdmin extends AbstractAdmin
     {
         $datagrid
             ->add('title')
-            ->add("keywords")
-            ->add("description")
+            ->add('keywords')
+            ->add('description')
         ;
     }
 
@@ -49,11 +50,11 @@ final class CategoryAdmin extends AbstractAdmin
             ])
             ->add(ListMapper::NAME_ACTIONS, null, [
                 'actions' => [
+                    'read' => ['template' => 'Admin/show.html.twig'],
                     'edit' => [],
                     'show' => [],
-                    'read' => ['template' => 'Admin/show.html.twig'],
                     'delete' => [],
-                ]
+                ],
             ])
         ;
     }
@@ -63,8 +64,8 @@ final class CategoryAdmin extends AbstractAdmin
         $show
             ->with('Category', ['class' => 'col-md-9'])
                 ->add('title')
-                ->add("slug")
-                ->add("keywords")
+                ->add('slug')
+                ->add('keywords')
                 ->add('description')
             ->end()
             ->with('Meta data', ['class' => 'col-md-3'])
@@ -83,7 +84,7 @@ final class CategoryAdmin extends AbstractAdmin
     {
         $this->editorService->prepareEditing($category);
     }
-    
+
     public function prePersist(object $category): void
     {
         $this->editorService->prepareCreation($category);
