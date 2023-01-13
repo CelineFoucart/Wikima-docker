@@ -22,6 +22,14 @@ final class CategoryController extends AbstractController
     ) {
     }
 
+    #[Route('/category', name: 'app_category_index')]
+    public function index(): Response
+    {
+        return $this->render('category/category_index.html.twig', [
+            'categories' => $this->categoryRepository->findWithPortals(),
+        ]);
+    }
+
     #[Route('/category/{slug}', name: 'app_category_show')]
     public function category(Category $category, Request $request): Response
     {

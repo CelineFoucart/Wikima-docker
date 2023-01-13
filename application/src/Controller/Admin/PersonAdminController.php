@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Entity\Data\SearchData;
 use App\Entity\Image;
 use App\Entity\Person;
+use App\Form\AdvancedSearchType;
 use App\Form\ImageType;
 use App\Repository\ImageRepository;
 use App\Repository\PersonRepository;
@@ -58,10 +60,21 @@ final class PersonAdminController extends CRUDController
             return $this->redirectToRoute('admin_app_person_image', ['id' => $person->getId()]);
         }
 
+        $searchData = (new SearchData())->setPage($page);
+        $searchForm = $this->createForm(AdvancedSearchType::class, $searchData);
+        $searchForm->handleRequest($request);
+
+        if ($searchForm->isSubmitted() && $searchForm->isValid()) {
+            $images = $this->imageRepository->search($searchData, $excludes);
+        } else {
+            $images = $this->imageRepository->findPaginated($page, $excludes);
+        }
+
         return $this->render('Admin/person/image_person.html.twig', [
             'person' => $person,
-            'images' => $this->imageRepository->findPaginated($page, $excludes),
+            'images' => $images,
             'form' => $form->createView(),
+            'searchForm' => $searchForm->createView(),
         ]);
     }
 

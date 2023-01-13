@@ -37,3 +37,7 @@ footer {
         gap: 0 3rem;
     }
 }
+
+.navbar {
+    z-index: 3000;
+}

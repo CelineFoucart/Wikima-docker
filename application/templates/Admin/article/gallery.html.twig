@@ -59,7 +59,7 @@
 
 			{% include "Admin/components/_flashes.html.twig" %}
 
-			<div class="box box-primary">
+			<article class="box box-primary">
 				<div class="box-header">
 					<h3 class="box-title">Galerie de
 						{{ article.title }}</h3>
@@ -83,9 +83,35 @@
 						{% endfor %}
 					</div>
 				</div>
+			</article>
+
+			<div class="row">
+				<aside class="col-md-4">
+					<div class="box box-primary">
+						<div class="box-header">
+							<h3 class="box-title">Recherche</h3>
+						</div>
+						<div class="box-body">
+							{{ form_start(form) }}
+							<h4 class="mt-4 mb-3 fw-bold">Par mot clé</h4>
+							{{ form_widget(form.query) }}
+							<h4 class="mt-4 mb-3 fw-bold">Par catégorie</h4>
+							{{ form_widget(form.categories) }}
+							<h4 class="mt-4 mb-3 fw-bold">Par portail</h3>
+							{{ form_widget(form.portals) }}
+							<a href="{{ path('admin_app_article_gallery', {id: article.id}) }}" class="btn btn-primary">Tout afficher</a>
+							<button type="submit" class="btn btn-primary">Rechercher</button>
+							{{ form_end(form) }}
+						</div>
+					</div>
+				</aside>
+
+				<article class="col-md-8">
+					{{ include('Admin/components/_item_gallery.html.twig', {title: 'Galerie de '~ app_name}) }}
+				</article>
 			</div>
 
-			{{ include('Admin/components/_item_gallery.html.twig', {title: 'Galerie de '~ app_name}) }}
+
 		</div>
 	</div>
 {% endblock %}

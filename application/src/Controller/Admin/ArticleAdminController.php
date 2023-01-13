@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\Article;
+use App\Entity\Data\SearchData;
 use App\Entity\Image;
 use App\Entity\Section;
+use App\Form\AdvancedSearchType;
 use App\Form\ArticleType;
 use App\Form\SectionType;
 use App\Repository\ArticleRepository;
@@ -83,9 +85,20 @@ final class ArticleAdminController extends CRUDController
             return $item->getId();
         }, $article->getImages()->toArray());
 
+        $searchData = (new SearchData())->setPage($page);
+        $form = $this->createForm(AdvancedSearchType::class, $searchData);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $images = $this->imageRepository->search($searchData, $excludes);
+        } else {
+            $images = $this->imageRepository->findPaginated($page, $excludes);
+        }
+
         return $this->render('Admin/article/gallery.html.twig', [
             'article' => $article,
-            'images' => $this->imageRepository->findPaginated($page, $excludes),
+            'images' => $images,
+            'form' => $form->createView(),
         ]);
     }
 

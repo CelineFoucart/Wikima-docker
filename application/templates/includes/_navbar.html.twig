@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-default text-uppercase">
+<nav class="navbar navbar-expand-lg navbar-dark bg-default text-uppercase position-sticky top-0 start-0 end-0">
 	<div class="container-fluid">
 		<a class="navbar-brand" href="{{ path('app_home') }}">{{ app_name }}</a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -12,10 +12,15 @@
 					</a>
 				</li>
 				<li class="nav-item dropdown me-3">
-					<a class="nav-link dropdown-toggle {{ active_links(app.request, ['app_article_index', 'app_portal_index'], false) }}" href="#" id="pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<a class="nav-link dropdown-toggle {{ active_links(app.request, ['app_article_index', 'app_portal_index', 'app_person_index', 'app_image_index', 'app_category_index'], false) }}" href="#" id="pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 						Encyclopédie
 					</a>
 					<ul class="dropdown-menu text-capitalize" aria-labelledby="pages">
+						<li>
+							<a class="dropdown-item" href="{{ path('app_category_index') }}">
+								Catégories
+							</a>
+						</li>
 						<li>
 							<a class="dropdown-item" href="{{ path('app_portal_index') }}">
 								Portails
@@ -31,23 +36,23 @@
 								Chronologies
 							</a>
 						</li>
+						<li>
+							<a class="dropdown-item" href="{{ path('app_person_index') }}">
+								Personnages
+							</a>
+						</li>
+						<li>
+							<a class="dropdown-item" href="{{ path('app_image_index') }}">
+								Galerie
+							</a>
+						</li>
 						{{ get_pages() }}
 					</ul>
-				</li>
-				<li class="nav-item me-3">
-					<a class="nav-link {{ active_link(app.request, 'app_person_index') }}" href="{{ path('app_person_index') }}">
-						Personnages
-					</a>
-				</li>
-				<li class="nav-item me-3">
-					<a class="nav-link {{ active_link(app.request, 'app_image') }}" href="{{ path('app_image') }}">
-						Galerie
-					</a>
 				</li>
 				{% if is_granted('ROLE_EDITOR') or is_granted('ROLE_ADMIN') %}
 					<li class="nav-item dropdown me-3">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							Actions
+							Administration
 						</a>
 						<ul class="dropdown-menu text-lowercase" aria-labelledby="navbarDropdown">
 							<li>
@@ -97,30 +102,45 @@
 						</ul>
 					</li>
 				{% endif %}
-				{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-					<li class="nav-item pe-2">
-						<a class="btn btn-outline-light" href="{{ path('app_profile') }}">
-							<i class="bi bi-person-fill me-1"></i>
-							{{ app.user.username }}
-						</a>
-					</li>
-					<li class="nav-item">
-						<a class="btn btn-outline-light" href="{{ path('app_logout') }}">
-							Déconnexion
-						</a>
-					</li>
-				{% else %}
-					{% if enable_login %}
-						<li class="nav-item pe-1">
-							<a class="btn btn-outline-light" href="{{ path('app_login') }}">Connexion</a>
-						</li>
-					{% endif %}
-					{% if enable_registration %}
-						<li class="nav-item">
-							<a class="btn btn-outline-light" href="{{ path('app_register') }}">Inscription</a>
-						</li>
-					{% endif %}
-				{% endif %}
+
+				<li class="nav-item dropdown">
+					<a class="btn btn-outline-light dropdown-toggle" href="#" id="account" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						<i class="bi bi-person-fill me-1"></i>
+						{{ app.user ? app.user.username : 'Compte' }}
+					</a>
+					<ul class="dropdown-menu text-capitalize" aria-labelledby="account">
+						{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+							<li>
+								<a class="dropdown-item" href="{{ path('app_profile') }}">
+									compte
+								</a>
+							</li>
+							<li>
+								<a class="dropdown-item" href="{{ path('app_user_show', {id: app.user.id}) }}">
+									Profil
+								</a>
+							</li>
+							<li>
+								<a class="dropdown-item" href="{{ path('app_logout') }}">
+									Déconnexion
+								</a>
+							</li>
+						{% else %}
+							{% if enable_login %}
+								<li>
+									<a class="dropdown-item" href="{{ path('app_login') }}">Connexion</a>
+								</li>
+							{% endif %}
+							{% if enable_registration %}
+								<li>
+									<a class="dropdown-item" href="{{ path('app_register') }}">Inscription</a>
+								</li>
+							{% endif %}
+						{% endif %}
+					</ul>
+				</li>
+
+
 			</ul>
 		</div>
 	</div>

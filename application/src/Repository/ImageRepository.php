@@ -64,7 +64,7 @@ class ImageRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
-    
+
     public function findPaginated(int $page, array $excludes = []): PaginationInterface
     {
         $builder = $this->createQueryBuilder('i')->orderBy('i.title', 'ASC');
@@ -75,7 +75,7 @@ class ImageRepository extends ServiceEntityRepository
 
         return $this->paginatorService->paginate($builder, $page);
     }
-    
+
     public function findByCategory(Category $category, int $page): PaginationInterface
     {
         $builder = $this->createQueryBuilder('i')
@@ -100,21 +100,22 @@ class ImageRepository extends ServiceEntityRepository
         return $this->paginatorService->paginate($builder, $page);
     }
 
-    public function search(SearchData $search): PaginationInterface
+    public function search(SearchData $search, array $excludes = []): PaginationInterface
     {
         $builder = $this->createQueryBuilder('i')
             ->orderBy('i.title', 'ASC')
             ->leftJoin('i.portals', 'p')->addSelect('p')
+            ->leftJoin('i.categories', 'c')->addSelect('c')
         ;
 
-        if (strlen($search->getQuery()) >= 3 AND $search->getQuery() !== null) {
+        if (strlen($search->getQuery()) >= 3 and null !== $search->getQuery()) {
             $builder
                 ->andWhere('i.title LIKE :q_1')
-                ->setParameter('q_1', '%' . $search->getQuery() . '%')
+                ->setParameter('q_1', '%'.$search->getQuery().'%')
                 ->orWhere('i.description LIKE :q_2')
-                ->setParameter('q_2', '%' . $search->getQuery() . '%')
+                ->setParameter('q_2', '%'.$search->getQuery().'%')
                 ->orWhere('i.keywords LIKE :q_3')
-                ->setParameter('q_3', '%' . $search->getQuery() . '%')
+                ->setParameter('q_3', '%'.$search->getQuery().'%')
             ;
         }
 
@@ -123,6 +124,17 @@ class ImageRepository extends ServiceEntityRepository
                 ->andWhere('p.id IN (:portals)')
                 ->setParameter('portals', $search->getPortals())
             ;
+        }
+
+        if (!empty($search->getCategories())) {
+            $builder
+                ->andWhere('c.id IN (:categories)')
+                ->setParameter('categories', $search->getCategories())
+            ;
+        }
+
+        if (!empty($excludes)) {
+            $builder->andWhere('i.id NOT IN (:excludes)')->setParameter('excludes', $excludes);
         }
 
         return $this->paginatorService->paginate($builder, $search->getPage());

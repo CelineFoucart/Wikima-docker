@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Data\SearchData;
 use App\Entity\Person;
 use App\Service\PaginatorService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -75,6 +76,38 @@ class PersonRepository extends ServiceEntityRepository
         $builder->andWhere($where)->setParameter('parents', [$parent->getId()]);
 
         return $this->paginatorService->paginate($builder, $page);
+    }
+
+    public function search(SearchData $search): PaginationInterface
+    {
+        $builder = $this->getDefaultQuery();
+
+        if (strlen($search->getQuery()) >= 3 and null !== $search->getQuery()) {
+            $q = '%'.$search->getQuery().'%';
+            $builder
+                ->andWhere('p.firstname LIKE :q_1')
+                ->andWhere('p.lastname LIKE :q_2')
+                ->orWhere('p.description LIKE :q_3')
+                ->orWhere('p.presentation LIKE :q_4')
+                ->setParameters(['q_1' => $q, 'q_2' => $q, 'q_3' => $q, 'q_4' => $q])
+            ;
+        }
+
+        if (!empty($search->getPortals())) {
+            $builder
+                ->andWhere('pt.id IN (:portals)')
+                ->setParameter('portals', $search->getPortals())
+            ;
+        }
+
+        if (!empty($search->getCategories())) {
+            $builder
+                ->andWhere('c.id IN (:categories)')
+                ->setParameter('categories', $search->getCategories())
+            ;
+        }
+
+        return $this->paginatorService->paginate($builder, $search->getPage());
     }
 
     public function findBySlug(string $slug): ?Person

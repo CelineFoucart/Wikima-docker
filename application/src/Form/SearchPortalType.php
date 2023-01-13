@@ -2,23 +2,31 @@
 
 namespace App\Form;
 
-use App\Entity\Category;
 use App\Entity\Data\SearchData;
+use App\Entity\Portal;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AdvancedSearchType extends SearchPortalType
+class SearchPortalType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        parent::buildForm($builder, $options);
-
         $builder
-            ->add('categories', EntityType::class, [
+            ->add('query', TextType::class, [
                 'label' => false,
                 'required' => false,
-                'class' => Category::class,
+                'attr' => [
+                    'placeholder' => 'Search...',
+                    'class' => 'form-control rounded-pill',
+                ],
+            ])
+            ->add('portals', EntityType::class, [
+                'label' => false,
+                'required' => false,
+                'class' => Portal::class,
                 'expanded' => true,
                 'multiple' => true,
             ])

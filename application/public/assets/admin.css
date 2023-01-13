@@ -46,6 +46,14 @@ blockquote {
     margin-bottom: 1rem;
 }
 
+.fw-bold {
+    font-weight: bold;
+}
+
+.form-check .form-check-label {
+    font-weight: normal;
+}
+
 /* help style */
 .help {
     position: relative;

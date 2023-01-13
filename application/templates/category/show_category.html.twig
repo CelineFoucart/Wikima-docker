@@ -16,7 +16,7 @@
 			<div class="col-md-12">
 				<p class="text-end m-2">
 					{% for page in category.pages %}
-						<a href="{{ path('app_page', {slug: page.slug}) }}" class="label mx-1">
+						<a href="{{ path('app_page', {slug: page.slug}) }}" class="label mx-1" data-bs-toggle="tooltip" title="{{ page.description ? page.description : 'Aucune description' }}">
 							<i class="bi bi-file-earmark-text"></i>
 							{{ page.title }}
 						</a>

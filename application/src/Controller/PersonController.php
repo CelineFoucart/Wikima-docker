@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Data\SearchData;
 use App\Entity\Person;
+use App\Form\AdvancedSearchType;
 use App\Repository\PersonRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,10 +22,19 @@ class PersonController extends AbstractController
     #[Route('/persons', name: 'app_person_index')]
     public function index(Request $request): Response
     {
-        $page = $request->query->getInt('page', 1);
+        $search = (new SearchData())->setPage($request->query->getInt('page', 1));
+        $form = $this->createForm(AdvancedSearchType::class, $search);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $persons = $this->personRepository->search($search);
+        } else {
+            $persons = $this->personRepository->findAllPaginated($search->getPage());
+        }
 
         return $this->render('person/index.html.twig', [
-            'persons' => $this->personRepository->findAllPaginated($page),
+            'persons' => $persons,
+            'form' => $form->createView(),
         ]);
     }
 

@@ -5,7 +5,7 @@
 	<h3 class="h4 mb-4">Chronologies de cette catégorie</h3>
 	{% for timeline in category.timelines %}
 		<p>
-			<a href="{{ path('app_timeline_show', {slug: timeline.slug}) }}" class="label mx-1">
+			<a href="{{ path('app_timeline_show', {slug: timeline.slug}) }}" class="label mx-1" data-bs-toggle="tooltip" data-bs-placement="right" title="{{ timeline.description ? timeline.description : 'Aucune description' }}">
 				<i class="bi bi-hourglass"></i>
 				{{ timeline.title }}
 			</a>

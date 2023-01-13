@@ -51,7 +51,7 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * Finds a category and its portals
+     * Finds a category and its portals.
      */
     public function findBySlug(string $slug): ?Category
     {
@@ -61,6 +61,21 @@ class CategoryRepository extends ServiceEntityRepository
             ->setParameter('slug', $slug)
             ->getQuery()
             ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+     * Finds an array of Categories, with portals ordered by title.
+     *
+     * @return Category[]
+     */
+    public function findWithPortals(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.portals', 'p')->addSelect('p')
+            ->addOrderBy('p.title')
+            ->getQuery()
+            ->getResult()
         ;
     }
 

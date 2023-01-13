@@ -14,9 +14,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class ImageController extends AbstractController
 {
     public function __construct(private ImageRepository $imageRepository)
-    { }
+    {
+    }
 
-    #[Route('/images', name: 'app_image')]
+    #[Route('/images', name: 'app_image_index')]
     public function gallery(Request $request): Response
     {
         $search = (new SearchData())
@@ -24,8 +25,8 @@ class ImageController extends AbstractController
         ;
         $imageForm = $this->createForm(AdvancedSearchType::class, $search);
         $imageForm->handleRequest($request);
-        
-        if ($imageForm->isSubmitted() && $imageForm->isValid()) { 
+
+        if ($imageForm->isSubmitted() && $imageForm->isValid()) {
             $images = $this->imageRepository->search($search);
         } else {
             $images = $this->imageRepository->findPaginated($search->getPage());
@@ -42,8 +43,8 @@ class ImageController extends AbstractController
     public function show(string $slug): Response
     {
         $image = $this->imageRepository->findBySlug($slug);
-        
-        if ($image === null) {
+
+        if (null === $image) {
             throw $this->createNotFoundException();
         }
 
@@ -51,6 +52,4 @@ class ImageController extends AbstractController
             'image' => $image,
         ]);
     }
-
-    
 }

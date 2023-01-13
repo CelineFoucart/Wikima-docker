@@ -16,3 +16,11 @@ import './styles/user-icon.css';
 
 // start the Stimulus application
 import './bootstrap';
+
+// Enabled tooltips
+window.onload = () => {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+}

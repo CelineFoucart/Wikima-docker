@@ -67,6 +67,7 @@ class TimelineRepository extends ServiceEntityRepository
         $builder = $this->createQueryBuilder('t')
             ->orderBy('t.title', 'ASC')
             ->leftJoin('t.portals', 'p')->addSelect('p')
+            ->leftJoin('t.categories', 'c')->addSelect('c')
         ;
 
         if (strlen($search->getQuery()) >= 3 and null !== $search->getQuery()) {
@@ -82,6 +83,13 @@ class TimelineRepository extends ServiceEntityRepository
             $builder
                 ->andWhere('p.id IN (:portals)')
                 ->setParameter('portals', $search->getPortals())
+            ;
+        }
+
+        if (!empty($search->getCategories())) {
+            $builder
+                ->andWhere('c.id IN (:categories)')
+                ->setParameter('categories', $search->getCategories())
             ;
         }
 
