@@ -71,7 +71,6 @@ class Portal
     {
         $this->categories = new ArrayCollection();
         $this->articles = new ArrayCollection();
-        $this->comments = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->pages = new ArrayCollection();
         $this->timelines = new ArrayCollection();

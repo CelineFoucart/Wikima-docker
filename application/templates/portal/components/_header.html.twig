@@ -27,13 +27,25 @@
 			<div class="col-md-6">{{ include('includes/_search.html.twig') }}</div>
 		</div>
 		<div class="item-heading position-relative">
-			{% if is_granted('ROLE_ADMIN') %}
-				<div class="p-2 position-absolute top-0" style="right:-10px">
-					<a href="{{ path('admin_app_portal_edit', {id:portal.id}) }}" class="btn btn-outline-secondary" title="administrer">
-						<i class="bi bi-pencil-fill"></i>
-					</a>
+			<div class="p-2 position-absolute top-0" style="right:-10px">
+				<div class="dropdown">
+					<button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" title="outils">
+						<i class="bi bi-wrench-adjustable me-1"></i>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+						<li>
+							<a class="dropdown-item" href="{{ path('app_print_portal', {slug: portal.slug}) }}" target="_blank">Aperçu avant impression</a>
+						</li>
+						{% if is_granted('ROLE_ADMIN') %}
+							<li>
+								<a class="dropdown-item" href="{{ path('admin_app_portal_edit', {id:portal.id}) }}">
+									Gérer
+								</a>
+							</li>
+						{% endif %}
+					</ul>
 				</div>
-			{% endif %}
+			</div>
 			<h1 class="mb-3">{{ portal.title|capitalize }}</h1>
 			<p class="lead mb-4">{{ portal.description }}</p>
 			<p>
