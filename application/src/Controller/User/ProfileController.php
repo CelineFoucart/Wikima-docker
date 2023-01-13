@@ -6,10 +6,13 @@ use App\Entity\User;
 use App\Form\User\AccountType;
 use App\Form\User\EditPasswordType;
 use App\Repository\CommentRepository;
+use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -66,5 +69,28 @@ class ProfileController extends AbstractController
         return $this->render('user/user_comments.html.twig', [
             'comments' => $commentRepository->findByAuthor($this->getUser(), $page),
         ]);
+    }
+
+    #[Route('/profile/confirmation', name: 'app_profile_confirmation')]
+    public function confirmation(EmailVerifier $emailVerifier, string $contactMail, string $contactName, Request $request): Response
+    {
+        if ($request->isMethod('POST')) {
+            /** @var User */
+            $user = $this->getUser();
+
+            $emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                (new TemplatedEmail())
+                    ->from(new Address($contactMail, $contactName))
+                    ->to($user->getEmail())
+                    ->subject('Veuillez confirmer votre email')
+                    ->htmlTemplate('user/confirmation_email.html.twig')
+            );
+
+            $this->addFlash('success', 'Un nouvel email de confirmation a été envoyé.');
+
+            return $this->redirectToRoute('app_profile_confirmation');
+        }
+
+        return $this->render('user/confirmation.html.twig', []);
     }
 }
