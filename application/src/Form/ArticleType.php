@@ -7,6 +7,7 @@ use App\Entity\Portal;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -26,11 +27,19 @@ class ArticleType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'attr' => [
-                    'rows' => '3'
-                ]
+                    'rows' => '3',
+                ],
             ])
             ->add('content', CKEditorType::class, [
                 'config' => ['toolbar' => 'full'],
+            ])
+            ->add('isDraft', CheckboxType::class, [
+                'label' => 'draft',
+                'required' => false,
+            ])
+            ->add('isPrivate', CheckboxType::class, [
+                'label' => 'private',
+                'required' => false,
             ])
         ;
     }

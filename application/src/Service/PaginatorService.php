@@ -7,10 +7,10 @@ use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
 /**
- * Class PaginatorService
- * 
+ * Class PaginatorService.
+ *
  * PaginatorService manages pagination.
- * 
+ *
  * @author Céline Foucart <celinefoucart@yahoo.fr>
  */
 class PaginatorService
@@ -40,9 +40,7 @@ class PaginatorService
 
     /**
      * Set the value of limit.
-     *
-     * @return  self
-     */ 
+     */
     public function setLimit(int $limit): self
     {
         $this->limit = $limit;

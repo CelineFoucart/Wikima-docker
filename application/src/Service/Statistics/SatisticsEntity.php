@@ -13,19 +13,23 @@ class SatisticsEntity implements StatisticsEntityInterface
         $this->table = $table;
 
         $this->query = "SELECT count(id) AS counts, '{$this->table}' AS element FROM {$this->table}";
+
+        if ('article' === $table) {
+            $this->query .= ' WHERE is_draft = 0 or is_draft IS NULL';
+        }
     }
 
     /**
-     * Get the sql query
-     */ 
+     * Get the sql query.
+     */
     public function getQuery(): string
     {
         return $this->query;
     }
 
     /**
-     * Get table name
-     */ 
+     * Get table name.
+     */
     public function getTable(): string
     {
         return $this->table;

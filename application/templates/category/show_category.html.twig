@@ -27,7 +27,7 @@
 		<article class="col-md-7 p-4">
 			<h2 class="h2 text-center my-4">Les articles de cette catégorie</h1>
 
-			{{ include('components/layout/_single_col_list.html.twig',{path: 'app_article_show', items: articles}) }}
+			{{ include('components/layout/_single_col_list.html.twig',{path: 'app_article_show', items: articles, handlePrivate: true}) }}
 
 			<div class="navigation">
 				{{ knp_pagination_render(articles) }}

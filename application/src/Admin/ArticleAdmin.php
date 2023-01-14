@@ -8,6 +8,7 @@ use App\Entity\Portal;
 use App\Entity\User;
 use App\Service\EditorService;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use phpDocumentor\Reflection\Types\Boolean;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -44,6 +45,14 @@ final class ArticleAdmin extends AbstractAdmin
                     'choice_label' => 'title',
                     'multiple' => true,
                 ])
+                ->add('isDraft', Boolean::class, [
+                    'label' => 'draft',
+                    'required' => false,
+                ])
+                ->add('isPrivate', Boolean::class, [
+                    'label' => 'private',
+                    'required' => false,
+                ])
             ->end()
         ;
     }
@@ -69,6 +78,8 @@ final class ArticleAdmin extends AbstractAdmin
                     'choice_label' => 'title',
                 ],
             ])
+            ->add('isDraft')
+            ->add('isPrivate')
         ;
     }
 
@@ -85,6 +96,8 @@ final class ArticleAdmin extends AbstractAdmin
             ->add('updatedAt', null, [
                 'format' => 'd/m/Y à H:i',
             ])
+            ->add('isDraft')
+            ->add('isPrivate')
             ->add('author', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'username',

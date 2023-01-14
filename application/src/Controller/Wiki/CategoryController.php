@@ -4,6 +4,7 @@ namespace App\Controller\Wiki;
 
 use App\Entity\Category;
 use App\Entity\Data\SearchData;
+use App\Entity\User;
 use App\Form\SearchType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
@@ -34,7 +35,7 @@ final class CategoryController extends AbstractController
     public function category(Category $category, Request $request): Response
     {
         $page = $request->query->getInt('page', 1);
-        $articles = $this->articleRepository->findByPortals($category->getPortals()->toArray(), $page);
+        $articles = $this->articleRepository->findByPortals($category->getPortals()->toArray(), $page, 10, $this->hidePrivate());
 
         return $this->render('category/show_category.html.twig', [
             'category' => $category,
@@ -65,5 +66,18 @@ final class CategoryController extends AbstractController
             'persons' => $personRepository->findByParent('category', $category, $page),
             'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
         ]);
+    }
+
+    private function hidePrivate(): bool
+    {
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            return true;
+        }
+
+        $roles = $user->getRoles();
+
+        return !in_array('ROLE_ADMIN', $roles) || !in_array('ROLE_SUPER_ADMIN', $roles);
     }
 }

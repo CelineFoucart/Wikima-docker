@@ -129,9 +129,12 @@
 						<div class="col-md-8">
 							<div class="box">
 								<div class="box-header">
-									<h3 class="box-title">Contenu introductif</h3>
+									<h3 class="box-title">Contenu</h3>
 								</div>
 								<div class="box-body">
+									<div class="form-group">
+										{{ form_row(form.title) }}
+									</div>
 									<div class="form-group">
 										{{ form_row(form.content) }}
 									</div>
@@ -145,9 +148,6 @@
 								</div>
 								<div class="box-body">
 									<div class="form-group">
-										{{ form_row(form.title) }}
-									</div>
-									<div class="form-group">
 										{{ form_row(form.keywords) }}
 									</div>
 									<div class="form-group">
@@ -155,6 +155,12 @@
 									</div>
 									<div class="form-group">
 										{{ form_row(form.portals) }}
+									</div>
+									<div class="form-group">
+										{{ form_row(form.isDraft) }}
+									</div>
+									<div class="form-group">
+										{{ form_row(form.isPrivate) }}
 									</div>
 								</div>
 							</div>

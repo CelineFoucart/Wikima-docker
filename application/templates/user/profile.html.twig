@@ -26,9 +26,15 @@
 							<dt class="col-sm-3">Date d'inscription</dt>
 							<dd class="col-sm-9">{{ user.createdAt|date('d/m/Y') }}</dd>
 
-							<dt class="col-sm-3">Mes commentaires</dt>
+							<dt class="col-sm-3">Mes contributions</dt>
 							<dd class="col-sm-9">
 								<a href="{{ path('app_profile_comments') }}">rechercher mes commentaires</a>
+								{% if is_granted('ROLE_EDITOR') or is_granted('ROLE_ADMIN') %}
+									<br>
+									<a href="{{ path('app_article_user', {id: app.user.id}) }}">Rechercher mes articles</a>
+									<br>
+									<a href="{{ path('app_article_draft') }}">Rechercher mes brouillons d'article</a>
+								{% endif %}
 							</dd>
 						</div>
 					</div>

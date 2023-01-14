@@ -72,6 +72,12 @@ class Article
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Section::class, orphanRemoval: true)]
     private $sections;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isDraft = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isPrivate = null;
+
     public function __construct()
     {
         $this->portals = new ArrayCollection();
@@ -145,7 +151,7 @@ class Article
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -294,6 +300,30 @@ class Article
                 $section->setArticle(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsDraft(): ?bool
+    {
+        return $this->isDraft;
+    }
+
+    public function setIsDraft(?bool $isDraft): self
+    {
+        $this->isDraft = $isDraft;
+
+        return $this;
+    }
+
+    public function getIsPrivate(): ?bool
+    {
+        return $this->isPrivate;
+    }
+
+    public function setIsPrivate(?bool $isPrivate): self
+    {
+        $this->isPrivate = $isPrivate;
 
         return $this;
     }

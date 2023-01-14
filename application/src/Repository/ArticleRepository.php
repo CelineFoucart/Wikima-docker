@@ -60,6 +60,8 @@ class ArticleRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('a')
             ->orderBy('a.createdAt', 'DESC')
+            ->andWhere('a.isDraft IS NULL OR a.isDraft = 0')
+            ->andWhere('a.isPrivate IS NULL OR a.isPrivate = 0')
             ->setMaxResults(6)
             ->getQuery()
             ->getResult()
@@ -69,14 +71,19 @@ class ArticleRepository extends ServiceEntityRepository
     /**
      * Returns a pagination of articles by portals.
      */
-    public function findByPortals(array $portals, int $page, int $limit = 10): PaginationInterface
+    public function findByPortals(array $portals, int $page, int $limit = 10, bool $hidePrivate = true): PaginationInterface
     {
         $query = $this->createQueryBuilder('a')
             ->orderBy('a.title', 'ASC')
             ->leftJoin('a.portals', 'p')->addSelect()
             ->andWhere('p.id IN (:portals)')
+            ->andWhere('a.isDraft IS NULL OR a.isDraft = 0')
             ->setParameter('portals', $portals)
         ;
+
+        if ($hidePrivate) {
+            $query->andWhere('a.isPrivate IS NULL OR a.isPrivate = 0');
+        }
 
         return $this->paginatorService->setLimit($limit)->paginate($query, $page);
     }
@@ -84,9 +91,13 @@ class ArticleRepository extends ServiceEntityRepository
     /**
      * Returns a pagination of 16 articles.
      */
-    public function findPaginated(int $page): PaginationInterface
+    public function findPaginated(int $page, bool $hidePrivate = true): PaginationInterface
     {
-        $builder = $this->createQueryBuilder('a')->orderBy('a.title', 'ASC');
+        $builder = $this->createQueryBuilder('a')->andWhere('a.isDraft IS NULL OR a.isDraft = 0')->orderBy('a.title', 'ASC');
+
+        if ($hidePrivate) {
+            $builder->andWhere('a.isPrivate IS NULL OR a.isPrivate = 0');
+        }
 
         return $this->paginatorService->setLimit(16)->paginate($builder, $page);
     }
@@ -116,17 +127,33 @@ class ArticleRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findByUser(User $user, int $page): PaginationInterface
+    public function findByUser(User $user, int $page = 1, bool $hidePrivate = true): PaginationInterface
     {
         $builder = $this->getDefaultQueryBuilder()
             ->andWhere('a.author = :user')
+            ->andWhere('a.isDraft IS NULL OR a.isDraft = 0')
+            ->setParameter('user', $user)
+        ;
+
+        if ($hidePrivate) {
+            $builder->andWhere('a.isPrivate IS NULL OR a.isPrivate = 0');
+        }
+
+        return $this->paginatorService->setLimit(12)->paginate($builder, $page);
+    }
+
+    public function findAuthorDrafts(User $user, int $page): PaginationInterface
+    {
+        $builder = $this->getDefaultQueryBuilder()
+            ->andWhere('a.author = :user')
+            ->andWhere('a.isDraft = 1')
             ->setParameter('user', $user)
         ;
 
         return $this->paginatorService->setLimit(12)->paginate($builder, $page);
     }
 
-    public function search(SearchData $search, int $limit = 10): PaginationInterface
+    public function search(SearchData $search, int $limit = 10, bool $hidePrivate = true): PaginationInterface
     {
         $builder = $this->getDefaultQueryBuilder();
 
@@ -146,6 +173,12 @@ class ArticleRepository extends ServiceEntityRepository
                 ->andWhere('p.id IN (:portals)')
                 ->setParameter('portals', $search->getPortals())
             ;
+        }
+
+        $builder->andWhere('a.isDraft IS NULL OR a.isDraft = 0');
+
+        if ($hidePrivate) {
+            $builder->andWhere('a.isPrivate IS NULL OR a.isPrivate = 0');
         }
 
         return $this->paginatorService->setLimit($limit)->paginate($builder, $search->getPage());

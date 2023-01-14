@@ -109,7 +109,7 @@
 						{{ app.user ? app.user.username : 'Compte' }}
 					</a>
 					<ul class="dropdown-menu text-capitalize" aria-labelledby="account">
-						{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+						{% if app.user %}
 							<li>
 								<a class="dropdown-item" href="{{ path('app_profile') }}">
 									compte

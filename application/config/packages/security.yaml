@@ -76,9 +76,9 @@ security:
         - { path: ^/admin/app/category, roles: [ROLE_ADMIN, ROLE_EDITOR, ROLE_SUPER_ADMIN] }
         - { path: ^/admin/app/portal, roles: [ROLE_ADMIN, ROLE_EDITOR, ROLE_SUPER_ADMIN] }
         - { path: ^/admin/app/image, roles: [ROLE_ADMIN, ROLE_EDITOR, ROLE_SUPER_ADMIN] }
-        - { path: ^/edit, roles: [ROLE_EDITOR, ROLE_ADMIN] }
         - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/comment, roles: ROLE_USER }
+        - { path: ^/draft, roles: [ROLE_EDITOR, ROLE_ADMIN] }
 
 when@test:
     security:

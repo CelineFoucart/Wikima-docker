@@ -4,6 +4,7 @@ namespace App\Controller\Wiki;
 
 use App\Entity\Data\SearchData;
 use App\Entity\Portal;
+use App\Entity\User;
 use App\Form\SearchType;
 use App\Repository\ArticleRepository;
 use App\Repository\ImageRepository;
@@ -28,7 +29,7 @@ final class PortalController extends AbstractController
     public function portal(Portal $portal, Request $request): Response
     {
         $page = $request->query->getInt('page', 1);
-        $articles = $this->articleRepository->findByPortals([$portal], $page, 16);
+        $articles = $this->articleRepository->findByPortals([$portal], $page, 16, $this->hidePrivate());
 
         return $this->render('portal/show_portal.html.twig', [
             'portal' => $portal,
@@ -72,5 +73,18 @@ final class PortalController extends AbstractController
             'persons' => $personRepository->findByParent('category', $portal, $page),
             'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
         ]);
+    }
+
+    private function hidePrivate(): bool
+    {
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            return true;
+        }
+
+        $roles = $user->getRoles();
+
+        return !in_array('ROLE_ADMIN', $roles) || !in_array('ROLE_SUPER_ADMIN', $roles);
     }
 }
