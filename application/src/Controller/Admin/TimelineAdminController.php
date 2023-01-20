@@ -11,6 +11,7 @@ use App\Repository\EventRepository;
 use App\Repository\TimelineRepository;
 use DateTime;
 use DateTimeImmutable;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +25,7 @@ final class TimelineAdminController extends CRUDController
     ) {
     }
 
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
     public function eventAction(int $id, Request $request): Response
     {
         $timeline = $this->getTimeline($id);
