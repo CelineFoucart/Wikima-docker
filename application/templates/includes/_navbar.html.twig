@@ -103,44 +103,44 @@
 					</li>
 				{% endif %}
 
-				<li class="nav-item dropdown">
-					<a class="btn btn-outline-light dropdown-toggle" href="#" id="account" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-						<i class="bi bi-person-fill me-1"></i>
-						{{ app.user ? app.user.username : 'Compte' }}
-					</a>
-					<ul class="dropdown-menu text-capitalize" aria-labelledby="account">
-						{% if app.user %}
-							<li>
-								<a class="dropdown-item" href="{{ path('app_profile') }}">
-									compte
-								</a>
-							</li>
-							<li>
-								<a class="dropdown-item" href="{{ path('app_user_show', {id: app.user.id}) }}">
-									Profil
-								</a>
-							</li>
-							<li>
-								<a class="dropdown-item" href="{{ path('app_logout') }}">
-									Déconnexion
-								</a>
-							</li>
-						{% else %}
-							{% if enable_login %}
+				{% if enable_login or enable_registration %}
+					<li class="nav-item dropdown">
+						<a class="btn btn-outline-light dropdown-toggle" href="#" id="account" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="bi bi-person-fill me-1"></i>
+							{{ app.user ? app.user.username : 'Compte' }}
+						</a>
+						<ul class="dropdown-menu text-capitalize" aria-labelledby="account">
+							{% if app.user %}
 								<li>
-									<a class="dropdown-item" href="{{ path('app_login') }}">Connexion</a>
+									<a class="dropdown-item" href="{{ path('app_profile') }}">
+										compte
+									</a>
 								</li>
-							{% endif %}
-							{% if enable_registration %}
 								<li>
-									<a class="dropdown-item" href="{{ path('app_register') }}">Inscription</a>
+									<a class="dropdown-item" href="{{ path('app_user_show', {id: app.user.id}) }}">
+										Profil
+									</a>
 								</li>
+								<li>
+									<a class="dropdown-item" href="{{ path('app_logout') }}">
+										Déconnexion
+									</a>
+								</li>
+							{% else %}
+								{% if enable_login %}
+									<li>
+										<a class="dropdown-item" href="{{ path('app_login') }}">Connexion</a>
+									</li>
+								{% endif %}
+								{% if enable_registration %}
+									<li>
+										<a class="dropdown-item" href="{{ path('app_register') }}">Inscription</a>
+									</li>
+								{% endif %}
 							{% endif %}
-						{% endif %}
-					</ul>
-				</li>
-
-
+						</ul>
+					</li>
+				{% endif %}
 			</ul>
 		</div>
 	</div>

@@ -18,6 +18,11 @@ Dans le container de l'appli
 sh deploy.sh
 ```
 
+Création d'un compte administrateur
+```bash
+php bin/console app:create-user
+```
+
 ## Consommer les messages avec Messenger de Symfony
 ```bash
 $ php bin/console messenger:consume async

@@ -25,7 +25,9 @@ final class UserService
      */
     public function getAvailableRoles(): array
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $token = $this->tokenStorage->getToken();
+        $user = ($token) ? $token->getUser() : null;
+
         if ($user instanceof User && in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
             $this->availableRoles['Founder Administrator'] = 'ROLE_SUPER_ADMIN';
         }

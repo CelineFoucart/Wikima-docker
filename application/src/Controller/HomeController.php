@@ -74,4 +74,10 @@ final class HomeController extends AbstractController
             'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
         ]);
     }
+
+    #[Route('/faq', name: 'app_faq')]
+    public function faqAction(): Response
+    {
+        return $this->render('home/faq.html.twig', []);
+    }
 }

@@ -284,13 +284,11 @@
 {% block javascripts %}
 	{{ parent() }}
 	<script src="{{ asset('assets/sortable/Sortable.min.js') }}"></script>
-	<script src="{{ asset('assets/admin.js') }}"></script>
 	<script>
-		window.onload = () => {
+		window.addEventListener('load', () => {
 getTabTargetFromUrl();
-
 let url = "{{ path('api_article_section', {'id': article.id}) }}";
 sortable('#sections', url);
-}
+});
 	</script>
 {% endblock %}

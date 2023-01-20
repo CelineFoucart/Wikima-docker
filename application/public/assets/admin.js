@@ -64,6 +64,9 @@ function toastify(type = 'success', text = null) {
  */
 async function sortable(list, path) {
     const events = document.querySelector(list);
+    if (!events) {
+        return;
+    }
     await Sortable.create(events, {
         dataIdAttr: 'data-order',
         ghostClass: 'blue-background-class',

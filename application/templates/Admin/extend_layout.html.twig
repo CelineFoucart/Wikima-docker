@@ -23,7 +23,7 @@
 {% set current_route = app.request.attributes.get('_route') %}
 
 {% block side_bar_before_nav %}
-	<ul class="sidebar-menu tree ">
+	<ul class="sidebar-menu tree">
 		<li class="first treeview {{ current_route == 'sonata_admin_dashboard' ? 'active' : '' }}">
 			<a href="{{ path('sonata_admin_dashboard') }}">
 				<i class="fa fa-tachometer" aria-hidden="true"></i>
@@ -42,6 +42,11 @@
 {% endblock %}
 
 {% block side_bar_after_nav_content %}
+	<p style="padding: 0 10px; margin:0; color: #b8c7ce">
+		Connecté(e) en tant que :
+		<br>
+		<strong style="color: #fff">{{ app.user.username }}</strong>
+	</p>
 	<ul class="sidebar-menu tree">
 		<li class="first treeview">
 			<a href="{{ path('app_home') }}">

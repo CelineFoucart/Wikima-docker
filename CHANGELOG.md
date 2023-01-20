@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Favicon dans l'administration
 - Possibilité de désactiver l'inscription, la page de contact et la connexion
 - Ajout d'un fichier changelog
+- Ajout du bouton générer le slug dans l'administration
+- Ajout du bouton générer le nom complet d'un personnage
+- Ajout d'un page FAQ
 
 ### Changed
 - Définition des permissions du panneau d'administration
