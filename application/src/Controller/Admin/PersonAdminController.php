@@ -12,6 +12,7 @@ use App\Form\ImageType;
 use App\Repository\ImageRepository;
 use App\Repository\PersonRepository;
 use App\Service\EditorService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +27,7 @@ final class PersonAdminController extends CRUDController
     ) {
     }
 
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
     public function imageAction(?int $id, Request $request): Response
     {
         $person = $this->personRepository->find($id);

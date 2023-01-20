@@ -50,6 +50,8 @@ security:
             - ROLE_ADMIN_IMAGE_SHOW
             - ROLE_ADMIN_IMAGE_EDIT
             - ROLE_ADMIN_IMAGE_CREATE
+            - ROLE_ADMIN_PERSON_LIST
+            - ROLE_ADMIN_PERSON_SHOW
         ROLE_ADMIN: 
             - ROLE_ADMIN_ARTICLE_ALL
             - ROLE_ADMIN_CATEGORY_ALL
@@ -57,6 +59,9 @@ security:
             - ROLE_ADMIN_IMAGE_ALL
             - ROLE_ADMIN_TIMELINE_ALL
             - ROLE_ADMIN_USER_ALL
+            - ROLE_ADMIN_PAGE_ALL
+            - ROLE_ADMIN_COMMENT_ALL
+            - ROLE_ADMIN_PERSON_ALL
         ROLE_SUPER_ADMIN:
             - ROLE_ADMIN_ARTICLE_ALL
             - ROLE_ADMIN_CATEGORY_ALL
@@ -76,6 +81,8 @@ security:
         - { path: ^/admin/app/category, roles: [ROLE_ADMIN, ROLE_EDITOR, ROLE_SUPER_ADMIN] }
         - { path: ^/admin/app/portal, roles: [ROLE_ADMIN, ROLE_EDITOR, ROLE_SUPER_ADMIN] }
         - { path: ^/admin/app/image, roles: [ROLE_ADMIN, ROLE_EDITOR, ROLE_SUPER_ADMIN] }
+        - { path: ^/admin/app/timeline, roles: [ROLE_ADMIN, ROLE_EDITOR, ROLE_SUPER_ADMIN] }
+        - { path: ^/admin/app/person, roles: [ROLE_ADMIN, ROLE_EDITOR, ROLE_SUPER_ADMIN] }
         - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/comment, roles: ROLE_USER }
         - { path: ^/draft, roles: [ROLE_EDITOR, ROLE_ADMIN] }

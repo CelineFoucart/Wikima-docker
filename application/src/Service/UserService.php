@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Entity\User;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class UserService
@@ -9,19 +11,25 @@ final class UserService
     private array $availableRoles = [
         'User' => 'ROLE_USER',
         'Editor' => 'ROLE_EDITOR',
-        'Administrator' => 'ROLE_ADMIN'
+        'Administrator' => 'ROLE_ADMIN',
     ];
 
     public function __construct(
-        private TranslatorInterface $translator
-    ) {   
+        private TranslatorInterface $translator,
+        private TokenStorageInterface $tokenStorage
+    ) {
     }
 
     /**
-     * Get a list of available roles
-     */ 
+     * Get a list of available roles.
+     */
     public function getAvailableRoles(): array
     {
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof User && in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+            $this->availableRoles['Founder Administrator'] = 'ROLE_SUPER_ADMIN';
+        }
+
         return $this->availableRoles;
     }
 
@@ -29,7 +37,7 @@ final class UserService
     {
         $userRoles = [];
 
-        foreach ($this->availableRoles as $key => $role) {
+        foreach ($this->getAvailableRoles() as $key => $role) {
             if (in_array($role, $roles)) {
                 $userRoles[] = $this->translator->trans($key);
             }
