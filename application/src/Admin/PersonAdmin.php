@@ -16,6 +16,7 @@ use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class PersonAdmin extends AbstractAdmin
@@ -71,13 +72,30 @@ final class PersonAdmin extends AbstractAdmin
     {
         $form
             ->tab('Generality')
-                ->with('Identity', ['class' => 'col-md-6'])
-                    ->add('firstname')
-                    ->add('lastname')
-                    ->add('fullname')
-                    ->add('parents')
+                ->with('Name', ['class' => 'col-md-6'])
+                    ->add('firstname', TextType::class, [
+                        'attr' => [
+                            'data-type' => 'firstname',
+                        ],
+                    ])
+                    ->add('lastname', TextType::class, [
+                        'attr' => [
+                            'data-type' => 'lastname',
+                        ],
+                    ])
+                    ->add('fullname', TextType::class, [
+                        'attr' => [
+                            'data-type' => 'fullname',
+                        ],
+                    ])
+                    ->add('slug', TextType::class, [
+                        'attr' => [
+                            'data-target' => 'slug-character',
+                        ],
+                    ])
                 ->end()
-                ->with('Status', ['class' => 'col-md-6'])
+                ->with('Informations', ['class' => 'col-md-6'])
+                    ->add('parents')
                     ->add('nationality')
                     ->add('job')
                 ->end()

@@ -128,3 +128,102 @@ function getTabTargetFromUrl() {
         }
     }
 }
+
+/**
+ * Transforms a string into a valid slug
+ * 
+ * @param {string} str 
+ * @returns 
+ */
+function slugify(str) {
+    str = str.trim();
+    str = str.toLowerCase();
+    str = str.replace(/[\s_-]+/g, '-');
+    str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    str = str.replace(/[^\w\s-]/g, '');
+
+    return str;
+}
+
+/**
+ * Create a button for an action in a form.
+ * 
+ * @returns HTMLButtonElement
+ */
+function createButton() {
+    const button = document.createElement('button');
+    button.classList = "btn btn-default break";
+    button.innerHTML = '<i class="fas fa-sync-alt"></i>';
+    button.title = "Générer";
+    button.type = "button";
+
+    return button;
+}
+
+/**
+ * Generate the fullname and slug value for characters in edition or creation form.
+ */
+function characterAction() {
+    const firstname = document.querySelector('[data-type="firstname"]');
+    const lastname = document.querySelector('[data-type="lastname"]');
+    const fullname = document.querySelector('[data-type="fullname"]');
+
+    if (firstname && lastname && fullname) {
+        const button = createButton();
+        fullname.after(button);
+        fullname.style.width = 'calc(100% - 40px)';
+        fullname.parentElement.style.display = "flex";
+
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            fullname.value = firstname.value + ' ' + lastname.value;
+        });
+
+        const slugInput = document.querySelector('[data-target="slug-character"]');
+        console.log(slugInput)
+        if (slugInput) {
+            const slugButton = createButton();
+            slugInput.after(slugButton);
+            slugInput.style.width = 'calc(100% - 40px)';
+            slugInput.parentElement.style.display = "flex";
+            slugInput.parentElement.style.flexWrap = "wrap";
+
+            slugButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                const slug = slugify(firstname.value + ' ' + lastname.value);
+                slugInput.value = slug;
+            });
+        }
+    }
+}
+
+/**
+ * Initiate the slug generation action event.
+ */
+function slugAction() {
+    const slugInput = document.querySelector('[data-target="slug"]');
+
+    if (!slugInput) {
+        return;
+    }
+
+    const button = createButton();
+    slugInput.after(button);
+    slugInput.parentElement.style.display = "flex";
+    slugInput.parentElement.style.flexWrap = "wrap";
+    slugInput.style.width = 'calc(100% - 40px)';
+
+    button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const title = document.querySelector('[data-action="slug"]');
+        if (title) {
+            const slug = slugify(title.value);
+            slugInput.value = slug;
+        }
+    });
+}
+
+window.addEventListener('load', () => {
+    characterAction();
+    slugAction();
+});

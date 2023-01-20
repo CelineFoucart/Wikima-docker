@@ -6,7 +6,8 @@ namespace App\Admin;
 
 use App\Entity\Portal;
 use App\Entity\User;
-use App\Service\EditorService;
+use DateTime;
+use DateTimeImmutable;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use phpDocumentor\Reflection\Types\Boolean;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
@@ -17,11 +18,13 @@ use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 final class ArticleAdmin extends AbstractAdmin
 {
-    public function __construct(private EditorService $editorService)
-    {
+    public function __construct(
+        private TokenStorageInterface $token
+    ) {
     }
 
     protected function configureFormFields(FormMapper $form): void
@@ -34,6 +37,7 @@ final class ArticleAdmin extends AbstractAdmin
             ->end()
             ->with('Meta Data', ['class' => 'col-md-4'])
                 ->add('title', TextType::class)
+                ->add('slug', TextType::class)
                 ->add('keywords', TextType::class)
                 ->add('description', TextareaType::class, [
                     'attr' => [
@@ -114,12 +118,14 @@ final class ArticleAdmin extends AbstractAdmin
 
     public function preUpdate(object $article): void
     {
-        $this->editorService->prepareEditing($article);
+        $article->setUpdatedAt(new DateTime());
+        $user = $this->token->getToken()->getUser();
+        $article->setAuthor($user);
     }
 
     public function prePersist(object $article): void
     {
-        $this->editorService->prepareCreation($article);
+        $article->setCreatedAt(new DateTimeImmutable());
     }
 
     protected function configureRoutes(RouteCollectionInterface $collection): void

@@ -6,7 +6,6 @@ namespace App\Admin;
 
 use App\Entity\Category;
 use App\Entity\Portal;
-use App\Service\EditorService;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -19,10 +18,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class PageAdmin extends AbstractAdmin
 {
-    public function __construct(private EditorService $editorService)
-    {
-    }
-
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         $filter
@@ -55,7 +50,16 @@ final class PageAdmin extends AbstractAdmin
     {
         $form
             ->with('Content', ['class' => 'col-md-9'])
-                ->add('title', TextType::class)
+                ->add('title', TextType::class, [
+                    'attr' => [
+                        'data-action' => 'slug',
+                    ],
+                ])
+                ->add('slug', TextType::class, [
+                    'attr' => [
+                        'data-target' => 'slug',
+                    ],
+                ])
                 ->add('description', TextareaType::class)
                 ->add('content', CKEditorType::class)
             ->end()
@@ -93,15 +97,5 @@ final class PageAdmin extends AbstractAdmin
                 ->add('portals')
             ->end()
         ;
-    }
-
-    public function preUpdate(object $page): void
-    {
-        $page->setSlug($this->editorService->updateSlug($page->getTitle()));
-    }
-
-    public function prePersist(object $page): void
-    {
-        $page->setSlug($this->editorService->updateSlug($page->getTitle()));
     }
 }

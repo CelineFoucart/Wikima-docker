@@ -6,7 +6,8 @@ namespace App\Admin;
 
 use App\Entity\Category;
 use App\Entity\Portal;
-use App\Service\EditorService;
+use DateTime;
+use DateTimeImmutable;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -15,13 +16,10 @@ use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class TimelineAdmin extends AbstractAdmin
 {
-    public function __construct(private EditorService $editorService)
-    {
-    }
-
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         $filter
@@ -71,7 +69,16 @@ final class TimelineAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $form): void
     {
         $form
-            ->add('title')
+            ->add('title', TextType::class, [
+                'attr' => [
+                    'data-action' => 'slug',
+                ],
+            ])
+            ->add('slug', TextType::class, [
+                'attr' => [
+                    'data-target' => 'slug',
+                ],
+            ])
             ->add('description', TextareaType::class, [
                 'required' => false,
             ])
@@ -108,14 +115,14 @@ final class TimelineAdmin extends AbstractAdmin
         ;
     }
 
-    public function preUpdate(object $portal): void
+    public function preUpdate(object $timeline): void
     {
-        $this->editorService->prepareEditing($portal);
+        $timeline->setUpdatedAt(new DateTime());
     }
 
-    public function prePersist(object $portal): void
+    public function prePersist(object $timeline): void
     {
-        $this->editorService->prepareCreation($portal);
+        $timeline->setCreatedAt(new DateTimeImmutable());
     }
 
     protected function configureRoutes(RouteCollectionInterface $collection): void

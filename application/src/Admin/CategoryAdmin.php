@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Admin;
 
-use App\Service\EditorService;
+use DateTime;
+use DateTimeImmutable;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -15,14 +16,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class CategoryAdmin extends AbstractAdmin
 {
-    public function __construct(private EditorService $editorService)
-    {
-    }
-
     protected function configureFormFields(FormMapper $form): void
     {
         $form
-            ->add('title', TextType::class)
+            ->add('title', TextType::class, [
+                'attr' => [
+                    'data-action' => 'slug',
+                ],
+            ])
+            ->add('slug', TextType::class, [
+                'attr' => [
+                    'data-target' => 'slug',
+                ],
+            ])
             ->add('keywords', TextType::class)
             ->add('description', TextareaType::class)
         ;
@@ -82,11 +88,11 @@ final class CategoryAdmin extends AbstractAdmin
 
     public function preUpdate(object $category): void
     {
-        $this->editorService->prepareEditing($category);
+        $category->setUpdatedAt(new DateTime());
     }
 
     public function prePersist(object $category): void
     {
-        $this->editorService->prepareCreation($category);
+        $category->setCreatedAt(new DateTimeImmutable());
     }
 }

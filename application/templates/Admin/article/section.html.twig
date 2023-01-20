@@ -148,6 +148,13 @@
 								</div>
 								<div class="box-body">
 									<div class="form-group">
+										{{ form_label(form.slug) }}
+										<div class="sonata-ba-field sonata-ba-field-standard-natural">
+											{{ form_widget(form.slug) }}
+										</div>
+										{{ form_errors(form.slug) }}
+									</div>
+									<div class="form-group">
 										{{ form_row(form.keywords) }}
 									</div>
 									<div class="form-group">

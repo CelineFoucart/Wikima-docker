@@ -6,11 +6,11 @@ use App\Repository\PageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PageRepository::class)]
-#[UniqueEntity(fields: ['title'], message: 'There is already a page with this title')]
+#[UniqueEntity(fields: ['title', 'slug'])]
 class Page
 {
     #[ORM\Id]
@@ -20,7 +20,7 @@ class Page
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
-    #[Assert\Regex('/^login|register|contact|portals|articles|category/i', match:false)]
+    #[Assert\Regex('/^login|register|contact|portals|articles|category/i', match: false)]
     #[Assert\Length(
         min: 3,
         max: 255
@@ -28,7 +28,8 @@ class Page
     private $title;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\Regex('/^login|register|contact|portals|articles|category/i', match:false)]
+    #[Assert\Regex('/^login|register|contact|portals|articles|category/i', match: false)]
+    #[Assert\NotBlank]
     private $slug;
 
     #[ORM\Column(type: 'string', length: 255)]

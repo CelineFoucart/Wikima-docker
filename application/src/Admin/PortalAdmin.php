@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Admin;
 
 use App\Entity\Category;
-use App\Service\EditorService;
+use DateTime;
+use DateTimeImmutable;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -17,15 +18,20 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class PortalAdmin extends AbstractAdmin
 {
-    public function __construct(private EditorService $editorService)
-    {
-    }
-
     protected function configureFormFields(FormMapper $form): void
     {
         $form
             ->with('Content', ['class' => 'col-md-9'])
-                ->add('title', TextType::class)
+                ->add('title', TextType::class, [
+                    'attr' => [
+                        'data-action' => 'slug',
+                    ],
+                ])
+                ->add('slug', TextType::class, [
+                    'attr' => [
+                        'data-target' => 'slug',
+                    ],
+                ])
                 ->add('keywords', TextType::class)
                 ->add('description', TextareaType::class)
             ->end()
@@ -110,11 +116,11 @@ final class PortalAdmin extends AbstractAdmin
 
     public function preUpdate(object $portal): void
     {
-        $this->editorService->prepareEditing($portal);
+        $portal->setUpdatedAt(new DateTime());
     }
 
     public function prePersist(object $portal): void
     {
-        $this->editorService->prepareCreation($portal);
+        $portal->setCreatedAt(new DateTimeImmutable());
     }
 }

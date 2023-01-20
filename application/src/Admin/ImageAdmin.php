@@ -6,11 +6,11 @@ namespace App\Admin;
 
 use App\Entity\Category;
 use App\Entity\Portal;
-use App\Service\EditorService;
+use DateTimeImmutable;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
-use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -21,22 +21,30 @@ use Vich\UploaderBundle\Form\Type\VichImageType;
 final class ImageAdmin extends AbstractAdmin
 {
     public function __construct(
-        private EditorService $editorService,
         private CacheManager $cacheManager
-    )
-    { }
+    ) {
+    }
 
     protected function configureFormFields(FormMapper $form): void
     {
         $entity = $this->getSubject();
 
         $form
-            ->add('title', TextType::class)
+            ->add('title', TextType::class, [
+                'attr' => [
+                    'data-action' => 'slug',
+                ],
+            ])
+            ->add('slug', TextType::class, [
+                'attr' => [
+                    'data-target' => 'slug',
+                ],
+            ])
             ->add('keywords', TextType::class)
             ->add('description', TextareaType::class, [
                 'attr' => [
-                    'rows' => '3'
-                ]
+                    'rows' => '3',
+                ],
             ])
             ->add('portals', EntityType::class, [
                 'class' => Portal::class,
@@ -50,7 +58,7 @@ final class ImageAdmin extends AbstractAdmin
             ])
         ;
 
-        if ($entity->getId() === null) {
+        if (null === $entity->getId()) {
             $form->add('imageFile', VichImageType::class);
         }
     }
@@ -73,7 +81,7 @@ final class ImageAdmin extends AbstractAdmin
                     'show' => [],
                     'read' => ['template' => 'Admin/show.html.twig'],
                     'delete' => [],
-                ]
+                ],
             ])
         ;
     }
@@ -88,10 +96,10 @@ final class ImageAdmin extends AbstractAdmin
                 ->add('keywords')
                 ->add('description')
             ->end()
-            ->with('Meta data', ['class' => 'col-sm-12 col-lg-6'])  
+            ->with('Meta data', ['class' => 'col-sm-12 col-lg-6'])
                 ->add('updatedAt', null, [
                     'format' => 'd/m/Y à H:i',
-                ]) 
+                ])
                 ->add('categories')
                 ->add('portals')
             ->end()
@@ -100,16 +108,11 @@ final class ImageAdmin extends AbstractAdmin
 
     public function preUpdate(object $image): void
     {
-        $this->editorService->prepareEditing($image);
+        $image->setUpdatedAt(new DateTimeImmutable());
     }
-    
-    public function prePersist(object $image): void
-    {
-        $image->setSlug($this->editorService->updateSlug($image->getTitle()));
-    }
-    
+
     public function preRemove(object $object): void
     {
-        $this->cacheManager->remove('/uploads/' . $object->getFilename());
+        $this->cacheManager->remove('/uploads/'.$object->getFilename());
     }
 }

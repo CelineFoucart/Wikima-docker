@@ -130,3 +130,15 @@ blockquote {
 img {
     max-width: 100%;
 }
+
+.is-invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+}
+
+.help-block {
+    flex: 0 1 100%;
+}

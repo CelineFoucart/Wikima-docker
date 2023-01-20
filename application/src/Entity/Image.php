@@ -6,14 +6,16 @@ use App\Repository\ImageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @Vich\Uploadable
  */
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
+#[UniqueEntity('slug')]
 class Image
 {
     #[ORM\Id]
@@ -24,31 +26,32 @@ class Image
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(
         min: 2,
-        max:255
+        max: 255
     )]
     private $title;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
     private $slug;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(
         min: 2,
-        max:255
+        max: 255
     )]
     private $keywords;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(
         min: 10,
-        max:255
+        max: 255
     )]
     private $description;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\Length(
         min: 1,
-        max:255
+        max: 255
     )]
     private $filename;
 
@@ -235,7 +238,7 @@ class Image
     public function setImageFile(File $image = null): self
     {
         $this->imageFile = $image;
-        
+
         if ($image) {
             $this->updatedAt = new \DateTime('now');
         }
