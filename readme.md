@@ -1,6 +1,6 @@
 # Wikima
 
-Un projet de wiki développé en symfony pour gérer du contenu textuel et des images.
+Wikima est un projet développé en symfony pour organiser des informations sur un univers fictif (de type romanesque, jeu de rôle, série). Il permet de gérer du contenu textuel sous forme de Wiki, des images, mais aussi une galerie, une chronologie et des fiches personnages. On peut créer des pages personnalisées et laisser des commentaires sur les articles.
 
 ## Environnement de développement
 ### Prérequis
