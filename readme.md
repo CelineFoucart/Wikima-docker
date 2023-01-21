@@ -13,14 +13,19 @@ docker compose up -d
 ```
 
 ### Initialisation du projet en environnement de dev
-Dans le container de l'appli
+Dans le container de l'appli, installer les dépendances et les migrations :
 ```bash
 sh deploy.sh
 ```
 
-Création d'un compte administrateur
+Création d'un compte administrateur :
 ```bash
 php bin/console app:create-user
+```
+
+Ou installation de données de test :
+```bash
+php bin/console hautelook:fixtures:load
 ```
 
 ## Consommer les messages avec Messenger de Symfony
