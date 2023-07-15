@@ -18,18 +18,18 @@ class ImageController extends AbstractController
     }
 
     #[Route('/images', name: 'app_image_index')]
-    public function gallery(Request $request): Response
+    public function gallery(Request $request, int $perPageEven): Response
     {
         $search = (new SearchData())
             ->setPage($request->query->getInt('page', 1))
         ;
-        $imageForm = $this->createForm(AdvancedSearchType::class, $search);
+        $imageForm = $this->createForm(AdvancedSearchType::class, $search, ['allow_extra_fields' => true]);
         $imageForm->handleRequest($request);
-
+        
         if ($imageForm->isSubmitted() && $imageForm->isValid()) {
-            $images = $this->imageRepository->search($search);
+            $images = $this->imageRepository->search($search, [], $perPageEven);
         } else {
-            $images = $this->imageRepository->findPaginated($search->getPage());
+            $images = $this->imageRepository->findPaginated($search->getPage(), [], $perPageEven);
         }
 
         return $this->render('image/gallery.html.twig', [
@@ -50,6 +50,7 @@ class ImageController extends AbstractController
 
         return $this->render('image/show_image.html.twig', [
             'image' => $image,
+            'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
         ]);
     }
 }

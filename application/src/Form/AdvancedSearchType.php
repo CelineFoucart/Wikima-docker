@@ -19,8 +19,10 @@ class AdvancedSearchType extends SearchPortalType
                 'label' => false,
                 'required' => false,
                 'class' => Category::class,
-                'expanded' => true,
                 'multiple' => true,
+                'attr' => [
+                    'data-choices' => 'choices',
+                ],
             ])
         ;
     }
@@ -31,6 +33,7 @@ class AdvancedSearchType extends SearchPortalType
             'data_class' => SearchData::class,
             'method' => 'GET',
             'csrf_protection' => false,
+            'allow_extra_fields ' => true,
         ]);
     }
 

@@ -1,0 +1,340 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Tableau de bord
+{% endblock %}
+
+{% block activeDashboard %}
+	active show
+{% endblock %}
+
+{% block toolbar %}
+	{% if is_granted('ROLE_ADMIN') %}
+		<a href="{{ path('admin_app_image_download') }}" class="btn btn-sm btn-primary">
+			<i class="fas fa-download"></i>
+			Télécharger les images
+		</a>
+	{% endif %}
+	{% if is_granted('ROLE_SUPER_ADMIN') %}
+		<a href="{{ path('admin_app_backup_create') }}" class="btn btn-primary btn-sm">
+			<i class="fas fa-plus-circle" aria-hidden="true"></i>
+			Sauvegarder les données
+		</a>
+	{% endif %}
+{% endblock %}
+
+{% block body %}
+	<p>
+		Bienvenue sur le panneau d'administration. Ici, vous allez pouvoir gérer l'encyclopédie et son contenu.
+		Cette page vous offre une vue d'ensemble des statistiques du site. Sur le menu à droite, vous pouvez accéder à la gestion du contenu.
+	</p>
+	<div class="row">
+		<div class="col-lg-6 mb-4">
+			<div class="card border-top-grey">
+				<div class="card-header bg-white">
+					<h2 class="h5 card-title mb-0">Statistiques de l'encyclopédie</h2>
+				</div>
+				<div class="card-body card-show p-1">
+					<table class="table stats-table mb-0">
+						<tbody>
+							<tr>
+								<th>Catégorie</th>
+								<td class="text-center">{{ stats.category }}</td>
+								<td>
+									{% if is_granted('ROLE_ADMIN') %}
+										<a href="{{ path('admin_app_category_create') }}" class="small text-decoration-none me-3">
+											<i class="fas fa-plus-circle" aria-hidden="true"></i>
+											Ajouter
+										</a>
+										<a href="{{ path('admin_app_category_list') }}" class="small text-decoration-none">
+											<i class="fas fa-list" aria-hidden="true"></i>
+											Liste
+										</a>
+									{% endif %}
+								</td>
+							</tr>
+							<tr>
+								<th>Portail</th>
+								<td class="text-center">{{ stats.portal }}</td>
+								<td>
+									{% if is_granted('ROLE_ADMIN') %}
+										<a href="{{ path('admin_app_portal_create') }}" class="small text-decoration-none me-3">
+											<i class="fas fa-plus-circle" aria-hidden="true"></i>
+											Ajouter
+										</a>
+										<a href="{{ path('admin_app_portal_list') }}" class="small text-decoration-none">
+											<i class="fas fa-list" aria-hidden="true"></i>
+											Liste
+										</a>
+									{% endif %}
+								</td>
+							</tr>
+							<tr>
+								<th>Article</th>
+								<td class="text-center">{{ stats.article }}</td>
+								<td>
+									<a href="{{ path('admin_app_article_create') }}" class="small text-decoration-none me-3">
+										<i class="fas fa-plus-circle" aria-hidden="true"></i>
+										Ajouter
+									</a>
+									<a href="{{ path('admin_app_article_list') }}" class="small text-decoration-none">
+										<i class="fas fa-list" aria-hidden="true"></i>
+										Liste
+									</a>
+								</td>
+							</tr>
+							<tr>
+								<th>Image</th>
+								<td class="text-center">{{ stats.image }}</td>
+								<td>
+									<a href="{{ path('admin_app_image_create') }}" class="small text-decoration-none me-3">
+										<i class="fas fa-plus-circle" aria-hidden="true"></i>
+										Ajouter
+									</a>
+									<a href="{{ path('admin_app_image_list') }}" class="small text-decoration-none">
+										<i class="fas fa-list" aria-hidden="true"></i>
+										Liste
+									</a>
+								</td>
+							</tr>
+							<tr>
+								<th>Personnage</th>
+								<td class="text-center">{{ stats.person }}</td>
+								<td>
+									{% if is_granted('ROLE_ADMIN') %}
+										<a href="{{ path('admin_app_person_create') }}" class="small text-decoration-none me-3">
+											<i class="fas fa-plus-circle" aria-hidden="true"></i>
+											Ajouter
+										</a>
+										<a href="{{ path('admin_app_person_list') }}" class="small text-decoration-none">
+											<i class="fas fa-list" aria-hidden="true"></i>
+											Liste
+										</a>
+									{% endif %}
+								</td>
+							</tr>
+							<tr>
+								<th>Lieu</th>
+								<td class="text-center">{{ stats.place }}</td>
+								<td>
+									{% if is_granted('ROLE_ADMIN') %}
+										<a href="{{ path('admin_app_place_create') }}" class="small text-decoration-none me-3">
+											<i class="fas fa-plus-circle" aria-hidden="true"></i>
+											Ajouter
+										</a>
+										<a href="{{ path('admin_app_place_list') }}" class="small text-decoration-none">
+											<i class="fas fa-list" aria-hidden="true"></i>
+											Liste
+										</a>
+									{% endif %}
+								</td>
+							</tr>
+							<tr>
+								<th>Page</th>
+								<td class="text-center">{{ stats.page }}</td>
+								<td>
+									{% if is_granted('ROLE_ADMIN') %}
+										<a href="{{ path('admin_app_page_create') }}" class="small text-decoration-none me-3">
+											<i class="fas fa-plus-circle" aria-hidden="true"></i>
+											Ajouter
+										</a>
+										<a href="{{ path('admin_app_page_list') }}" class="small text-decoration-none">
+											<i class="fas fa-list" aria-hidden="true"></i>
+											Liste
+										</a>
+									{% endif %}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div class="card border-top-grey mt-3">
+				<div class="card-header bg-white">
+					<h2 class="h5 card-title mb-0">Statistiques des utilisateurs</h2>
+				</div>
+				<div class="card-body card-show p-1">
+					<table class="table stats-table mb-0">
+						<tbody>
+							{% if is_granted('ROLE_ADMIN') %}
+								<tr>
+									<th>Utilisateur</th>
+									<td class="text-center">{{ stats.user }}</td>
+									<td>
+										<a href="{{ path('admin_app_user_create') }}" class="small text-decoration-none me-3">
+											<i class="fas fa-plus-circle" aria-hidden="true"></i>
+											Ajouter
+										</a>
+										<a href="{{ path('admin_app_user_list') }}" class="small text-decoration-none">
+											<i class="fas fa-list" aria-hidden="true"></i>
+											Liste
+										</a>
+									</td>
+								</tr>
+							{% endif %}
+							<tr>
+								<th>Note</th>
+								<td class="text-center">{{ stats.note }}</td>
+								<td>
+									<a href="{{ path('admin_app_note_create') }}" class="small text-decoration-none me-3">
+										<i class="fas fa-plus-circle" aria-hidden="true"></i>
+										Ajouter
+									</a>
+									<a href="{{ path('admin_app_note_list') }}" class="small text-decoration-none">
+										<i class="fas fa-list" aria-hidden="true"></i>
+										Liste
+									</a>
+								</td>
+							</tr>
+							{% if is_granted('ROLE_ADMIN') %}
+								<tr>
+									<th>Commentaire</th>
+									<td class="text-center">{{ stats.comment }}</td>
+									<td>
+										<a href="{{ path('admin_app_comment_list') }}" class="small text-decoration-none">
+											<i class="fas fa-list" aria-hidden="true"></i>
+											Liste
+										</a>
+									</td>
+								</tr>
+							{% endif %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<div class="card border-top-primary">
+				<div class="card-header bg-white">
+					<h2 class="h5 card-title mb-0">
+						<i class="fas fa-sticky-note me-1"></i>
+						Les 5 dernières notes
+					</h2>
+				</div>
+				<div class="card-body p-1">
+					<table class="table table-striped mb-0">
+						<thead>
+							<tr>
+								<th>Titre</th>
+								<th>Création</th>
+								<th class="table-id">Est traité</th>
+								<th style="width:40px"></th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for note in notes %}
+								<tr>
+									<td data-label="Titre">
+										<a href="{{ path('admin_app_note_show', {id: note.id}) }}" class="link-primary fw-bold">
+											{{ note.title }}
+										</a>
+									</td>
+									<td data-label="Création">{{ note.createdAt|date(date_format) }}</td>
+									<td data-label="Est traitée">
+										{% if note.isProcessed %}
+											<div role="button" data-id="{{ note.id }}" data-action="update-processed" class="badge rounded-pill bg-success">
+												Traité
+											</div>
+										{% else %}
+											<div role="button" data-id="{{ note.id }}" data-action="update-processed" class="badge rounded-pill bg-danger">
+												A traiter
+											</div>
+										{% endif %}
+									</td>
+									<td data-label="Actions">
+										<div>
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-primary btn-sm" 
+                                                data-bs-toggle="modal" data-bs-target="#show{{ note.id }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+										<div 
+                                            class="modal fade" 
+                                            id="show{{ note.id }}" 
+                                            tabindex="-1" 
+                                            aria-labelledby="show{{ note.id }}Label" 
+                                            aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h3 class="modal-title h5" id="show{{ note.id }}Label">{{ note }}</h3>
+														<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+													</div>
+													<div class="modal-body">
+                                                        {% if note.message is null %}
+                                                            <p class="fst-italic">Aucun message</p>
+                                                        {% else %}
+                                                            {{ note.message|raw }}
+                                                        {% endif %}
+                                                        
+													</div>
+                                                    <div class="modal-footer justify-content-start">
+                                                        <div>
+                                                            {% if note.portal %}
+                                                                <span class="fw-bold">Portail :</span>
+                                                                <a href="{{ path('app_portal_show', {slug: note.portal.slug}) }}">
+                                                                    {{ note.portal }}
+                                                                </a>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div>
+                                                            {% if note.category %}
+																<span class="fw-bold">Catégorie :</span>
+                                                                <a href="{{ path('app_category_show', {slug: note.category.slug}) }}">
+                                                                    {{ note.category }}
+                                                                </a>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+												</div>
+											</div>
+										</div>
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="4" class="text-center">Aucune note</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				<div class="card-footer bg-white border-top-0">
+					<a href="{{ path('admin_app_note_list') }}" class="btn btn-primary w-100 btn-sm">
+						<i class="fas fa-list" aria-hidden="true"></i>
+						Voir plus
+					</a>
+				</div>
+			</div>
+			<div class="card card-stats mt-3">
+				<div class="card-body">
+					<h3>{{ total }}</h3>
+					<p>
+						élément{{ total > 1 ? 's' : '' }}
+						textuel{{ total > 1 ? 's' : '' }}
+					</p>
+				</div>
+				<div class="icon">
+					<i class="fas fa-file" aria-hidden="true"></i>
+				</div>
+				<div class="card-footer text-center position-relative small">
+					dont
+					<strong>{{ stats.article }}</strong>
+					article{{ stats.article > 1 ? 's' : '' }},
+					<strong>{{ stats.person }}</strong>
+					personnage{{ stats.person > 1 ? 's' : '' }}
+					et
+					<strong>{{ stats.place }}</strong>
+					lieu{{ stats.place > 1 ? 'x' : '' }}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('app') }}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Créer une catégorie{% endblock %}
+
+{% block activeWiki %}active show{% endblock %}
+{% block activeCategory %}active{% endblock %}
+
+{% block page_title %}Créer une catégorie{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_category_list') }}" class="text-reset">
+			Catégorie
+		</a>
+	</li>
+	<li class="breadcrumb-item active">
+		Création
+	</li>
+{% endblock %}
+
+{% block toolbar %}
+	<a href="{{ path('admin_app_category_list') }}" class="btn btn-default btn-sm">
+		<i class="fas fa-long-arrow-left"></i>
+		Retour
+	</a>
+{% endblock %}
+
+{% block body %}
+	{% include "Admin/category/_form.html.twig" %}
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block activeWiki %} active show {% endblock %}
+{% block activeArticle %}active{% endblock %}
+
+{% block title %}Editer "{{ section.title }}"{% endblock %}
+
+{% block page_title %}Supprimer "{{ section.title }}"{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="{{ path('admin_app_article_section', {id: section.article.id}) }}" class="text-reset">
+            Sections de "{{ section.article }}"
+        </a>
+    </li>
+    <li class="breadcrumb-item active">
+        {{ section.title }}
+    </li>
+{% endblock %}
+
+{% block toolbar %}
+    <div class="dropdown d-inline">
+        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Action
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li>
+                <a class="dropdown-item" href="{{ path('admin_app_article_section', {id: section.article.id}) }}">
+                    <i class="fas fa-plus-circle" aria-hidden="true"></i>
+                    Ajouter
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('app_article_show', {slug: section.article.slug}) }}" class="dropdown-item">
+                    <i class="fas fa-book-reader" aria-hidden="true"></i>
+                    Retour à l'article
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="card delete-modal">
+        <div class="card-header bg-white">
+            <h3 class="card-title h5 mb-0">Confirmation de suppression</h3>
+        </div>
+        <div class="card-body">
+            Êtes-vous sûr de vouloir supprimer l'élément "{{ section }}" ?
+        </div>
+        <div class="card-footer bg-white">
+            <form method="POST">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ section.id) }}">
+                <a href="{{ path('app_article_show', {slug: section.article.slug}) }}" class="btn btn-primary btn-sm" title="Consulter">
+                    <i class="fas fa-book-reader"></i> Retourner à l'article
+                </a>
+                <button type="submit" name="btn_delete" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash-alt " aria-hidden="true"></i> Oui, supprimer
+                </button>
+                ou
+                <a class="btn btn-success btn-sm" href="{{ path('admin_app_section_edit', {id: section.id }) }}">
+                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                    Éditer
+                </a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

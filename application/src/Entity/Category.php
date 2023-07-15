@@ -5,10 +5,16 @@ namespace App\Entity;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+/**
+ * @Vich\Uploadable
+ */
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[UniqueEntity('slug')]
 class Category
@@ -28,6 +34,7 @@ class Category
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
+    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/')]
     private $slug;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -67,6 +74,23 @@ class Category
     #[ORM\ManyToMany(targetEntity: Person::class, mappedBy: 'categories')]
     private $people;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $presentation = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $banner = null;
+
+    /**
+     * @Vich\UploadableField(mapping="upload_images", fileNameProperty="banner")
+     */
+    private ?File $imageBanner = null;
+
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Note::class)]
+    private Collection $notes;
+
+    #[ORM\ManyToMany(targetEntity: Place::class, mappedBy: 'categories')]
+    private Collection $places;
+
     public function __construct()
     {
         $this->portals = new ArrayCollection();
@@ -74,6 +98,8 @@ class Category
         $this->pages = new ArrayCollection();
         $this->timelines = new ArrayCollection();
         $this->people = new ArrayCollection();
+        $this->notes = new ArrayCollection();
+        $this->places = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -292,6 +318,103 @@ class Category
     {
         if ($this->people->removeElement($person)) {
             $person->removeCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function getPresentation(): ?string
+    {
+        return $this->presentation;
+    }
+
+    public function setPresentation(?string $presentation): self
+    {
+        $this->presentation = $presentation;
+
+        return $this;
+    }
+
+    public function getBanner(): ?string
+    {
+        return $this->banner;
+    }
+
+    public function setBanner(?string $banner): self
+    {
+        $this->banner = $banner;
+
+        return $this;
+    }
+
+    public function setImageBanner(File $imageBanner = null): self
+    {
+        $this->imageBanner = $imageBanner;
+
+        if ($imageBanner) {
+            $this->updatedAt = new \DateTime('now');
+        }
+
+        return $this;
+    }
+
+    public function getImageBanner(): ?File
+    {
+        return $this->imageBanner;
+    }
+
+    /**
+     * @return Collection<int, Note>
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes->add($note);
+            $note->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getCategory() === $this) {
+                $note->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Place>
+     */
+    public function getPlaces(): Collection
+    {
+        return $this->places;
+    }
+
+    public function addPlace(Place $place): self
+    {
+        if (!$this->places->contains($place)) {
+            $this->places->add($place);
+            $place->addCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlace(Place $place): self
+    {
+        if ($this->places->removeElement($place)) {
+            $place->removeCategory($this);
         }
 
         return $this;

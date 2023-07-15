@@ -3,8 +3,7 @@
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
-    {{ include('home/_header.html.twig', { heading_title: "Page d'inscription", heading_description: "Veuillez vous créer un compte pour poster des commentaires." }) }}
-    <section class="p-5 row justify-content-center">
+    <section class="py-5 row justify-content-center">
         {% for flash_error in app.flashes('verify_email_error') %}
             <div class="col-12">
                 <div class="alert alert-danger mb-5" role="alert">{{ flash_error }}</div>
@@ -12,7 +11,7 @@
         {% endfor %}
 
         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
-            <div class="card shadow mx-5 border-0 radius-3">
+            <div class="card shadow mx-2 border-0 radius-3">
                 <div class="card-body p-5">
                     <h2 class="text-uppercase text-center mb-5">Formulaire d'inscription</h2>
                     {{ form_start(registrationForm) }}
@@ -20,7 +19,7 @@
                         {{ form_row(registrationForm.email) }}
                         {{ form_row(registrationForm.plainPassword) }}
                         <div class="my-4">
-                            {{ form_row(registrationForm.agreeTerms) }}
+                            En validant votre inscription, vous acceptez les <a href="{{ path('app_terms') }}" target="_blank">conditions d'utilisation</a>.  
                         </div>
 
                         <div class="text-center">

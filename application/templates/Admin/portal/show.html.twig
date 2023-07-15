@@ -1,0 +1,123 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Afficher "{{ portal }}"{% endblock %}
+
+{% block activeWiki %}active show{% endblock %}
+{% block activePortal %}active{% endblock %}
+
+{% block page_title %}Afficher "{{ portal }}"{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_portal_list') }}" class="text-reset">
+			Portail
+		</a>
+	</li>
+	<li class="breadcrumb-item active">
+		Voir
+	</li>
+{% endblock %}
+
+{% block toolbar %}
+    <a class="btn btn-sm btn-default" href="{{ path('admin_app_portal_create') }}" data-bs-toggle="tooltip" title="Ajouter">
+        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+    </a>
+    <div class="btn-group">
+        <a href="{{ path('app_portal_show', {slug: portal.slug}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Consulter">
+            <i class="fas fa-book-reader"></i>
+        </a>                   
+        <a href="{{ path('admin_app_portal_show', {id: portal.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Afficher">
+            <i class="fas fa-info-circle"></i>
+        </a>
+        <a href="{{ path('admin_app_portal_edit', {id: portal.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Éditer">
+            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+        </a>
+        {% include "Admin/components/_delete_modal.html.twig" with { element: portal, path: 'admin_app_portal_delete' } %}
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card border-top-primary">
+                <div class="card-header bg-white">
+                    <h2 class="card-title h5 mb-0">{{ portal }}</h2>
+                </div>
+                <div class="card-body card-show">
+                    <table class="table table-striped mb-0">
+                        <tbody>
+                            <tr>
+                                <th>Titre</th>
+                                <td>
+                                    <a href="{{ path('app_portal_show', {slug: portal.slug}) }}">
+                                        {{ portal.title }}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Slug</th>
+                                <td>{{ portal.slug }}</td>
+                            </tr>
+                            <tr>
+                                <th>Mots clés</th>
+                                <td>{{ portal.keywords }}</td>
+                            </tr>
+                            <tr>
+                                <th>Catégories</th>
+                                <td class="container-list">
+                                    {% for category in portal.categories %}
+                                        <a href="{{ path('app_category_show', {slug: category.slug}) }}">{{ category }}</a>
+                                    {% else %}
+                                        <span class="fst-italic">Aucune catégorie</span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Description</th>
+                                <td>{{ portal.description|nl2br }}</td>
+                            </tr>
+                            <tr>
+                                <th>Présentation</th>
+                                <td>{{ portal.presentation|raw }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card border-top-primary mt-3">
+                <div class="card-header bg-white">
+                    <h2 class="card-title h5 mb-0">Bannière</h2>
+                </div>
+                <div class="card-body card-show">
+                    {% if portal.banner %}
+                        <img src="{{ vich_uploader_asset(portal) }}" class="img-fluid" alt="bannière de {{ portal.title }}">
+                        <p class="text-center">{{ portal.banner }}</p>
+                    {% else %}
+                        <p class="text-center">Aucune bannière</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-top-primary">
+                <div class="card-header bg-white">
+                    <h2 class="card-title h5 mb-0">Méta données</h2>
+                </div>
+                <div class="card-body card-show">
+                    <table class="table table-striped mb-0">
+                        <tbody>
+                            <tr>
+                                <th>Création</th>
+                                <td>{{ portal.createdAt|date(date_format) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Mise à jour</th>
+                                <td>{{ portal.updatedAt ? portal.updatedAt|date(date_format) : '' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

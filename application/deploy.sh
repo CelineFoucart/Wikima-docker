@@ -5,12 +5,12 @@
 
 # ---------------------------------- 
 # install php and symfony dependencies
-composer install
+composer install --no-dev
 php bin/console assets:install
 
 # install node modules and build styles and js
 npm install
-npm run dev
+npm run build
 
 # Create the database
 php bin/console doctrine:database:create --if-not-exists

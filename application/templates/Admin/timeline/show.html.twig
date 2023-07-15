@@ -1,0 +1,121 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Afficher "{{ timeline }}"{% endblock %}
+
+{% block activeWiki %}active show{% endblock %}
+{% block activeTimeline %}active{% endblock %}
+
+{% block page_title %}Afficher "{{ timeline }}"{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_timeline_list') }}" class="text-reset">
+			Chronologie
+		</a>
+	</li>
+	<li class="breadcrumb-item active">
+		Voir
+	</li>
+{% endblock %}
+
+{% block toolbar %}
+    <a class="btn btn-sm btn-default" href="{{ path('admin_app_timeline_create') }}" data-bs-toggle="tooltip" title="Ajouter">
+        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+    </a>
+    <div class="btn-group">
+        <a href="{{ path('app_timeline_show', {slug: timeline.slug}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Consulter">
+            <i class="fas fa-book-reader"></i>
+        </a>                   
+        <a href="{{ path('admin_app_timeline_show', {id: timeline.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Afficher">
+            <i class="fas fa-info-circle"></i>
+        </a>
+        <a href="{{ path('admin_app_timeline_event', {id: timeline.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Evénements">
+            <i class="fas fa-calendar" aria-hidden="true"></i>
+        </a>  
+        <a href="{{ path('admin_app_timeline_edit', {id: timeline.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Éditer">
+            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+        </a>
+        {% include "Admin/components/_delete_modal.html.twig" with { element: timeline, path: 'admin_app_timeline_delete' } %}
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card border-top-primary">
+                <div class="card-header bg-white">
+                    <h2 class="card-title h5 mb-0">{{ timeline }}</h2>
+                </div>
+                <div class="card-body card-show">
+                    <table class="table table-striped mb-0">
+                        <tbody>
+                            <tr>
+                                <th>Titre</th>
+                                <td>
+                                    <a href="{{ path('app_timeline_show', {slug: timeline.slug}) }}">
+                                        {{ timeline.title }}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Slug</th>
+                                <td>{{ timeline.slug }}</td>
+                            </tr>
+                            <tr>
+                                <th>Description</th>
+                                <td>{{ timeline.description|nl2br }}</td>
+                            </tr>
+                            <tr>
+                                <th>Catégories</th>
+                                <td>
+                                    {% if timeline.categories is not empty %}
+                                        <ul class="mb-0">
+                                            {% for category in timeline.categories %}
+                                                <li><a href="{{ path('app_category_show', {slug: category.slug}) }}">{{ category }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Portails</th>
+                                <td>
+                                    {% if timeline.portals is not empty %}
+                                        <ul class="mb-0">
+                                            {% for portal in timeline.portals %}
+                                                <li><a href="{{ path('app_portal_show', {slug: portal.slug}) }}">{{ portal }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-top-primary">
+                <div class="card-header bg-white">
+                    <h2 class="card-title h5 mb-0">Méta données</h2>
+                </div>
+                <div class="card-body card-show">
+                    <table class="table table-striped mb-0">
+                        <tbody>
+                            <tr>
+                                <th>Création</th>
+                                <td>{{ timeline.createdAt|date(date_format) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Mise à jour</th>
+                                <td>{{ timeline.updatedAt ? timeline.updatedAt|date(date_format) : '' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	
+{% endblock %}

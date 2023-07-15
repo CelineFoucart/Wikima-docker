@@ -19,14 +19,10 @@ use Symfony\Component\Routing\Annotation\Route;
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(CategoryRepository $categoryRepository, ArticleRepository $articleRepository, AboutRepository $aboutRepository): Response
+    public function index(ArticleRepository $articleRepository, AboutRepository $aboutRepository): Response
     {
-        $categories = $categoryRepository->findAll();
-        $articles = $articleRepository->findLastArticles();
-
         return $this->render('home/index.html.twig', [
-            'categories' => $categories,
-            'articles' => $articles,
+            'article' => $articleRepository->getRandomArticle(),
             'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
             'overview' => $aboutRepository->findAboutRow('overview'),
         ]);
@@ -72,12 +68,26 @@ final class HomeController extends AbstractController
         return $this->render('home/page.html.twig', [
             'page' => $page,
             'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
+            'title' => $page->getTitle(),
+            'description' => $page->getDescription(),
         ]);
     }
 
     #[Route('/faq', name: 'app_faq')]
     public function faqAction(): Response
     {
-        return $this->render('home/faq.html.twig', []);
+        return $this->render('home/faq.html.twig');
+    }
+
+    #[Route('/terms', name: 'app_terms')]
+    public function termsAction(): Response
+    {
+        return $this->render('home/terms.html.twig');
+    }
+
+    #[Route('/privacy', name: 'app_privacy')]
+    public function privacyAction(): Response
+    {
+        return $this->render('home/privacy.html.twig');
     }
 }

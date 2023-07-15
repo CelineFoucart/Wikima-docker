@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ category.title }}
+	| Catégorie
+{% endblock %}
+
+{% block description %}
+	{{ category.description }}
+{% endblock %}
+
+{% block body %}
+	{% include "category/components/_header.html.twig" with {articles: true} %}
+    <article class="p-4">
+        <h2 class="content-title-section">
+            Les articles de la catégorie &laquo;&nbsp;{{ category.title }}&nbsp;&raquo;
+        </h2>
+        <div class="row">
+            <p class="col-md-9">
+                {% set total = articles.getTotalItemCount %}
+                {% if type %}
+                    Cette catégorie comprend <strong>{{ total }}</strong> articles du type <strong>{{ type }}</strong>, 
+                    dont les <strong>{{articles|length}}</strong> articles ci-dessous.
+                {% else %}
+                    Cette catégorie comprend <strong>{{ total }}</strong> articles, 
+                    dont les <strong>{{articles|length}}</strong> articles ci-dessous.
+                {% endif %}
+            </p>
+            <div class="col-md-3 text-end">
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Types d'article
+                    </button>
+
+                    {% set style_scroll = types|length > 9 ? 'style="overflow-y: scroll; max-height: 350px;"' : '' %}
+
+                    <ul class="dropdown-menu" {{ style_scroll|raw }} aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="{{ path('app_category_show_article', {slug: category.slug}) }}">Tous les types</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        {% for article_type in types %}
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_category_show_article', {slug: category.slug, type: article_type.slug}) }}">
+                                    {% if article_type.icon %}<i class="{{ article_type.icon }}" aria-hidden="true"></i>{% endif %}
+                                    {{ article_type }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="{{ total > 3 ? 'column-3' : '' }} mt-1">
+            {% for key, elements in items %}
+                <div class="mb-4">
+                    <h3 class="h4 mb-0 fw-bold">{{ key }}</h3>
+                    <ul>
+                        {% for item in elements %}
+                            <li data-bs-toggle="tooltip" title="{{ item.description ? item.description : 'Aucune description' }}">
+                                <a href="{{ path('app_article_show', {slug: item.slug}) }}" class="text-decoration-none">
+                                    {{ item.title }}
+                                    {% if item.isPrivate %}
+                                        <i class="fas fa-lock fw-bold, text-danger" data-bs-toggle="tooltip" title="Privé (visible uniquement par son auteur et les administrateurs)"></i>
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <p class="text-muted text-center">Aucun element trouvé</p>
+            {% endfor %}
+        </div>
+
+        <div class="navigation">
+            {{ knp_pagination_render(articles) }}
+        </div>
+    </article>
+{% endblock %}

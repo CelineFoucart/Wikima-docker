@@ -13,14 +13,33 @@ import './styles/index.css';
 import './styles/content.css';
 import './styles/timeline.css';
 import './styles/user-icon.css';
+import searchInput from './lib/search-input.js';
+import updateNote from './lib/update-note.js';
 
 // start the Stimulus application
 import './bootstrap';
 
-// Enabled tooltips
 window.onload = () => {
+    // Enable tooltips
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     });
+
+    // Enable updating note processed
+    const notes = document.querySelectorAll('[data-action="update-processed"]');
+    if (notes.length > 0) {
+        notes.forEach(note => {
+            note.addEventListener('click', (e) => {
+                e.preventDefault();
+                const id = note.dataset.id;
+                if (id) {
+                    updateNote(id, note);
+                }
+            })
+        });
+    }
+
+    // Enable search input in navbar
+    searchInput('#searchable-dropdown-input', '#searchable-dropdown');
 }

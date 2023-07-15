@@ -34,7 +34,7 @@ class StatisticsExtension extends AbstractExtension
      */
     public function getStatistics(): string
     {
-        $tables = ['category', 'portal', 'article', 'image'];
+        $tables = ['category', 'portal', 'article', 'image', 'place', 'person'];
 
         foreach ($tables as $table) {
             $this->statisticsHandler->addEntity(new SatisticsEntity($table));
@@ -45,15 +45,35 @@ class StatisticsExtension extends AbstractExtension
         $pluralPort = (int) $stats['portal'] > 1 ? 's' : '';
         $pluralArt = (int) $stats['article'] > 1 ? 's' : '';
         $pluralIm = (int) $stats['image'] > 1 ? 's' : '';
+        $pluralPl = (int) $stats['place'] > 1 ? 'x' : '';
+        $pluralPe = (int) $stats['person'] > 1 ? 's' : '';
+
+        $total = (int) $stats['article'] + (int) $stats['place'] + (int) $stats['person'] + (int) $stats['image'];
+        $plural = $total > 1 ? 's' : '';
 
         return <<<HTML
-            <p>
-                {$this->websiteName} a <span class='fw-bold'>{$stats['category']}</span> catégorie{$pluralCat} 
-                <span class="fw-bold">{$stats['portal']}</span> portail{$pluralPort} et 
-                <span class="fw-bold">{$stats['article']}</span> article{$pluralArt}.
+            <p> 
+                Aujourd'hui, {$this->websiteName} regroupe 
+                dans <strong>{$stats['category']}</strong> catégorie{$pluralCat} et <strong>{$stats['portal']}</strong> portail{$pluralPort} 
+                les <strong>{$total}</strong> élément{$plural} suivants :
             </p>
-            <p>
-                Ses membres ont importé <span class='fw-bold'>{$stats['image']}</span> fichier{$pluralIm} multimédia{$pluralIm}.
+            <p class="d-flex flex-wrap justify-content-between mx-5 text-center">
+                <span class="px-1">
+                    <span class="fw-bold fs-5">{$stats['article']}</span> <br> 
+                    article{$pluralArt}
+                </span>
+                <span class="px-1">
+                    <span class='fw-bold fs-5'>{$stats['image']}</span> <br>
+                    image{$pluralIm} 
+                </span>
+                <span class="px-1">
+                    <span class="fw-bold fs-5">{$stats['place']}</span> <br>
+                    lieu{$pluralPl} 
+                </span>
+                <span class="px-1">
+                    <span class="fw-bold fs-5">{$stats['person']}</span> <br>
+                    personnage{$pluralPe}
+                </span>
             </p>
 HTML;
     }

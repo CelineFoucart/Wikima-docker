@@ -1,0 +1,70 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Afficher "{{ article }}"{% endblock %}
+
+{% block activeWiki %}active show{% endblock %}
+{% block activeArticle %}active{% endblock %}
+
+{% block page_title %}
+    {% if article.isArchived %}
+        <i class="fas fa-archive me-1 fa-fw" data-bs-toggle="tooltip" aria-hidden="true" title="archivé"></i>
+    {% endif %}
+    {% if article.isSticky %}
+        <i class="fas fa-thumbtack me-1" data-bs-toggle="tooltip" title="Epinglé"></i>
+    {% endif %}
+    {{ article }}
+{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_article_list') }}" class="text-reset">
+			Article
+		</a>
+	</li>
+	<li class="breadcrumb-item active">
+		Voir
+	</li>
+{% endblock %}
+
+{% set can_edit = can_access(app.user, article) %}
+
+{% block toolbar %}
+    <a class="btn btn-sm btn-default" href="{{ path('admin_app_article_create') }}" data-bs-toggle="tooltip" title="Ajouter">
+        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+    </a>
+    <div class="btn-group">
+        {% set can_edit = can_access(app.user, article) %}
+
+        <a href="{{ path('app_article_show', {slug: article.slug}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Consulter">
+            <i class="fas fa-book-reader"></i>
+        </a>                   
+        <a href="{{ path('admin_app_article_show', {id: article.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Afficher">
+            <i class="fas fa-info-circle"></i>
+        </a>
+        {% if can_edit %}
+            <a href="{{ path('admin_app_article_edit', {id: article.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Éditer">
+                <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+            </a>
+            {% include "Admin/components/_archive_modal.html.twig" with { element: article, path: 'admin_app_article_archive' } %}
+            {% include "Admin/components/_delete_modal.html.twig" with { element: article, path: 'admin_app_article_delete' } %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block body %}
+    <ul class="nav nav-custom-style nav-pills mb-4">
+        <li class="nav-item">
+            <a class="nav-link {{ general_active is defined ? 'active' : '' }}" href="{{ path('admin_app_article_show', {id: article.id}) }}">Général</a>
+        </li>
+        {% if can_edit %}
+            <li class="nav-item">
+                <a class="nav-link {{ section_active is defined ? 'active' : '' }}" href="{{ path('admin_app_article_section', {id: article.id}) }}">Gérer les sections</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ gallery_active is defined ? 'active' : '' }}" href="{{ path('admin_app_article_gallery', {id: article.id}) }}">Gérer la galerie</a>
+            </li>
+        {% endif %}
+    </ul>
+
+    {% block show_tab %}{% endblock %}
+{% endblock %}

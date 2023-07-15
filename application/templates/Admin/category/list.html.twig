@@ -1,0 +1,75 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Liste des catégories{% endblock %}
+
+{% block activeWiki %} active show {% endblock %}
+{% block activeCategory %}active{% endblock %}
+
+{% block page_title %}Catégorie{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">
+        Catégorie
+    </li>
+{% endblock %}
+
+{% block toolbar %}
+    <a href="{{ path('admin_app_category_create') }}" class="btn btn-default btn-sm">
+        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+        Ajouter
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="card border-top-primary">
+        <div class="card-body p-1">
+            <table class="table data-table mb-0 table-striped">
+                <thead>
+                    <tr>
+                        <th class="table-id">Id</th>
+                        <th>Titre</th>
+                        <th>Création</th>
+                        <th>Mise à jour</th>
+                        <th data-orderable="false">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td data-label="Id">
+                                <a href="{{ path('app_category_show', {slug: category.slug}) }}" class="fw-bold">{{category.id }}</a>
+                            </td>
+                            <td data-label="Titre">
+                                {{ category.title }}
+                            </td>
+                            <td data-label="Création" data-sort="{{ category.createdAt ? category.createdAt|date('Y-m-d H:i') : '' }}">
+                                {{ category.createdAt|date(date_format) }}
+                            </td>
+                            <td data-label="Mise à jour" data-sort="{{ category.updatedAt ? category.updatedAt|date('Y-m-d H:i') : '' }}">
+                                {{ category.updatedAt ? category.updatedAt|date(date_format) : '' }}
+                            </td>
+                            <td data-label="Actions">
+                                <div class="btn-group">
+                                    <a href="{{ path('app_category_show', {slug: category.slug}) }}" class="btn btn-sm btn-default" data-bs-toggle="tooltip" title="Consulter">
+                                        <i class="fas fa-book-reader"></i>
+                                    </a>                   
+                                    <a href="{{ path('admin_app_category_show', {id: category.id}) }}" class="btn btn-sm btn-default" data-bs-toggle="tooltip" title="Afficher">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+                                    <a href="{{ path('admin_app_category_sort', {id: category.id}) }}" class="btn btn-sm btn-default" data-bs-toggle="tooltip" title="Gérer l'ordre des elements">
+                                        <i class="fas fa-sort-amount-down-alt"></i>
+                                    </a>
+                                    <a href="{{ path('admin_app_category_edit', {id: category.id}) }}" class="btn btn-sm btn-default" data-bs-toggle="tooltip" title="Éditer">
+                                        <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                                    </a>
+                                    {% include "Admin/components/_delete_modal.html.twig" with { element: category, path: 'admin_app_category_delete' } %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

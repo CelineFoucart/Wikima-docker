@@ -28,6 +28,7 @@ class Timeline
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
+    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/')]
     private $slug;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -51,6 +52,9 @@ class Timeline
 
     #[ORM\OneToMany(mappedBy: 'timeline', targetEntity: Event::class, orphanRemoval: true)]
     private $events;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $position = null;
 
     public function __construct()
     {
@@ -198,6 +202,18 @@ class Timeline
                 $event->setTimeline(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?int $position): self
+    {
+        $this->position = $position;
 
         return $this;
     }

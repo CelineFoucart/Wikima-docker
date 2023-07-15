@@ -9,6 +9,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class SearchPortalType extends AbstractType
 {
@@ -20,15 +22,17 @@ class SearchPortalType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'Search...',
-                    'class' => 'form-control rounded-pill',
+                    'class' => 'form-control search-input',
                 ],
             ])
             ->add('portals', EntityType::class, [
                 'label' => false,
                 'required' => false,
                 'class' => Portal::class,
-                'expanded' => true,
                 'multiple' => true,
+                'attr' => [
+                    'data-choices' => 'choices'
+                ]
             ])
         ;
     }
@@ -39,6 +43,7 @@ class SearchPortalType extends AbstractType
             'data_class' => SearchData::class,
             'method' => 'GET',
             'csrf_protection' => false,
+            'allow_extra_fields ' => true,
         ]);
     }
 

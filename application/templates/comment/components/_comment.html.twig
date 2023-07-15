@@ -12,11 +12,11 @@
                 {% endif %}
             </h4>
             <small class="text-muted">
-                <i class="bi bi-calendar3 me-1"></i>
-                Le {{ comment.createdAt|date('d/m/Y, à H:i')}}
+                <i class="fas fa-calendar-alt me-1"></i>
+                Le {{ comment.createdAt|date(date_format)}}
             </small>
         </div>
     </header>
     
-    <p class="mt-2 mb-0 text-muted">{{ comment.content|nl2br}}</p>
+    <p class="mt-2 mb-0 text-muted">{{ comment.content|raw}}</p>
 </article>

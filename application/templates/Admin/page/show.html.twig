@@ -1,0 +1,121 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Afficher "{{ page }}"{% endblock %}
+{% block activeAdmin %}active show{% endblock %}
+{% block activePage %} active {% endblock %}
+{% block page_title %}Afficher "{{ page }}"{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_page_list') }}" class="text-reset">
+			Page
+		</a>
+	</li>
+	<li class="breadcrumb-item active">
+		Voir
+	</li>
+{% endblock %}
+
+{% block toolbar %}
+    <a class="btn btn-sm btn-default" href="{{ path('admin_app_page_create') }}" data-bs-toggle="tooltip" title="Ajouter">
+        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+    </a>
+    <div class="btn-group">
+        <a href="{{ path('app_page', {slug: page.slug}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Consulter">
+            <i class="fas fa-book-reader"></i>
+        </a>                   
+        <a href="{{ path('admin_app_page_show', {id: page.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Afficher">
+            <i class="fas fa-info-circle"></i>
+        </a>
+        <a href="{{ path('admin_app_page_edit', {id: page.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Éditer">
+            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+        </a>
+        {% include "Admin/components/_delete_modal.html.twig" with { element: page, path: 'admin_app_page_delete' } %}
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card border-top-primary">
+                <div class="card-header bg-white">
+                    <h2 class="card-title h5 mb-0">Informations</h2>
+                </div>
+                <div class="card-body card-show">
+                    <table class="table table-striped mb-0">
+                        <tbody>
+                            <tr>
+                                <th>Titre</th>
+                                <td>
+                                    {{ page.title }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Slug</th>
+                                <td>
+                                    {{ page.slug }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Description</th>
+                                <td>
+                                    {{ page.description }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-top-primary">
+                <div class="card-header bg-white">
+                    <h2 class="card-title h5 mb-0">Relations</h2>
+                </div>
+                <div class="card-body card-show">
+                    <table class="table table-striped mb-0">
+                        <tbody>
+                            <tr>
+                                <th>Catégories</th>
+                                <td>
+                                    {% if page.categories is not empty %}
+                                        <ul class="mb-0">
+                                            {% for category in page.categories %}
+                                                <li><a href="{{ path('app_category_show', {slug: category.slug}) }}">{{ category }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Portails</th>
+                                <td>
+                                    {% if page.portals is not empty %}
+                                        <ul class="mb-0">
+                                            {% for portal in page.portals %}
+                                                <li><a href="{{ path('app_portal_show', {slug: portal.slug}) }}">{{ portal }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 mt-3">
+            <div class="card border-top-primary">
+                <div class="card-header bg-white">
+                    <h2 class="card-title h5 mb-0">Contenu</h2>
+                </div>
+                <div class="card-body">
+                    {{ page.content|raw }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+{% endblock %}

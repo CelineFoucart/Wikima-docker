@@ -12,14 +12,16 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+#[UniqueEntity(fields: ['username'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['index'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
@@ -27,6 +29,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         min: 3,
         max: 180
     )]
+    #[Groups(['index'])]
     private $username;
 
     #[ORM\Column(type: 'json')]

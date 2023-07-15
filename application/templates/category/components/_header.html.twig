@@ -7,8 +7,17 @@
 {% if persons is not defined %}
 	{% set persons = false %}
 {% endif %}
+{% if articles is not defined %}
+	{% set articles = false %}
+{% endif %}
+{% if portals is not defined %}
+	{% set portals = false %}
+{% endif %}
+{% if places is not defined %}
+	{% set places = false %}
+{% endif %}
 
-<header class="pt-4 pb-0 bg-item header-item border-bottom">
+<div class="pt-3 pb-0 bg-item header-item">
 	<div class="container-fluid">
 		<div class="row border-bottom align-items-center">
 			<div class="col-md-6 pb-3">
@@ -20,7 +29,7 @@
 						<li class="breadcrumb-item">
 							<a href="{{ path('app_category_index') }}">Catégories</a>
 						</li>
-						<li class="breadcrumb-item active" aria-current="page">{{ category.title|capitalize }}</li>
+						<li class="breadcrumb-item active" aria-current="page">{{ category.title }}</li>
 					</ol>
 				</nav>
 			</div>
@@ -29,40 +38,103 @@
 		<div class="item-heading position-relative">
 			{% if is_granted('ROLE_ADMIN') %}
 				<div class="p-2 position-absolute top-0" style="right:-10px">
-					<div class="dropdown">
-						<button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" title="outils">
-							<i class="bi bi-wrench-adjustable me-1"></i>
+					<div class="dropdown d-inline-block">
+						<button class="btn btn-outline-secondary w-100 btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" title="outils">
+							<i class="fas fa-wrench me-1"></i>
 						</button>
 						<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 							<li>
 								<a class="dropdown-item" href="{{ path('admin_app_category_edit', {id:category.id}) }}">
-									Gérer
+									<i class="fas fa-pencil-alt"></i>
+									Editer la catégorie
+								</a>
+							</li>
+							<li>
+								<a class="dropdown-item" href="{{ path('admin_app_category_sort', {id:category.id}) }}">
+									<i class="fas fa-sort-amount-down-alt"></i>
+									Ordonner les éléments
+								</a>
+							</li>
+							<li>
+								<a class="dropdown-item" href="{{ path('admin_app_portal_create', {category:category.id}) }}">
+									<i class="fas fa-tag"></i>
+									Ajouter un portail
+								</a>
+							</li>
+							<li>
+								<a class="dropdown-item" href="{{ path('admin_app_timeline_create', {category:category.id}) }}">
+									<i class="fas fa-hourglass"></i>
+									Ajouter une chronologie
+								</a>
+							</li>
+							<li>
+								<a class="dropdown-item" href="{{ path('admin_app_person_create', {category:category.id}) }}">
+									<i class="fas fa-user"></i>
+									Ajouter un personnage
+								</a>
+							</li>
+							<li>
+								<a class="dropdown-item" href="{{ path('admin_app_place_create', {category:category.id}) }}">
+									<i class="fas fa-globe"></i>
+									Ajouter un lieu
+								</a>
+							</li>
+							<li>
+								<a class="dropdown-item" href="{{ path('admin_app_image_create', {category:category.id}) }}">
+									<i class="fas fa-image"></i>
+									Ajouter une image
 								</a>
 							</li>
 						</ul>
 					</div>
+					{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR') %}
+						<a href="{{ path('app_category_notes', {slug: category.slug}) }}" class="btn btn-outline-secondary btn-sm" title="note">Notes</a>
+					{% endif %}
 				</div>
 			{% endif %}
-			<h1 class="mb-3">{{ category.title|capitalize }}</h1>
-			<p class="lead mb-3">{{ category.description }}</p>
 		</div>
-
-		<ul class="nav nav-tabs border-bottom-0">
-			<li class="nav-item">
-				<a class="nav-link {{ articles ? 'active': '' }}" href="{{ path('app_category_show', {slug:category.slug}) }}">
-					Articles
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link {{ persons ? 'active': '' }}" href="{{ path('app_category_persons', {slug:category.slug}) }}">
-					Personnages
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link {{ images ? 'active': '' }}" href="{{ path('app_category_gallery', {slug:category.slug}) }}">
-					Galerie d'images
-				</a>
-			</li>
-		</ul>
 	</div>
-</header>
+	<nav class="tab-default mt-3">
+		<div class="item {{ portals ? 'active': '' }}">
+			<a href="{{ path('app_category_show', {slug:category.slug}) }}" data-bs-toggle="tooltip" title="Catégorie">
+				<i class="fas fa-folder"></i>
+			</a>
+		</div>
+		<div class="item {{ articles ? 'active': '' }}">
+			<a href="{{ path('app_category_show_article', {slug:category.slug}) }}" data-bs-toggle="tooltip" title="Articles">
+				<i class="fas fa-file-alt"></i>
+			</a>
+		</div>
+		<div class="item {{ persons ? 'active': '' }}">
+			<a href="{{ path('app_category_persons', {slug:category.slug}) }}" data-bs-toggle="tooltip" title="Personnages">
+				<i class="fas fa-user"></i>
+			</a>
+		</div>
+		<div class="item {{ places ? 'active': '' }}">
+			<a href="{{ path('app_category_places', {slug:category.slug}) }}" data-bs-toggle="tooltip" title="Lieux">
+				<i class="fas fa-globe"></i>
+			</a>
+		</div>
+		<div class="item {{ images ? 'active': '' }}">
+			<a href="{{ path('app_category_gallery', {slug:category.slug}) }}" data-bs-toggle="tooltip" title="Galerie">
+				<i class="fas fa-image"></i>
+			</a>
+		</div>
+	</nav>
+</div>
+<section>
+	{% if category.banner %}
+		<img src="{{ vich_uploader_asset(category) }}" class="img-fluid" alt="bannière de {{ category.title }}">
+	{% endif %}
+
+	{% if category.pages is not empty %}
+		<p class="text-end m-2">
+			{% for page in category.pages %}
+				<a href="{{ path('app_page', {slug: page.slug}) }}" class="label mx-1" data-bs-toggle="tooltip" title="{{ page.description ? page.description : 'Aucune description' }}">
+					<i class="fas fa-file-alt"></i>
+					{{ page.title }}
+				</a>
+			{% endfor %}
+		</p>			
+	{% endif %}
+</section>

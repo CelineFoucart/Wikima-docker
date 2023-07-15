@@ -7,12 +7,9 @@
 {% set title_page = "Liste des membres de "~ app_name %}
 
 {% block body %}
-	{{ include('home/_header.html.twig', { heading_title: title_page, heading_description: "Cliquez sur un pseudo pour obtenir plus d'information sur le membre." }) }}
-
 	<section class="py-5 container-fluid">
-		<h2>Les contributeurs de
-			{{ app_name }}</h2>
-		<table class="table">
+		<h2>Les contributeurs de {{ app_name }}</h2>
+		<table class="table mb-0">
 			<thead>
 				<tr>
 					<th>Pseudo</th>
@@ -23,13 +20,13 @@
 			<tbody>
 				{% for user in users %}
 					<tr>
-						<td>
+						<td data-label="Pseudo">
 							<a href="{{ path('app_user_show', {id:user.id}) }}">{{ user.username }}</a>
 						</td>
-						<td>
+						<td data-label="Roles">
 							{{ format_roles(user.roles) }}
 						</td>
-						<td>
+						<td data-label="Contributions">
 							<a href="{{ path('app_article_user', {id: user.id}) }}">articles publiés</a>
 						</td>
 					</tr>
@@ -40,6 +37,13 @@
 				{% endfor %}
 			</tbody>
 		</table>
+		<p class="mt-1">
+            {% set total = users.getTotalItemCount %}            
+            {% set current = users|length %}
+            Affichage de <span class="fw-bold">{{ current }}</span>
+            sur <span class="fw-bold">{{ total }}</span>
+            utilisateur{{ total > 1 ? 's' : '' }}
+        </p>
 
 		<div class="navigation">
 			{{ knp_pagination_render(users) }}

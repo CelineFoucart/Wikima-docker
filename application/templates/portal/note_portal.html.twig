@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Notes | {{ portal.title }}
+{% endblock %}
+
+{% block description %}
+	{{ portal.description }}
+{% endblock %}
+
+{% block stylesheets %}
+	<link href="{{ asset('assets/DataTables/datatables.min.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block body %}
+    {% include "portal/components/_header.html.twig"  %}
+    <article class="pt-1 py-5 px-4">
+        <header class="row">
+            <div class="col-9">
+                <h2>Consulter les notes du portail &laquo;&nbsp;{{ portal.title }}&nbsp;&raquo;</h2>
+            </div>
+            {% include "components/_note_form.html.twig" %}
+        </header>
+
+        {% include "components/_note_table.html.twig" with {notes: portal.notes} %}
+    </article>
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset('assets/DataTables/jQuery-3.6.0/jquery-3.6.0.min.js') }}"></script>
+<script src="{{ asset('assets/DataTables/datatables.min.js') }}"></script>
+<script>
+    $('#tableIndex').DataTable({
+        language: {
+            url: '/assets/DataTables/i18n/fr-FR.json',
+        },
+        order: [[1, 'desc']]
+    });
+</script>
+{% endblock %}

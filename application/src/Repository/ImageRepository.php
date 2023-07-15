@@ -65,7 +65,7 @@ class ImageRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findPaginated(int $page, array $excludes = []): PaginationInterface
+    public function findPaginated(int $page, array $excludes = [], int $limit = 14): PaginationInterface
     {
         $builder = $this->createQueryBuilder('i')->orderBy('i.title', 'ASC');
 
@@ -73,10 +73,10 @@ class ImageRepository extends ServiceEntityRepository
             $builder->andWhere('i.id NOT IN (:excludes)')->setParameter('excludes', $excludes);
         }
 
-        return $this->paginatorService->paginate($builder, $page);
+        return $this->paginatorService->setLimit($limit)->paginate($builder, $page);
     }
 
-    public function findByCategory(Category $category, int $page): PaginationInterface
+    public function findByCategory(Category $category, int $page, int $limit = 24): PaginationInterface
     {
         $builder = $this->createQueryBuilder('i')
             ->leftJoin('i.categories', 'c')
@@ -85,10 +85,10 @@ class ImageRepository extends ServiceEntityRepository
             ->setParameter('categories', [$category->getId()])
         ;
 
-        return $this->paginatorService->paginate($builder, $page);
+        return $this->paginatorService->setLimit($limit)->paginate($builder, $page);
     }
 
-    public function findByPortal(Portal $portal, int $page): PaginationInterface
+    public function findByPortal(Portal $portal, int $page, int $limit = 24): PaginationInterface
     {
         $builder = $this->createQueryBuilder('i')
             ->leftJoin('i.portals', 'p')
@@ -97,10 +97,10 @@ class ImageRepository extends ServiceEntityRepository
             ->setParameter('portals', [$portal->getId()])
         ;
 
-        return $this->paginatorService->paginate($builder, $page);
+        return $this->paginatorService->setLimit($limit)->paginate($builder, $page);
     }
 
-    public function search(SearchData $search, array $excludes = []): PaginationInterface
+    public function search(SearchData $search, array $excludes = [], int $limit = 10): PaginationInterface
     {
         $builder = $this->createQueryBuilder('i')
             ->orderBy('i.title', 'ASC')
@@ -137,6 +137,6 @@ class ImageRepository extends ServiceEntityRepository
             $builder->andWhere('i.id NOT IN (:excludes)')->setParameter('excludes', $excludes);
         }
 
-        return $this->paginatorService->paginate($builder, $search->getPage());
+        return $this->paginatorService->setLimit($limit)->paginate($builder, $search->getPage());
     }
 }

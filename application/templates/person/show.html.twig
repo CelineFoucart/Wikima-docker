@@ -14,42 +14,50 @@
 {% block body %}
 	<header class="bg-default-light border-bottom">
 		<div class="pt-3 border-bottom container-fluid">
-			<nav aria-label="breadcrumb">
-				<ol class="breadcrumb">
-					<li class="breadcrumb-item">
-						<a href="{{ path('app_person_index') }}">Personnages</a>
-					</li>
-					<li class="breadcrumb-item active" aria-current="page">{{ person }}</li>
-				</ol>
-			</nav>
+			<div class="row align-items-center">
+				<div class="col-md-6">
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item">
+								<a href="{{ path('app_person_index') }}">Personnages</a>
+							</li>
+							<li class="breadcrumb-item active" aria-current="page">{{ person }}</li>
+						</ol>
+					</nav>
+				</div>
+				<div class="col-md-6">{{ include('includes/_search.html.twig', { route_name: 'app_person_index' }) }}</div>
+			</div>
 		</div>
 		<div class="item-heading position-relative">
 			{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
 				<div class="p-2 position-absolute top-0" style="right:0px">
-					<a href="{{ path('admin_app_person_edit', {id: person.id}) }}" class="btn btn-outline-secondary" title="administrer">
-						<i class="bi bi-pencil-fill"></i>
+					<a href="{{ path('admin_app_person_edit', {id: person.id}) }}" class="btn btn-outline-secondary btn-sm" title="administrer">
+						<i class="fas fa-pencil-alt"></i>
+					</a>
+					<a href="{{ path('admin_app_person_image', {id: person.id}) }}" class="btn btn-outline-secondary btn-sm" title="gérer l'image">
+						<i class="fas fa-image"></i>
 					</a>
 				</div>
 			{% endif %}
 			<p>
 				{% for category in person.categories %}
 					<a href="{{ path('app_category_show', {slug: category.slug}) }}" class="label mx-1">
-						<i class="bi bi-folder-fill me-1"></i>
+						<i class="fas fa-folder me-1"></i>
 						{{ category.title }}
 					</a>
 				{% endfor %}
 			</p>
 			<h1 class="mb-4">
-				<i class="bi bi-person-fill me-1"></i>
+				<i class="fas fa-user me-1"></i>
 				{{ person }}
+				<div class="float-end">
+					{% if person.isArchived %}
+						<i class="fas fa-archive me-1 fa-fw" data-bs-toggle="tooltip" aria-hidden="true" title="archivé"></i>
+					{% endif %}
+				</div>
 			</h1>
 
-			<p class="lead mb-4">{{ person.description }}</p>
-			<p>
-				{% for portal in person.portals %}
-					{{ include('components/utils/_tag_link.html.twig', {item: portal, path: 'app_portal_show'}) }}
-				{% endfor %}
-			</p>
+			<p class="lead mb-2">{{ person.description }}</p>
 		</div>
 	</header>
 	<section class="mt-4 px-4 container-fluid">
@@ -67,65 +75,135 @@
 			<table>
 				<tbody>
 					<tr>
-						<th>Prénom</th>
+						<th class="align-top">Prénom</th>
 						<td>{{ person.firstname }}</td>
 					</tr>
 					<tr>
-						<th>Nom</th>
+						<th class="align-top">Nom</th>
 						<td>{{ person.lastname ? person.lastname : '-' }}</td>
 					</tr>
 					<tr>
-						<th>Nom complet</th>
+						<th class="align-top">Nom complet</th>
 						<td>{{ person.fullname ? person.fullname : person }}</td>
 					</tr>
+					{% if person.species %}
+						<tr>
+							<th class="align-top">Espèce</th>
+							<td>{{ person.species }}</td>
+						</tr>
+					{% endif %}
+					{% if person.gender %}
+						<tr>
+							<th class="align-top">Genre</th>
+							<td>{{ person.gender }}</td>
+						</tr>
+					{% endif %}
+					{% if person.nationality %}
+						<tr>
+							<th class="align-top">Nationalité</th>
+							<td>{{ person.nationality }}</td>
+						</tr>
+					{% endif %}
 					<tr>
-						<th>Parents</th>
-						<td>{{ person.parents ? person.parents : '-' }}</td>
-					</tr>
-					<tr>
-						<th>Nationalité</th>
-						<td>{{ person.nationality ? person.nationality : '-' }}</td>
-					</tr>
-					<tr>
-						<th>Profession</th>
+						<th class="align-top">Profession</th>
 						<td>{{ person.job ? person.job : '-' }}</td>
 					</tr>
 				</tbody>
 			</table>
+			{% if person.parents or person.siblings or person.partner or person.children %}
+				<h3 class="h6 bg-default-light p-1 text-center">Famille</h3>
+				<table>
+					<tbody>
+						{% if person.parents %}
+							<tr>
+								<th class="align-top">Parents</th>
+								<td>{{ person.parents }}</td>
+							</tr>
+						{% endif %}
+						{% if person.siblings %}
+							<tr>
+								<th class="align-top">Fratrie</th>
+								<td>{{ person.siblings }}</td>
+							</tr>
+						{% endif %}
+						{% if person.partner %}
+							<tr>
+								<th class="align-top">Conjoint</th>
+								<td>{{ person.partner }}</td>
+							</tr>
+						{% endif %}
+						{% if person.children %}
+							<tr>
+								<th class="align-top">Enfant(s)</th>
+								<td>{{ person.children }}</td>
+							</tr>
+						{% endif %}
+					</tbody>
+				</table>
+			{% endif %}
 
-			{% if person.birthday or person.birthdayPlace %}
-				<h3 class="h6 bg-default-light p-1 text-center">Naissance</h3>
+			{% if person.birthday or person.birthdayPlace or person.deathDate or person.deathPlace %}
+				<h3 class="h6 bg-default-light p-1 text-center">Biographie</h3>
 				<table>
 					<tbody>
 						<tr>
-							<th>Date</th>
+							<th class="align-top">Naissance</th>
 							<td>{{ person.birthday ? person.birthday : '-' }}</td>
 						</tr>
 						<tr>
-							<th>Lieu</th>
+							<th class="align-top text-nowrap">Lieu de naissance</th>
 							<td>{{ person.birthdayPlace ? person.birthdayPlace : '-' }}</td>
 						</tr>
-					</tbody>
-				</table>
-			{% endif %}
-
-			{% if person.deathDate or person.deathPlace  %}
-				<h3 class="h6 bg-default-light p-1 text-center">Mort</h3>
-				<table>
-					<tbody>
 						<tr>
-							<th>Date</th>
+							<th class="align-top">Mort</th>
 							<td>{{ person.deathDate ? person.deathDate : '-' }}</td>
 						</tr>
 						<tr>
-							<th>Lieu</th>
-							<td>{{ person.deathPlace ? person.deathDate : '-' }}</td>
+							<th class="align-top">Lieu de mort</th>
+							<td>{{ person.deathPlace ? person.deathPlace : '-' }}</td>
 						</tr>
 					</tbody>
 				</table>
 			{% endif %}
+			{% if person.physicalDescription %}
+				<h3 class="h6 bg-default-light p-1 text-center">Physique</h3>
+				<table>
+					<tbody>
+						<tr>
+							<td>{{ person.physicalDescription|nl2br }}</td>
+						</tr>
+					</tbody>
+				</table>
+			{% endif %}
+			<h3 class="h6 bg-default-light p-1 text-center">Portails</h3>
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							<ul class="ps-0 mb-0">
+								{% for portal in person.portals %}
+									<a href="{{ path('app_portal_show', {slug: portal.slug}) }}" class="text-decoration-none">
+										<i class="fas fa-tag small me-1"></i>
+										{{ portal }}
+									</a>
+								{% else %}
+									<li>-</li>
+								{% endfor %}
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</aside>
+		
 		<div id="presentation" class="article-content">
+			<div>
+				{% for tag in person.type %}
+					<a href="{{ path('app_person_type', {slug: tag.slug}) }}" class="badge rounded-pill bg-secondary link-light text-decoration-none">
+						{{ tag }}
+					</a>
+				{% endfor %}
+			</div>
 			{{ person.presentation|raw }}
 		</div>
 
@@ -134,7 +212,7 @@
 				<div class="category-section" style="max-width:273px">
 					<div>
 						<span title="afficher ou cacher" role="button" data-action="click->toggle#toggle" data-toggle-target="action" class="float-end">
-							<i class="bi bi-chevron-down"></i>
+							<i class="fas fa-chevron-down"></i>
 						</span>
 						<h2 class="h6">Sommaire</h2>
 					</div>
@@ -149,7 +227,6 @@
 								<a href="#personality" class="text-dark">Personnalité</a>
 							</li>
 						{% endif %}
-						{# <li class="fs-6"><a href="#gallery" class="text-dark">Galerie</a></li> #}
 					</ol>
 				</div>
 			</div>
@@ -168,7 +245,5 @@
 				{{ person.personality|raw }}
 			</div>
 		{% endif %}
-
-		{# <div id="gallery"></div> #}
 	</section>
 {% endblock %}

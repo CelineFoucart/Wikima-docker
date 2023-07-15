@@ -1,0 +1,118 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Afficher "{{ category }}"{% endblock %}
+
+{% block activeWiki %}active show{% endblock %}
+{% block activeCategory %}active{% endblock %}
+
+{% block page_title %}Afficher "{{ category }}"{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_category_list') }}" class="text-reset">
+			Catégorie
+		</a>
+	</li>
+	<li class="breadcrumb-item active">
+		Voir
+	</li>
+{% endblock %}
+
+{% block toolbar %}
+    <a class="btn btn-sm btn-default" href="{{ path('admin_app_category_create') }}" data-bs-toggle="tooltip" title="Ajouter">
+        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+    </a>
+    <div class="btn-group">
+        <a href="{{ path('app_category_show', {slug: category.slug}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Consulter">
+            <i class="fas fa-book-reader"></i>
+        </a>                   
+        <a href="{{ path('admin_app_category_show', {id: category.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Afficher">
+            <i class="fas fa-info-circle"></i>
+        </a>                 
+        <a href="{{ path('admin_app_category_sort', {id: category.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Ordonner">
+            <i class="fas fa-sort-amount-down-alt"></i>
+        </a>
+        <a href="{{ path('admin_app_category_edit', {id: category.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Éditer">
+            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+        </a>
+        {% include "Admin/components/_delete_modal.html.twig" with { element: category, path: 'admin_app_category_delete' } %}
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card border-top-primary">
+                <div class="card-header bg-white">
+                    <h2 class="card-title h5 mb-0">{{ category }}</h2>
+                </div>
+                <div class="card-body card-show">
+                    <table class="table table-striped mb-0">
+                        <tbody>
+                            <tr>
+                                <th>Titre</th>
+                                <td>
+                                    <a href="{{ path('app_category_show', {slug: category.slug}) }}">
+                                        {{ category.title }}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Slug</th>
+                                <td>{{ category.slug }}</td>
+                            </tr>
+                            <tr>
+                                <th>Mots clés</th>
+                                <td>{{ category.keywords }}</td>
+                            </tr>
+                            <tr>
+                                <th>Description</th>
+                                <td>{{ category.description|nl2br }}</td>
+                            </tr>
+                            <tr>
+                                <th>Présentation</th>
+                                <td>{{ category.presentation|raw }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card border-top-primary mt-3">
+                <div class="card-header bg-white">
+                    <h2 class="card-title h5 mb-0">Bannière</h2>
+                </div>
+                <div class="card-body card-show">
+                    {% if category.banner %}
+                        <img src="{{ vich_uploader_asset(category) }}" class="img-fluid" alt="bannière de {{ category.title }}">
+                        <p class="text-center">{{ category.banner }}</p>
+                    {% else %}
+                        <p class="text-center">Aucune bannière</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-top-primary">
+                <div class="card-header bg-white">
+                    <h2 class="card-title h5 mb-0">Méta données</h2>
+                </div>
+                <div class="card-body card-show">
+                    <table class="table table-striped mb-0">
+                        <tbody>
+                            <tr>
+                                <th>Création</th>
+                                <td>{{ category.createdAt|date(date_format) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Mise à jour</th>
+                                <td>{{ category.updatedAt ? category.updatedAt|date(date_format) : '' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	
+{% endblock %}

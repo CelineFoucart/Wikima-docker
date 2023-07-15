@@ -3,8 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Section;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,8 +15,10 @@ class SectionType extends AbstractType
     {
         $builder
             ->add('title', TextType::class)
-            ->add('content', CKEditorType::class, [
-                'config' => ['toolbar' => 'full'],
+            ->add('content', TextareaType::class, [
+                'attr' => [
+                    'data-editor' => 'editor'
+                ]
             ])
         ;
     }

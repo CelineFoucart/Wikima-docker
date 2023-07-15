@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PersonRepository::class)]
 #[UniqueEntity('slug')]
@@ -16,6 +17,7 @@ class Person
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['index'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -24,6 +26,7 @@ class Person
         min: 1,
         max: 255
     )]
+    #[Groups(['index'])]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -31,6 +34,7 @@ class Person
         min: 1,
         max: 255
     )]
+    #[Groups(['index'])]
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -38,10 +42,13 @@ class Person
         min: 1,
         max: 255
     )]
+    #[Groups(['index'])]
     private $fullname;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
+    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/')]
+    #[Groups(['index'])]
     private $slug;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -49,6 +56,7 @@ class Person
         min: 1,
         max: 255
     )]
+    #[Groups(['index'])]
     private $nationality;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -63,6 +71,7 @@ class Person
         min: 1,
         max: 255
     )]
+    #[Groups(['index'])]
     private $birthday;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -77,6 +86,7 @@ class Person
         min: 1,
         max: 255
     )]
+    #[Groups(['index'])]
     private $deathDate;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -129,10 +139,47 @@ class Person
     #[ORM\ManyToOne(targetEntity: Image::class, inversedBy: 'people')]
     private $image;
 
+    #[ORM\ManyToMany(targetEntity: PersonType::class, inversedBy: 'people')]
+    #[Groups(['index'])]
+    private Collection $type;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isSticky = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $children = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $siblings = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $partner = null;
+
+    #[ORM\Column(length: 400, nullable: true)]
+    private ?string $physicalDescription = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(
+        min: 1,
+        max: 255
+    )]
+    private ?string $species = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\Length(
+        min: 1,
+        max: 100
+    )]
+    private ?string $gender = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isArchived = null;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->portals = new ArrayCollection();
+        $this->type = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -384,6 +431,126 @@ class Person
     public function setImage(?Image $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PersonType>
+     */
+    public function getType(): Collection
+    {
+        return $this->type;
+    }
+
+    public function addType(PersonType $type): self
+    {
+        if (!$this->type->contains($type)) {
+            $this->type->add($type);
+        }
+
+        return $this;
+    }
+
+    public function removeType(PersonType $type): self
+    {
+        $this->type->removeElement($type);
+
+        return $this;
+    }
+
+    public function getIsSticky(): ?bool
+    {
+        return $this->isSticky;
+    }
+
+    public function setIsSticky(?bool $isSticky): self
+    {
+        $this->isSticky = $isSticky;
+
+        return $this;
+    }
+
+    public function getChildren(): ?string
+    {
+        return $this->children;
+    }
+
+    public function setChildren(?string $children): self
+    {
+        $this->children = $children;
+
+        return $this;
+    }
+
+    public function getSiblings(): ?string
+    {
+        return $this->siblings;
+    }
+
+    public function setSiblings(?string $siblings): self
+    {
+        $this->siblings = $siblings;
+
+        return $this;
+    }
+
+    public function getPartner(): ?string
+    {
+        return $this->partner;
+    }
+
+    public function setPartner(?string $partner): self
+    {
+        $this->partner = $partner;
+
+        return $this;
+    }
+
+    public function getPhysicalDescription(): ?string
+    {
+        return $this->physicalDescription;
+    }
+
+    public function setPhysicalDescription(?string $physicalDescription): self
+    {
+        $this->physicalDescription = $physicalDescription;
+
+        return $this;
+    }
+
+    public function getSpecies(): ?string
+    {
+        return $this->species;
+    }
+
+    public function setSpecies(?string $species): self
+    {
+        $this->species = $species;
+
+        return $this;
+    }
+
+    public function getGender(): ?string
+    {
+        return $this->gender;
+    }
+
+    public function setGender(?string $gender): self
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    public function getIsArchived(): ?bool
+    {
+        return $this->isArchived;
+    }
+
+    public function setIsArchived(?bool $isArchived): static
+    {
+        $this->isArchived = $isArchived;
 
         return $this;
     }

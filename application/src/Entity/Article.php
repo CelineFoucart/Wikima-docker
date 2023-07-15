@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[UniqueEntity('slug')]
@@ -17,6 +18,7 @@ class Article
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['index'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -25,10 +27,13 @@ class Article
         min: 3,
         max: 255
     )]
+    #[Groups(['index'])]
     private $title;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
+    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/')]
+    #[Groups(['index'])]
     private $slug;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -37,6 +42,7 @@ class Article
         min: 3,
         max: 255
     )]
+    #[Groups(['index'])]
     private $keywords;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -55,15 +61,19 @@ class Article
     private $content;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['index'])]
     private $createdAt;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Groups(['index'])]
     private $updatedAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'articles')]
+    #[Groups(['index'])]
     private $author;
 
     #[ORM\ManyToMany(targetEntity: Portal::class, inversedBy: 'articles')]
+    #[Groups(['index'])]
     private $portals;
 
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Comment::class, orphanRemoval: true)]
@@ -80,6 +90,18 @@ class Article
 
     #[ORM\Column(nullable: true)]
     private ?bool $isPrivate = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isSticky = null;
+
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    private ?ArticleType $type = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $enableComment = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isArchived = null;
 
     public function __construct()
     {
@@ -327,6 +349,54 @@ class Article
     public function setIsPrivate(?bool $isPrivate): self
     {
         $this->isPrivate = $isPrivate;
+
+        return $this;
+    }
+
+    public function getIsSticky(): ?bool
+    {
+        return $this->isSticky;
+    }
+
+    public function setIsSticky(?bool $isSticky): self
+    {
+        $this->isSticky = $isSticky;
+
+        return $this;
+    }
+
+    public function getType(): ?ArticleType
+    {
+        return $this->type;
+    }
+
+    public function setType(?ArticleType $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function isEnableComment(): ?bool
+    {
+        return $this->enableComment;
+    }
+
+    public function setEnableComment(?bool $enableComment): static
+    {
+        $this->enableComment = $enableComment;
+
+        return $this;
+    }
+
+    public function getIsArchived(): ?bool
+    {
+        return $this->isArchived;
+    }
+
+    public function setIsArchived(?bool $isArchived): static
+    {
+        $this->isArchived = $isArchived;
 
         return $this;
     }

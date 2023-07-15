@@ -1,0 +1,44 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Editer "{{ placeType }}"{% endblock %}
+
+{% block activePlace %}
+	active show
+{% endblock %}
+
+{% block activePlaceType %}active {% endblock %}
+
+{% block page_title %}Editer "{{ placeType }}"{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_placetype_list') }}" class="text-reset">
+			Types de lieu
+		</a>
+	</li>
+	<li class="breadcrumb-item active">
+		Editer
+	</li>
+{% endblock %}
+
+{% block toolbar %}
+    <a class="btn btn-sm btn-default" href="{{ path('admin_app_placetype_create') }}" data-bs-toggle="tooltip" title="Ajouter">
+        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+    </a>
+    <div class="btn-group">
+        <a href="{{ path('app_place_type', {slug: placeType.slug}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Consulter">
+            <i class="fas fa-book-reader"></i>
+        </a>                   
+        <a href="{{ path('admin_app_placetype_show', {id: placeType.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Afficher">
+            <i class="fas fa-info-circle"></i>
+        </a>
+        <a href="{{ path('admin_app_placetype_edit', {id: placeType.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Éditer">
+            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+        </a>
+        {% include "Admin/components/_delete_modal.html.twig" with { element: placeType, path: 'admin_app_placetype_delete' } %}
+    </div>
+{% endblock %}
+
+{% block body %}
+	{% include "Admin/place_type/_form.html.twig" %}
+{% endblock %}

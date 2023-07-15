@@ -1,0 +1,20 @@
+{% extends 'admin_layout.html.twig' %}
+
+
+
+{% block title %}Gérer la configuration{% endblock %}
+
+{% block activeAdmin %}active show{% endblock %}
+{% block activeConfig %}active{% endblock %}
+{% block page_title %}Gérer la configuration{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item active">
+		Configuration
+	</li>
+{% endblock %}
+
+{% block body %}
+    {% include "Admin/components/_settings_form.html.twig" %}
+{% endblock %}
+

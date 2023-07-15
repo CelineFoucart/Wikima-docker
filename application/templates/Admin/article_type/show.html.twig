@@ -1,0 +1,73 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Afficher "{{ articleType }}"{% endblock %}
+
+{% block activeWiki %}
+	active show
+{% endblock %}
+
+{% block activeArticleType %}active {% endblock %}
+
+{% block page_title %}Afficher "{{ articleType }}"{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_articletype_list') }}" class="text-reset">
+			Types d'article
+		</a>
+	</li>
+	<li class="breadcrumb-item active">
+		{{ articleType }}
+	</li>
+{% endblock %}
+
+{% block toolbar %}
+    <a class="btn btn-sm btn-default" href="{{ path('admin_app_articletype_create') }}" data-bs-toggle="tooltip" title="Ajouter">
+        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+    </a>
+    <div class="btn-group">
+        <a href="{{ path('app_articletype_show', {slug: articleType.slug}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Consulter">
+            <i class="fas fa-book-reader"></i>
+        </a>                   
+        <a href="{{ path('admin_app_articletype_show', {id: articleType.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Afficher">
+            <i class="fas fa-info-circle"></i>
+        </a>
+        <a href="{{ path('admin_app_articletype_edit', {id: articleType.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Éditer">
+            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+        </a>
+        {% include "Admin/components/_delete_modal.html.twig" with { element: articleType, path: 'admin_app_articletype_delete' } %}
+    </div>
+{% endblock %}
+
+{% block body %}
+	<div class="card border-top-primary">
+        <div class="card-header bg-white">
+            <h2 class="card-title h5 mb-0">{{ articleType }}</h2>
+        </div>
+        <div class="card-body card-show">
+            <table class="table table-striped mb-0">
+                <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ articleType.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Titre</th>
+                        <td>{{ articleType.title }}</td>
+                    </tr>
+                    <tr>
+                        <th>Slug</th>
+                        <td>{{ articleType.slug }}</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>{{ articleType.description|nl2br }}</td>
+                    </tr><tr>
+                        <th>Icône</th>
+                        <td><i class="{{ articleType.icon }}" data-bs-toggle="tooltip" title="{{ articleType.icon }}"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+	</div>
+{% endblock %}

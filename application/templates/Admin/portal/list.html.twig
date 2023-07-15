@@ -1,0 +1,78 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Liste des portails{% endblock %}
+
+{% block activeWiki %} active show {% endblock %}
+{% block activePortal %}active{% endblock %}
+
+{% block page_title %}Portail{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">
+        Portail
+    </li>
+{% endblock %}
+
+{% block toolbar %}
+    <a href="{{ path('admin_app_portal_create') }}" class="btn btn-default btn-sm">
+        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+        Ajouter
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="card border-top-primary">
+        <div class="card-body p-1">
+            <table class="table data-table mb-0 table-striped">
+                <thead>
+                    <tr>
+                        <th class="table-id">Id</th>
+                        <th>Titre</th>
+                        <th>Catégories</th>
+                        <th>Création</th>
+                        <th>Mise à jour</th>
+                        <th data-orderable="false">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for portal in portals %}
+                        <tr>
+                            <td data-label="Id">
+                                <a href="{{ path('app_portal_show', {slug: portal.slug}) }}" class="fw-bold">{{portal.id }}</a>
+                            </td>
+                            <td data-label="Titre">
+                                {{ portal.title }}
+                            </td>
+                            <td data-label="Catégories" class="container-list">
+                                {% for category in portal.categories %}
+                                    <a href="{{ path('admin_app_category_show', {id: category.id}) }}">{{ category }}</a>
+                                {% endfor %}
+                            </td>
+                            <td data-label="Création" data-sort="{{ portal.createdAt ? portal.createdAt|date('Y-m-d H:i') : '' }}">
+                                {{ portal.createdAt|date(date_format) }}
+                            </td>
+                            <td data-label="Mise à jour" data-sort="{{ portal.updatedAt ? portal.updatedAt|date('Y-m-d H:i') : '' }}">
+                                {{ portal.updatedAt ? portal.updatedAt|date(date_format) : '' }}
+                            </td>
+                            <td data-label="Actions">
+                                <div class="btn-group">
+                                    <a href="{{ path('app_portal_show', {slug: portal.slug}) }}" class="btn btn-sm btn-default" data-bs-toggle="tooltip" title="Consulter">
+                                        <i class="fas fa-book-reader"></i>
+                                    </a>                   
+                                    <a href="{{ path('admin_app_portal_show', {id: portal.id}) }}" class="btn btn-sm btn-default" data-bs-toggle="tooltip" title="Afficher">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+                                    <a href="{{ path('admin_app_portal_edit', {id: portal.id}) }}" class="btn btn-sm btn-default" data-bs-toggle="tooltip" title="Éditer">
+                                        <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                                    </a>
+                                    {% include "Admin/components/_delete_modal.html.twig" with { element: portal, path: 'admin_app_portal_delete' } %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

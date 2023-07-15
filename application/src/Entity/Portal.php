@@ -5,10 +5,17 @@ namespace App\Entity;
 use App\Repository\PortalRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+/**
+ * @Vich\Uploadable
+ */
 #[ORM\Entity(repositoryClass: PortalRepository::class)]
 #[UniqueEntity('slug')]
 class Portal
@@ -16,6 +23,7 @@ class Portal
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['index'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -24,10 +32,13 @@ class Portal
         min: 3,
         max: 255
     )]
+    #[Groups(['index'])]
     private $title;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
+    #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/')]
+    #[Groups(['index'])]
     private $slug;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -70,6 +81,26 @@ class Portal
     #[ORM\ManyToMany(targetEntity: Person::class, mappedBy: 'portals')]
     private $people;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $presentation = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $banner = null;
+
+    /**
+     * @Vich\UploadableField(mapping="upload_images", fileNameProperty="banner")
+     */
+    private ?File $imageBanner = null;
+
+    #[ORM\OneToMany(mappedBy: 'portal', targetEntity: Note::class)]
+    private Collection $notes;
+
+    #[ORM\ManyToMany(targetEntity: Place::class, mappedBy: 'portals')]
+    private Collection $places;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $position = null;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
@@ -78,6 +109,8 @@ class Portal
         $this->pages = new ArrayCollection();
         $this->timelines = new ArrayCollection();
         $this->people = new ArrayCollection();
+        $this->notes = new ArrayCollection();
+        $this->places = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -321,6 +354,115 @@ class Portal
         if ($this->people->removeElement($person)) {
             $person->removePortal($this);
         }
+
+        return $this;
+    }
+
+    public function getPresentation(): ?string
+    {
+        return $this->presentation;
+    }
+
+    public function setPresentation(?string $presentation): self
+    {
+        $this->presentation = $presentation;
+
+        return $this;
+    }
+
+    public function getBanner(): ?string
+    {
+        return $this->banner;
+    }
+
+    public function setBanner(?string $banner): self
+    {
+        $this->banner = $banner;
+
+        return $this;
+    }
+
+    public function setImageBanner(File $imageBanner = null): self
+    {
+        $this->imageBanner = $imageBanner;
+
+        if ($imageBanner) {
+            $this->updatedAt = new \DateTime('now');
+        }
+
+        return $this;
+    }
+
+    public function getImageBanner(): ?File
+    {
+        return $this->imageBanner;
+    }
+
+    /**
+     * @return Collection<int, Note>
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes->add($note);
+            $note->setPortal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getPortal() === $this) {
+                $note->setPortal(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Place>
+     */
+    public function getPlaces(): Collection
+    {
+        return $this->places;
+    }
+
+    public function addPlace(Place $place): self
+    {
+        if (!$this->places->contains($place)) {
+            $this->places->add($place);
+            $place->addPortal($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlace(Place $place): self
+    {
+        if ($this->places->removeElement($place)) {
+            $place->removePortal($this);
+        }
+
+        return $this;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?int $position): self
+    {
+        $this->position = $position;
 
         return $this;
     }

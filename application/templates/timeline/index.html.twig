@@ -4,7 +4,6 @@
 {% endblock %}
 
 {% block body %}
-	{{ include('home/_header.html.twig') }}
 	<article class="my-5 px-5 container-fluid">
 		<header class="text-center">
 			<h2 class="h2">Index des chronologies</h2>
@@ -24,32 +23,16 @@
 					{{ app_name }}
 				</h3>
 				<p class="mb-4">
-					{% set plural = timelines.getTotalItemCount > 1 ? 's' : '' %}
-					<span class="fw-bold">{{ timelines.getTotalItemCount }}</span>
-					chronologie{{ plural }}
-					trouvée{{ plural }}.
+					{% set current = timelines|length %}
+					Affichage de <span class="fw-bold">{{ current }}</span>
+					sur <span class="fw-bold">{{ timelines.getTotalItemCount }}</span>
+					chronologie{{ timelines.getTotalItemCount > 1 ? 's' : '' }}.
 				</p>
 
 				<div class="row gy-3">
 					{% for timeline in timelines %}
 						<div class="col-md-6">
-							<article class="card shadow-sm h-100">
-								<div class="card-body">
-									<h2 class="card-title h5 mb-3">
-										<a href="{{ path('app_timeline_show', {slug: timeline.slug}) }}" class="text-decoration-none">
-											{{ timeline.title|capitalize }}
-										</a>
-									</h2>
-									<p class="card-text">{{ timeline.description }}</p>
-								</div>
-								<div class="card-footer text-muted">
-									<span>
-										<i class="bi bi-calendar3 me-1"></i>
-										Le
-										{{ timeline.createdAt|date('d/m/Y') }}
-									</span>
-								</div>
-							</article>
+							{% include "timeline/components/_timeline_card.html.twig" %}
 						</div>
 					{% else %}
 						<p class="alert alert-danger">Votre recherche n'a donné aucun résultat</p>
@@ -61,4 +44,26 @@
 			</section>
 		</div>
 	</article>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+
+	<script src="{{ asset('assets/choicesjs/choices.min.js') }}"></script>
+	<script>
+		elements = document.querySelectorAll('[data-choices]');
+		elements.forEach(element => {
+			const choices = new Choices(element, {
+				removeItems: true,
+				removeItemButton: true,
+				allowHTML: false,
+				noResultsText: 'Aucun résultat',
+				noChoicesText: 'Aucun élément à choisir',
+				itemSelectText: 'Cliquez pour choisir'
+			});
+		});
+
+		document.querySelectorAll('[name="search_terms"]').forEach(element => {
+			element.removeAttribute('name');
+		});
+	</script>
 {% endblock %}

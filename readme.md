@@ -3,37 +3,39 @@
 Wikima est un projet développé en symfony pour organiser des informations sur un univers fictif (de type romanesque, jeu de rôle, série). Il permet de gérer du contenu textuel sous forme de Wiki, des images, mais aussi une galerie, une chronologie et des fiches personnages. On peut créer des pages personnalisées et laisser des commentaires sur les articles.
 
 ## Environnement de développement
+
 ### Prérequis
+
 * Docker
 * Docker Compose
 
 ### Installation
+
 ```bash
 docker compose up -d
 ```
 
 ### Initialisation du projet en environnement de dev
+
 Dans le container de l'appli, installer les dépendances et les migrations :
+
 ```bash
-sh deploy.sh
+composer install
+npm install
+npm run build
 ```
 
-Création d'un compte administrateur :
-```bash
-php bin/console app:create-user
-```
+Se rendre sur la page d'installation à l'url suivante : **/installation**. Suivre le processus d'installation pour configurer
+la base de données, le compte du super administrateur, les informations du site et le système d'envoi de mail.
 
-Ou installation de données de test :
+### Données de test
+
+Installation de données de test :
+
 ```bash
 php bin/console hautelook:fixtures:load
 ```
 
-## Consommer les messages avec Messenger de Symfony
-```bash
-$ php bin/console messenger:consume async
-```
+## Licence
 
-Pour voir les détails :
-```bash
-$ php bin/console messenger:consume async -vv
-```
+Distribué sous la licence MIT. Voir `LICENSE` pour plus d'information.

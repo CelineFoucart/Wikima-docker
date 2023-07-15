@@ -1,16 +1,13 @@
 {% extends 'base.html.twig' %}
-{% block activePerson %}active
-{% endblock %}
+{% block activePerson %}active{% endblock %}
 
 {% block title %}
 	Index des personnages
 {% endblock %}
 
 {% block body %}
-	{{ include('home/_header.html.twig', { heading_title: 'Personnages', heading_description: "Liste des personnages importants" }) }}
-
 	<article class="mt-5 container-fluid">
-		<header class="text-center">
+		<header class="text-center mt-5">
 			<h2 class="h4">
 				Galerie des personnages
 			</h2>
@@ -28,18 +25,58 @@
 
 			<section class="col-md-8">
 				<h3 class="border-bottom display-6 mb-2 mt-0">Liste des personnages</h3>
+				<p>
+					{% for type in types %}
+						<a href="{{ path('app_person_type', {slug: type.slug}) }}" class="badge rounded-pill bg-secondary link-light text-decoration-none me-1">
+							{{ type }}
+						</a>
+					{% endfor %}
+				</p>
+				<p class="mb-1">
+					{% set current = persons|length %}
+					Affichage de <span class="fw-bold">{{ current }}</span>
+					sur <span class="fw-bold">{{ persons.getTotalItemCount }}</span>
+					personnage{{ persons.getTotalItemCount > 1 ? 's' : '' }}.
+				</p>
 				<div class="row">
 					{% for person in persons %}
-						<div class="col-md-6 col-lg-4 my-2">
+						<div class="col-md-6 my-2">
 							{% include "person/_person_card.html.twig" %}
 						</div>
 					{% else %}
-						<div class="col-12">
-							<div class="alert alert-danger">Aucun personnage trouvé</div>
+						<div class="p-3">
+							<p class="alert alert-danger">Votre recherche n'a donné aucun résultat</p>
 						</div>
 					{% endfor %}
+				</div>
+
+				<div class="navigation">
+					{{ knp_pagination_render(persons) }}
 				</div>
 			</section>
 		</div>
 	</article>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+
+	<script src="{{ asset('assets/choicesjs/choices.min.js') }}"></script>
+	<script>
+		elements = document.querySelectorAll('[data-choices]');
+		elements.forEach(element => {
+			const choices = new Choices(element, {
+				removeItems: true,
+				removeItemButton: true,
+				allowHTML: false,
+				noResultsText: 'Aucun résultat',
+				noChoicesText: 'Aucun élément à choisir',
+				itemSelectText: 'Cliquez pour choisir'
+			});
+		});
+
+		document.querySelectorAll('[name="search_terms"]').forEach(element => {
+			element.removeAttribute('name');
+		});
+	</script>
 {% endblock %}

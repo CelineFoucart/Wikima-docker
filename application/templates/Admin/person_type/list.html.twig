@@ -1,0 +1,64 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Liste des types de personnage{% endblock %}
+
+{% block activePerson %} active show {% endblock %}
+{% block activePersonType %}active{% endblock %}
+
+{% block page_title %}Types de personnage{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">
+        Types de personnage
+    </li>
+{% endblock %}
+
+{% block toolbar %}
+    <a href="{{ path('admin_app_persontype_create') }}" class="btn btn-default btn-sm">
+        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+        Ajouter
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="card border-top-primary">
+        <div class="card-body p-1">
+            <table class="table data-table mb-0 table-striped">
+                <thead>
+                    <tr>
+                        <th class="table-id">Id</th>
+                        <th>Titre</th>
+                        <th>Slug</th>
+                        <th data-orderable="false">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for personType in personTypes %}
+                        <tr>
+                            <td data-label="Id">
+                                <a href="#" class="fw-bold">{{personType.id }}</a>
+                            </td>
+                            <td data-label="Titre">{{personType.title }}</td>
+                            <td data-label="Slug">{{personType.slug }}</td>
+                            <td data-label="Actions">
+                                <div class="btn-group">
+                                    <a href="{{ path('app_person_type', {slug: personType.slug}) }}" class="btn btn-sm btn-default" data-bs-toggle="tooltip" title="Consulter">
+                                        <i class="fas fa-book-reader"></i>
+                                    </a>                    
+                                    <a href="{{ path('admin_app_persontype_show', {id: personType.id}) }}" class="btn btn-sm btn-default" data-bs-toggle="tooltip" title="Afficher">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+                                    <a href="{{ path('admin_app_persontype_edit', {id: personType.id}) }}" class="btn btn-sm btn-default" data-bs-toggle="tooltip" title="Éditer">
+                                        <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                                    </a>
+                                    {% include "Admin/components/_delete_modal.html.twig" with { element: personType, path: 'admin_app_persontype_delete' } %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+

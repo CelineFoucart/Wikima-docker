@@ -1,9 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	{{ image.title|capitalize }}
-	|
-	{{ app_name }}
+	{{ image.title }} | {{ app_name }}
 {% endblock %}
 
 {% block description %}
@@ -13,22 +11,37 @@
 {% block body %}
 	<header class="bg-default-light border-bottom">
 		<div class="pt-3 border-bottom container-fluid">
-			<nav aria-label="breadcrumb">
-				<ol class="breadcrumb">
-					<li class="breadcrumb-item">
-						<a href="{{ path('app_home') }}">Accueil</a>
-					</li>
-					<li class="breadcrumb-item">
-						<a href="{{ path('app_image_index') }}">Galerie</a>
-					</li>
-					<li class="breadcrumb-item active" aria-current="page">{{ image.title }}</li>
-				</ol>
-			</nav>
+			<div class="row align-items-center">
+				<div class="col-md-6">
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb mb-2">
+							<li class="breadcrumb-item">
+								<a href="{{ path('app_home') }}">Accueil</a>
+							</li>
+							<li class="breadcrumb-item">
+								<a href="{{ path('app_image_index') }}">Galerie</a>
+							</li>
+							<li class="breadcrumb-item active" aria-current="page">{{ image.title }}</li>
+						</ol>
+					</nav>
+				</div>
+				<div class="col-md-6 text-end">
+					{{ include('includes/_search.html.twig', { route_name: 'app_image_index' }) }}
+				</div>
+			</div>
 		</div>
-		<div class="item-heading">
+		<div class="item-heading position-relative">
+			{% if is_granted('ROLE_ADMIN') %}
+				<div class="pt-2 pe-3 position-absolute top-0" style="right:-10px">
+					<a href="{{ path('admin_app_image_edit', {id:image.id}) }}" class="btn btn-outline-secondary btn-sm" title="éditer">
+						<i class="fas fa-pencil-alt"></i>
+					</a>
+				</div>
+			{% endif %}
 			<h1 class="mb-5">
-				<i class="bi bi-image me-1"></i>
-				{{ image.title }}</h1>
+				<i class="fas fa-image me-1"></i>
+				{{ image.title }}
+			</h1>
 
 			<p class="lead mb-3">{{ image.description }}</p>
 		</div>
@@ -60,7 +73,7 @@
 									{% for category in image.categories %}
 										<li>
 											<a href="{{ path('app_category_show', {slug: category.slug }) }}" class="text-decoration-none">
-												<i class="bi bi-folder-fill me-1"></i>
+												<i class="fas fa-folder me-1"></i>
 												{{ category.title }}
 											</a>
 										</li>
@@ -75,8 +88,23 @@
 									{% for portal in image.portals %}
 										<li>
 											<a href="{{ path('app_portal_show', {slug: portal.slug }) }}" class="text-decoration-none">
-												<i class="bi bi-tag-fill me-1"></i>
+												<i class="fas fa-tag me-1"></i>
 												{{ portal.title }}
+											</a>
+										</li>
+									{% endfor %}
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<th>Personnages</th>
+							<td>
+								<ul class="list-unstyled">
+									{% for person in image.people %}
+										<li>
+											<a href="{{ path('app_person_show', {slug: person.slug }) }}" class="text-decoration-none">
+												<i class="fas fa-user me-1"></i>
+												{{ person.firstname }} {{ person.lastname }}
 											</a>
 										</li>
 									{% endfor %}

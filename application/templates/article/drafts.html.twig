@@ -4,7 +4,6 @@
 {% endblock %}
 
 {% block body %}
-	{{ include('home/_header.html.twig') }}
 	<article class="mt-5 container-fluid">
 		<h2 class="list-title">Brouillons d'article</h2>
 		{% set plural = drafts.getTotalItemCount > 1 ? 's' : '' %}
@@ -25,14 +24,14 @@
 				{% for draft in drafts %}
 					<tr>
 						<td>{{ draft.title }}</td>
-						<td>{{ draft.createdAt|date('d/m/Y à H:i') }}</td>
-						<td>{{ draft.updatedAt ? draft.updatedAt|date('d/m/Y à H:i') : '' }}</td>
+						<td>{{ draft.createdAt|date(date_format) }}</td>
+						<td>{{ draft.updatedAt ? draft.updatedAt|date(date_format) : '' }}</td>
 						<td>
 							<a href="{{ path('admin_app_article_section', {id:draft.id}) }}" class="btn btn-success btn-sm">
-								<i class="bi bi-pencil-square" data-bs-toggle="tooltip" title="Modifier"></i>
+								<i class="fas fa-edit" data-bs-toggle="tooltip" title="Modifier"></i>
 							</a>
 							<a href="{{ path('app_article_show', {slug:draft.slug}) }}" class="btn btn-primary btn-sm">
-								<i class="bi bi-eye-fill" data-bs-toggle="tooltip" title="Afficher"></i>
+								<i class="fas fa-eye" data-bs-toggle="tooltip" title="Afficher"></i>
 							</a>
 						</td>
 					</tr>

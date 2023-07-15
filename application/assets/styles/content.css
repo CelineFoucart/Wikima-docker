@@ -11,6 +11,7 @@
 
 .navigation .pagination {
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .bg-item {
@@ -71,7 +72,13 @@
 }
 
 .article-content h3 {
-    font-size: 1.05rem;
+    font-size: 1.25rem;
+}
+
+.article-content h4,
+.article-content h5,
+.article-content h6 {
+    font-size: 1rem;
 }
 
 .article-content blockquote {
@@ -87,7 +94,7 @@
     background-color: var(--secondary-light);
     color: var(--secondary);
     width: 180px;
-    height: 180px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -161,11 +168,111 @@
     color: var(--primary);
 }
 
-.form-image {
-    width: 100%;
-    height: 100%;
-    background: url(img/Terraformed_Mars.png) no-repeat center;
-    opacity: .7;
-    /* width: 310px;
-    height: 313px; */
+
+.element-presentation {
+    margin: 40px auto;
+    width: 90%;
+}
+
+.element-presentation h2 {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--secondary);
+}
+
+.element-presentation .content {
+    border-color: var(--secondary);
+    border-style: solid;
+    border-width: 1px;
+    padding: 10px;
+    background-color: var(--secondary-light);
+}
+
+.tab-default {
+    display: flex;
+    justify-content: flex-start;
+    gap: 5px;
+    border-bottom: 1px solid var(--secondary);
+}
+
+.tab-default .item {
+    border: 1px solid var(--secondary);
+    border-bottom: none;
+    background-color: var(--secondary);
+    color: #fff;
+    padding: 1px 10px;
+    transition: all .3s ease-in-out;
+}
+
+.tab-default .item.active,
+.tab-default .item:hover {
+    background: transparent;
+    color: var(--secondary);
+}
+
+.tab-default a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.content-title-section {
+    border: 1px solid var(--secondary);
+    background-color: var(--secondary);
+    color: #fff;
+    padding: 5px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+/* About block style */
+.about-block {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.about-card {
+    max-width: 450px;
+    display: none;
+    position: absolute;
+    z-index: 3000;
+}
+
+.content-card {
+    display: flex;
+    box-shadow: 0 30px 90px -20px rgb(0 0 0 / 30%), 0 0 1px 1px rgb(0 0 0 / 5%);
+    overflow: hidden;
+    background-color: white;
+    margin-top: 5px;
+}
+
+.about-title {
+    margin: 0;
+}
+
+.about-title:hover + .about-card {
+    display: block;
+}
+
+.about-img {
+    display: block;
+    width: 150px;
+    object-fit: cover;
+}
+
+.about-content-card {
+    padding: 1rem;
+    font-size: 0.9rem;
+}
+
+.about-content-card p {
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.edit-actions {
+    display: none;
+}
+
+.section-title:hover .edit-actions {
+    display: block;
 }
