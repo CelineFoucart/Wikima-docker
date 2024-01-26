@@ -8,7 +8,7 @@ use App\Entity\Image;
 use App\Entity\Person;
 use App\Form\Admin\ImageType;
 use App\Entity\Data\SearchData;
-use App\Form\AdvancedSearchType;
+use App\Form\Search\AdvancedSearchType;
 use App\Form\Admin\PersonFormType;
 use App\Repository\ImageRepository;
 use App\Repository\PersonRepository;
@@ -18,10 +18,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\Admin\AbstractAdminController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 #[Route('/admin/person')]
-#[Security("is_granted('ROLE_ADMIN')")]
+#[IsGranted(new Expression("is_granted('ROLE_ADMIN')"))]
 final class AdminPersonController extends AbstractAdminController
 {
     protected string $entityName = "person";
@@ -133,6 +134,19 @@ final class AdminPersonController extends AbstractAdminController
         }
 
         return $this->redirectToRoute('admin_app_person_list', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/sticky', name: 'admin_app_person_sticky', methods:['POST'])]
+    public function stickyAction(Request $request, Person $person): Response
+    {
+        if ($this->isCsrfTokenValid('sticky'.$person->getId(), $request->request->get('_token'))) {
+            $sticky = !$person->getIsSticky();
+            $person->setIsSticky($sticky);
+            $this->personRepository->add($person, true);
+            $this->addFlash('success', "Le personnage a été modifié avec succès.");
+        }
+
+        return $this->redirectToRoute('app_person_show', ['slug' => $person->getSlug()], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/image', name: 'admin_app_person_image', methods:['GET', 'POST'])]

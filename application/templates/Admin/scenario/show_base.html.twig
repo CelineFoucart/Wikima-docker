@@ -1,0 +1,34 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Afficher "{{ scenario }}"{% endblock %}
+{% block page_title %}Afficher "{{ scenario }}"{% endblock %}
+{% block activeScenario %}active show{% endblock %}
+{% block activeScenarioList %} active {% endblock %}
+
+{% block toolbar %}
+    {% include 'Admin/scenario/_toolbar.html.twig' %}
+{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_scenario_list') }}" class="text-reset">Scénarios</a>
+	</li>
+	<li class="breadcrumb-item active">Voir</li>
+{% endblock %}
+
+{% block body %}
+    <ul class="nav nav-custom-style nav-pills mb-4">
+        <li class="nav-item">
+            <a class="nav-link {{ general_active is defined ? 'active' : '' }}" href="{{ path('admin_app_scenario_show', {id: scenario.id}) }}">
+                Général
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ episode_active is defined ? 'active' : '' }}" href="{{ path('admin_app_scenario_episode', {id: scenario.id}) }}">
+                Episodes
+            </a>
+        </li>
+    </ul>
+    
+    {% block content %}{% endblock %}
+{% endblock %}

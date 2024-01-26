@@ -8,7 +8,7 @@
 {% block breadcrumb %}
 	<li class="breadcrumb-item">
 		<a href="{{ path('admin_app_comment_list') }}" class="text-reset">
-			Commentaire
+			Commentaires
 		</a>
 	</li>
 	<li class="breadcrumb-item active">
@@ -17,26 +17,7 @@
 {% endblock %}
 
 {% block toolbar %}
-	<div class="dropdown d-inline">
-        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-            Action
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li>
-                <a class="dropdown-item" href="{{ path('admin_app_comment_show', {id: comment.id}) }}">
-                    <i class="fas fa-info-circle"></i>
-                    Informations
-                </a>
-            </li>
-            <li>
-                <a class="dropdown-item" href="{{ path('admin_app_comment_list') }}">
-                    <i class="fas fa-list" aria-hidden="true"></i>
-                    Retour à la liste
-                </a>
-            </li>
-        </ul>
-    </div>
-    {% include "Admin/components/_delete_modal.html.twig" with { element: comment, path: 'admin_app_comment_delete', full: true } %}
+	{% include "Admin/comment/_toolbar.html.twig" %}
 {% endblock %}
 
 {% block body %}
@@ -64,7 +45,7 @@
     {{ parent() }}
     <script src="{{ asset("assets/ckeditor/ckeditor.js") }}"></script>
     <script src="{{ asset("assets/admin/editor.js") }}"></script>
-    <script type="text/javascript">   
+    <script>   
         enableBasicEditor("comment_form_content");
     </script>
 {% endblock %}

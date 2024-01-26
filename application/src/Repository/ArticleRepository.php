@@ -135,16 +135,69 @@ class ArticleRepository extends ServiceEntityRepository
         return $this->paginatorService->setLimit($perPage)->paginate($builder, $page);
     }
 
+    /**
+     * @param SearchData $search
+     * 
+     * @return Article[]
+     */
+    public function advancedSearch(SearchData $search): array
+    {
+        $builder = $this->getDefaultQueryBuilder();
+        $builder
+            ->andWhere('(a.isArchived != :isArchived  OR a.isArchived IS NULL)')
+            ->setParameter('isArchived', true)
+            ->andWhere('a.isPrivate IS NULL OR a.isPrivate = 0')
+            ->andWhere('a.isDraft IS NULL OR a.isDraft = 0')
+            ->setParameter('q', '%'.$search->getQuery().'%')
+            ->leftJoin('p.categories', 'c')->addSelect('c');
+
+            if (empty($search->getFields())) {
+                $builder->andWhere('a.title LIKE :q OR a.keywords LIKE :q OR a.description LIKE :q OR t.title LIKE :q');
+            } else {
+                $where = [];
+
+                if (in_array('name', $search->getFields())) {
+                    $where[] = 'a.title LIKE :q';
+                }
+
+                if (in_array('description', $search->getFields())) {
+                    $where[] = 'a.description LIKE :q OR a.keywords LIKE :q';
+                }
+
+                if (in_array('tags', $search->getFields())) {
+                    $where[] = 't.title LIKE :q';
+                }
+
+                $builder->andWhere(join(' OR ', $where));
+            }
+
+        if (!empty($search->getPortals())) {
+            $builder
+                ->andWhere('p.id IN (:portals)')
+                ->setParameter('portals', $search->getPortals())
+            ;
+        }
+
+        if (!empty($search->getCategories())) {
+            $builder
+                ->andWhere('c.id IN (:categories)')
+                ->setParameter('categories', $search->getCategories())
+            ;
+        }
+
+        return $builder->getQuery()->getResult();
+    }
+
     public function search(SearchData $search, int $limit = 10, bool $hidePrivate = true): PaginationInterface
     {
         $builder = $this->getDefaultQueryBuilder();
         $builder->andWhere('(a.isArchived != :isArchived  OR a.isArchived IS NULL)')->setParameter('isArchived', true);
 
-        if (strlen($search->getQuery()) >= 3 and null !== $search->getQuery()) {
+        if (strlen((string) $search->getQuery()) >= 3 and null !== $search->getQuery()) {
             $builder
                 ->andWhere('a.title LIKE :q')
                 ->orWhere('a.description LIKE :q')
-                ->orWhere('a.content LIKE :q')
+                ->orWhere('a.keywords LIKE :q')
                 ->setParameter('q', '%'.$search->getQuery().'%')
             ;
         }
@@ -153,6 +206,13 @@ class ArticleRepository extends ServiceEntityRepository
             $builder
                 ->andWhere('p.id IN (:portals)')
                 ->setParameter('portals', $search->getPortals())
+            ;
+        }
+
+        if (!empty($search->getTags())) {
+            $builder
+                ->andWhere('t.id IN (:types)')
+                ->setParameter('types', $search->getTags())
             ;
         }
 
@@ -186,6 +246,7 @@ class ArticleRepository extends ServiceEntityRepository
             ->leftJoin('a.portals', 'p')->addSelect('p')
             ->leftJoin('a.author', 'u')->addSelect('u')
             ->leftJoin('a.sections', 's')->addSelect('s')
+            ->leftJoin('a.type', 't')->addSelect('t')
         ;
     }
 
@@ -262,6 +323,7 @@ class ArticleRepository extends ServiceEntityRepository
     {
         $sql = "SELECT a.id, a.title, a.slug, a.description, a.content 
             FROM article a
+            WHERE a.is_archived != 1 AND a.is_draft != 1
             ORDER BY RAND ( )  
             LIMIT 1";
 

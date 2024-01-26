@@ -1,0 +1,17 @@
+
+{{ form_start(form) }}
+    <div class="card border-top-primary">
+        <div class="card-header">
+            <h2 class="card-title h5 mb-0">Groupe de modèles</h2>
+        </div>
+        <div class="card-body">
+            {{ form_widget(form) }}
+        </div>
+    </div>
+
+    <div class="card-btn mt-3">
+        {% include "Admin/components/_form_btns.html.twig" %}
+        {{ form_rest(form) }}
+    </div>
+{{ form_end(form) }}
+

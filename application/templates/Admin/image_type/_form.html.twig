@@ -1,0 +1,33 @@
+<div class="card border-top-primary">
+    {{ form_start(form) }}
+        <div class="card-header">
+            <h2 class="card-title h5 mb-0">Type d'image</h2>
+        </div>
+        <div class="card-body">
+            {{ form_row(form.title) }}
+            <div class="mb-3">
+                {{ form_label(form.slug) }}
+                <div class="input-group">
+                    {{ form_widget(form.slug) }}
+                    <span 
+                        class="input-group-text" 
+                        data-action="slugify" 
+                        data-target="#image_tag_form_slug" 
+                        role="btton" 
+                        data-source="#image_tag_form_title"
+                        data-bs-toggle="tooltip"
+                        title="Générer">
+                        <i class="fas fa-sync-alt"></i>
+                    </span>
+                </div>
+                {{ form_help(form.slug) }}
+                {{ form_errors(form.slug) }}
+            </div>
+            {{ form_row(form.description) }}
+        </div>
+        <div class="card-footer">
+            {% include "Admin/components/_form_btns.html.twig" %}
+            {{ form_rest(form) }}
+        </div>
+    {{ form_end(form) }}
+</div>

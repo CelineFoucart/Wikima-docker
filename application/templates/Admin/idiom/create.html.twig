@@ -1,0 +1,26 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Créer une langue{% endblock %}
+
+{% block activeIdiom %}active show{% endblock %}
+{% block activeIdiomList %}active{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_idiom_list') }}" class="text-reset">
+			Langues
+		</a>
+	</li>
+	<li class="breadcrumb-item active">
+		Créer
+	</li>
+{% endblock %}
+
+{% block page_title %}Créer une langue{% endblock %}
+
+{% block toolbar %}
+    {% include 'Admin/components/_toolbar.html.twig' with { prefix: 'idiom', entity: null } %}
+{% endblock %}
+{% block body %}
+    {{ include('Admin/idiom/_form.html.twig') }}
+{% endblock %}

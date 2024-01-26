@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Groupe d'image - {{ image_group }} | {{ app_name }}
+{% endblock %}
+
+{% block body %}
+	<header class="bg-default-light border-bottom">
+		<div class="pt-3 border-bottom container-fluid">
+			<div class="row align-items-center">
+				<div class="col-md-6">
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb mb-2">
+							<li class="breadcrumb-item">
+								<a href="{{ path('app_home') }}">Accueil</a>
+							</li>
+							<li class="breadcrumb-item">
+								<a href="{{ path('app_image_group_index') }}">Groupes d'image</a>
+							</li>
+							<li class="breadcrumb-item active" aria-current="page">{{ image_group }}</li>
+						</ol>
+					</nav>
+				</div>
+				<div class="col-md-6 text-end">
+					{{ include('includes/_search.html.twig', { route_name: 'app_image_index' }) }}
+				</div>
+			</div>
+		</div>
+		<div class="item-heading position-relative">
+			{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR') %}
+				<div class="pt-2 pe-3 position-absolute top-0" style="right:-10px">
+					<a href="{{ path('admin_app_image_group_edit', {id:image_group.id}) }}" class="btn btn-outline-secondary btn-sm" title="éditer">
+						<i class="fas fa-pencil-alt"></i>
+					</a>
+
+                    <a href="{{ path('admin_app_image_group_show', {id:image_group.id}) }}" class="btn btn-outline-secondary btn-sm" title="gérer les images">
+						<i class="fas fa-info-circle"></i>
+					</a>
+				</div>
+			{% endif %}
+			{% for portal in image_group.portals %}
+				{{ include('components/utils/_tag_link.html.twig', {item: portal, path: 'app_portal_show', position: "bottom"}) }}
+			{% endfor %}
+			<h2 class="h1">
+				<i class="fas fa-images me-1"></i>
+				{{ image_group }}
+			</h2>
+
+            <div class="mx-3 mt-4">{{ image_group.description|raw }}</div>
+            <div class="mx-3">
+                {% if image_group.scenarios|length > 0 %}
+                    <span class="fw-bold">Scénarios</span> |
+                    {% for scenario in image_group.scenarios %}
+                        <a href="{{ path('app_scenario_show', {slug:scenario.slug}) }}">
+                            {{ scenario }}
+                        </a>
+                        {% if not loop.last %}
+                            |
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="mx-3">
+                {% if image_group.places|length > 0 %}
+                    <span class="fw-bold">Lieux</span> |
+                    {% for place in image_group.places %}
+                        <a href="{{ path('app_place_show', {slug:place.slug}) }}">
+                            {{ place }}
+                        </a>
+                        {% if not loop.last %}
+                            |
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+		</div>
+	</header>
+
+	<section class="m-4 container-fluid">
+        <h3 class=" text-center display-6 mb-4 mt-0">Images de ce groupe</h3>
+        <p class="lead text-center">
+            Ce groupe contient <strong>{{ image_group.images|length }}</strong> image{{ image_group.images|length > 1 ? 's' : '' }}.
+        </p>
+        {% include "image/components/_not_paginated_list.html.twig" with {images: image_group.images} only %}
+	</section>
+{% endblock %}

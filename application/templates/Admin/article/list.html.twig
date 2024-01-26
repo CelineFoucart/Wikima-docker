@@ -9,18 +9,30 @@
 
 {% block breadcrumb %}
     <li class="breadcrumb-item active">
-        Article
+        Articles
     </li>
 {% endblock %}
 
 {% block toolbar %}
     <a href="{{ path('admin_app_article_create') }}" class="btn btn-default btn-sm">
         <i class="fas fa-plus-circle" aria-hidden="true"></i>
-        Ajouter
+        <span class="d-none d-sm-inline">Ajouter</span>
     </a>
+    <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+        <i class="fas fa-table fa-fw" aria-hidden="true"></i>
+        <span class="d-none d-sm-inline">A partir d'un modèle</span>
+    </button>
+    <div class="dropdown-menu dropdown-template" aria-labelledby="dropdownMenuButton">
+        {% for template in templates %}
+            <a class="dropdown-item" href="{{ path('admin_app_article_create', {template: template.id}) }}">
+                {{ template.title }}
+            </a>
+        {% endfor %}
+    </div>
     <a href="{{ path('admin_app_article_archive_index') }}" class="btn btn-default btn-sm">
         <i class="fas fa-archive" aria-hidden="true"></i>
-        Archive
+        <span class="d-none d-sm-inline">Archive</span>
     </a>
 {% endblock %}
 
@@ -30,9 +42,7 @@
             <table class="table mb-0 table-striped" id="tableIndex">
                 <thead>
                     <tr>
-                        <th class="table-id">Id</th>
                         <th>Titre</th>
-                        <th>Mots clés</th>
                         <th data-orderable="false">Portail</th>
                         <th data-orderable="false">Auteur</th>
                         <th data-orderable="false">Actions</th>
@@ -63,24 +73,14 @@
             autoWidth: false,
             ajax: articleRoute,
             columns: [
-                { 
-                    data: "id", 
-                    name:"a.id", 
-                    render: function (data, type, row) {
-                        return `
-                            <a href="/articles/${row.slug}" class="fw-bold">${row.id}</a>
-                        `;
-                    }
-                },
                 { data: "title", name:"a.title" },
-                { data: "keywords", name:"a.keywords" },
                 { 
                     data: "portals", 
                     name:"p.title",
                     render: function ( data, type, row ) {
                         let portals = '';
                         row.portals.forEach(element => {
-                            portals += `<a href="/portal/${element.slug}">${element.title}</a>`
+                            portals += `<a href="/portals/${element.slug}">${element.title}</a>`
                         });
                         return `<div class="container-list">${portals}</div>`;
                     }
@@ -100,15 +100,21 @@
 
                         if (isAdmin || currentUserId === data.author.id) {
                             editActions = `
+                                <a href="/admin/article/${row.id}/section" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Gérer les section">
+                                    <i class="fas fa-clone"></i>
+                                </a>
                                 <a href="/admin/article/${row.id}/edit" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Éditer">
                                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                                </a>
+                                <a href="/admin/article/${row.id}/gallery" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Afficher">
+                                    <i class="fas fa-image"></i>
                                 </a>
                             `;
                         }
 
                         return `
                             <div class="btn-group">
-                                <a href="/article/${row.slug}/show" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Consulter">
+                                <a href="/articles/${row.slug}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Consulter">
                                     <i class="fas fa-book-reader"></i>
                                 </a>
                                 <a href="/admin/article/${row.id}/show" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Afficher">
@@ -121,12 +127,10 @@
                 },
             ],
             createdRow: function( row, data, dataIndex ) {
-                $( row ).find('td:eq(0)').attr('data-label', 'Id');
-                $( row ).find('td:eq(1)').attr('data-label', 'Titre');
-                $( row ).find('td:eq(2)').attr('data-label', 'Mots clés');
-                $( row ).find('td:eq(3)').attr('data-label', 'Portail');
-                $( row ).find('td:eq(4)').attr('data-label', 'Auteur');
-                $( row ).find('td:eq(5)').attr('data-label', 'Actions');
+                $( row ).find('td:eq(0)').attr('data-label', 'Titre');
+                $( row ).find('td:eq(1)').attr('data-label', 'Portail');
+                $( row ).find('td:eq(2)').attr('data-label', 'Auteur');
+                $( row ).find('td:eq(3)').attr('data-label', 'Actions');
             }
         });
     </script>

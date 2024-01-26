@@ -8,7 +8,7 @@ use App\Entity\Image;
 use App\Entity\Place;
 use App\Form\Admin\ImageType;
 use App\Entity\Data\SearchData;
-use App\Form\AdvancedSearchType;
+use App\Form\Search\AdvancedSearchType;
 use App\Form\Admin\PlaceFormType;
 use App\Repository\ImageRepository;
 use App\Repository\PlaceRepository;
@@ -18,10 +18,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\Admin\AbstractAdminController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 #[Route('/admin/place')]
-#[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
+#[IsGranted(new Expression("is_granted('ROLE_ADMIN')"))]
 final class AdminPlaceController extends AbstractAdminController
 {
     protected string $entityName = "place";
@@ -72,7 +73,7 @@ final class AdminPlaceController extends AbstractAdminController
             $placeParent = $this->placeRepository->find($placeId);
 
             if ($placeParent && $placeParent->getId() !== $place->getId()) {
-                $place->addLocalisation($place);
+                $place->addLocalisation($placeParent);
             }
         }
 
@@ -129,6 +130,19 @@ final class AdminPlaceController extends AbstractAdminController
         return $this->redirectToRoute('admin_app_place_list', [], Response::HTTP_SEE_OTHER);
     }
 
+    #[Route('/{id}/sticky', name: 'admin_app_place_sticky', methods:['POST'])]
+    public function stickyAction(Request $request, Place $place): Response
+    {
+        if ($this->isCsrfTokenValid('sticky'.$place->getId(), $request->request->get('_token'))) {
+            $sticky = !$place->getIsSticky();
+            $place->setIsSticky($sticky);
+            $this->placeRepository->save($place, true);
+            $this->addFlash('success', "Le lieu a été modifié avec succès.");
+        }
+
+        return $this->redirectToRoute('app_place_show', ['slug' => $place->getSlug()], Response::HTTP_SEE_OTHER);
+    }
+
     #[Route('/{id}/archive', name: 'admin_app_place_archive', methods:['POST'])]
     public function archiveAction(Request $request, Place $place): Response
     {
@@ -168,7 +182,7 @@ final class AdminPlaceController extends AbstractAdminController
 
                 return $this->redirectToRoute('admin_app_place_image', ['id' => $place->getId()]);
             }
-        }else if ('POST' === $request->getMethod()) {
+        } else if ('POST' === $request->getMethod()) {
             $status = $this->handleImage($request, $place);
             $uri = $request->server->get('REQUEST_URI');
 

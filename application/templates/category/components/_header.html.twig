@@ -16,6 +16,10 @@
 {% if places is not defined %}
 	{% set places = false %}
 {% endif %}
+{% if scenarios is not defined %}
+	{% set scenarios = false %}
+{% endif %}
+
 
 <div class="pt-3 pb-0 bg-item header-item">
 	<div class="container-fluid">
@@ -39,10 +43,10 @@
 			{% if is_granted('ROLE_ADMIN') %}
 				<div class="p-2 position-absolute top-0" style="right:-10px">
 					<div class="dropdown d-inline-block">
-						<button class="btn btn-outline-secondary w-100 btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" title="outils">
+						<button class="btn btn-outline-secondary w-100 btn-sm dropdown-toggle" type="button" id="dropdownMenuButtonActionCategory" data-bs-toggle="dropdown" aria-expanded="false" title="outils">
 							<i class="fas fa-wrench me-1"></i>
 						</button>
-						<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+						<ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonActionCategory">
 							<li>
 								<a class="dropdown-item" href="{{ path('admin_app_category_edit', {id:category.id}) }}">
 									<i class="fas fa-pencil-alt"></i>
@@ -120,9 +124,14 @@
 				<i class="fas fa-image"></i>
 			</a>
 		</div>
+		<div class="item {{ scenarios ? 'active': '' }}">
+			<a href="{{ path('app_category_scenarios', {slug:category.slug}) }}" data-bs-toggle="tooltip" title="Scénarios">
+				<i class="fas fa-book"></i>
+			</a>
+		</div>
 	</nav>
 </div>
-<section>
+<div>
 	{% if category.banner %}
 		<img src="{{ vich_uploader_asset(category) }}" class="img-fluid" alt="bannière de {{ category.title }}">
 	{% endif %}
@@ -137,4 +146,4 @@
 			{% endfor %}
 		</p>			
 	{% endif %}
-</section>
+</div>

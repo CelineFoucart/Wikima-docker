@@ -3,7 +3,19 @@
 {% block title %}Index des portails{% endblock %}
 
 {% block body %}
-    <article class="my-5 container-fluid">
+    <article class="mb-5 container-fluid">
+        <header class="mb-4">
+            <div class="row border-bottom align-items-center py-3 bg-default-light">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item">
+                            <a href="{{ path('app_home') }}">Accueil</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Portails</li>
+                    </ol>
+                </nav>
+            </div>
+        </header>
         <h2 class="list-title">Les portails</h2>
         <p class="text-center text-muted fs-5 mb-4">Explorer les portails disponibles sur le site</p>
         <p class="mt-5">
@@ -14,24 +26,17 @@
             portail{{ total > 1 ? 's' : '' }}.
         </p>
 
-        <div class="column-3 mx-2">
-            {% for key, elements in items %}
-                <div class="mb-4">
-                    <h3 class="h4 mb-0 fw-bold">{{ key }}</h3>
-                    <ul>
-                        {% for item in elements %}
-                            <li data-bs-toggle="tooltip" title="{{ item.description ? item.description : 'Aucune description' }}">
-                                <a href="{{ path('app_portal_show', {slug: item.slug}) }}" class="text-decoration-none">
-                                    {{ item.title }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+        <div class="row">
+            {% for portal in portals %}
+                {% include "portal/components/_card_portal.html.twig" %}
+            {% else %}
+                <p class="text-center text-muted">
+                    Aucun portail n'a été trouvé
+                </p>
             {% endfor %}
         </div>
 
-        <div class="navigation">
+        <div class="navigation mb-2">
             {{ knp_pagination_render(portals) }}
         </div>
     </article>

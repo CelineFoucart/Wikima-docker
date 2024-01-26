@@ -1,0 +1,27 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block activeTemplate %}active show{% endblock %}
+{% block activeTemplateList %}active{% endblock %}
+
+{% block title %}Editer "{{ template }}"{% endblock %}
+
+{% block page_title %}Editer "{{ template }}"{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_template_list') }}" class="text-reset">
+			Modèles
+		</a>
+	</li>
+	<li class="breadcrumb-item active">
+		Editer
+	</li>
+{% endblock %}
+
+{% block toolbar %}
+    {% include 'Admin/components/_toolbar.html.twig' with { prefix: 'template', entity: template } %}
+{% endblock %}
+
+{% block body %}
+    {{ include('Admin/template/_form.html.twig') }}
+{% endblock %}

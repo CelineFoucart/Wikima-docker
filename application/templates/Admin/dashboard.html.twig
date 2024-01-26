@@ -1,23 +1,17 @@
 {% extends 'admin_layout.html.twig' %}
 
-{% block title %}Tableau de bord
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('assets/vanillajs-datepicker/datepicker-bs5.min.css') }}">
 {% endblock %}
 
-{% block activeDashboard %}
-	active show
-{% endblock %}
+{% block title %}Tableau de bord{% endblock %}
+{% block activeDashboard %}active show{% endblock %}
 
 {% block toolbar %}
-	{% if is_granted('ROLE_ADMIN') %}
-		<a href="{{ path('admin_app_image_download') }}" class="btn btn-sm btn-primary">
-			<i class="fas fa-download"></i>
-			Télécharger les images
-		</a>
-	{% endif %}
 	{% if is_granted('ROLE_SUPER_ADMIN') %}
-		<a href="{{ path('admin_app_backup_create') }}" class="btn btn-primary btn-sm">
-			<i class="fas fa-plus-circle" aria-hidden="true"></i>
-			Sauvegarder les données
+		<a href="{{ path('admin_app_export') }}" class="btn btn-primary btn-sm">
+			<i class="fas fa-download fa-fw"></i>
+			Exporter les données
 		</a>
 	{% endif %}
 {% endblock %}
@@ -27,8 +21,13 @@
 		Bienvenue sur le panneau d'administration. Ici, vous allez pouvoir gérer l'encyclopédie et son contenu.
 		Cette page vous offre une vue d'ensemble des statistiques du site. Sur le menu à droite, vous pouvez accéder à la gestion du contenu.
 	</p>
+	<p class="text-end mb-0 small"><span class="fw-bold">Version du logiciel :</span> {{ app_version }}</p>
+	<p class="text-end mb-0 small"><span class="fw-bold">Taille de la base de données :</span> {{ size|number_format(2, ',', ' ') }} MB</p>
+	<p class="text-end mb-0 small"><span class="fw-bold">Taille du dossier image :</span> {{ imagesSize }}</p>
+	
+	
 	<div class="row">
-		<div class="col-lg-6 mb-4">
+		<div class="col-lg-7 mb-4">
 			<div class="card border-top-grey">
 				<div class="card-header bg-white">
 					<h2 class="h5 card-title mb-0">Statistiques de l'encyclopédie</h2>
@@ -83,6 +82,20 @@
 								</td>
 							</tr>
 							<tr>
+								<th>Chronologie</th>
+								<td class="text-center">{{ stats.timeline }}</td>
+								<td>
+									<a href="{{ path('admin_app_timeline_create') }}" class="small text-decoration-none me-3">
+										<i class="fas fa-plus-circle" aria-hidden="true"></i>
+										Ajouter
+									</a>
+									<a href="{{ path('admin_app_timeline_list') }}" class="small text-decoration-none">
+										<i class="fas fa-list" aria-hidden="true"></i>
+										Liste
+									</a>
+								</td>
+							</tr>
+							<tr>
 								<th>Image</th>
 								<td class="text-center">{{ stats.image }}</td>
 								<td>
@@ -128,6 +141,22 @@
 									{% endif %}
 								</td>
 							</tr>
+							{% if enable_idiom == 1 %}
+								<tr>
+									<th>Langue</th>
+									<td class="text-center">{{ stats.idiom }}</td>
+									<td>
+										<a href="{{ path('admin_app_idiom_create') }}" class="small text-decoration-none me-3">
+											<i class="fas fa-plus-circle" aria-hidden="true"></i>
+											Ajouter
+										</a>
+										<a href="{{ path('admin_app_idiom_list') }}" class="small text-decoration-none">
+											<i class="fas fa-list" aria-hidden="true"></i>
+											Liste
+										</a>
+									</td>
+								</tr>
+							{% endif %}
 							<tr>
 								<th>Page</th>
 								<td class="text-center">{{ stats.page }}</td>
@@ -186,7 +215,7 @@
 									</a>
 								</td>
 							</tr>
-							{% if is_granted('ROLE_ADMIN') %}
+							{% if is_granted('ROLE_ADMIN') and enable_comment == 1 %}
 								<tr>
 									<th>Commentaire</th>
 									<td class="text-center">{{ stats.comment }}</td>
@@ -202,8 +231,67 @@
 					</table>
 				</div>
 			</div>
+
+			<div class="mt-3 card">
+				<div class="card-header bg-white">
+					<div class="row align-items-center">
+						<div class="col-md-8">
+							<h2 class="h5 card-title mb-0">
+								<i class="fas fa-chart-pie me-1"></i>
+								{{ totalThisYear }} article{{ totalThisYear > 1 ? 's' : '' }} en {{ year }}
+							</h2>
+						</div>
+						<div class="col-md-4">
+							<form action="" method="get">
+								<div class="input-group">
+									<input type="text" name="year" id="year" class="form-control" value="{{ year }}" required>
+									<button type="submit" class="btn btn-primary">OK</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="card-body ctx-container">
+					<canvas id="ctxArticles"></canvas>	
+				</div>
+			</div>
+
+			<div class="card mt-3">
+				<div class="card-header bg-white">
+					<h2 class="h5 card-title mb-0">
+						<i class="fas fa-chart-pie me-1"></i>
+						Statistiques des portails
+					</h2>
+				</div>
+				<div class="card-body card-show p-1">
+					<table class="table table-striped mb-0 data-table">
+						<thead>
+							<tr>
+								<th>Portail</th>
+								<th>Articles</th>
+								<th>Personnages</th>
+								<th>Lieux</th>
+								<th>Total</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for item in portalStats %}
+								<tr>
+									<td data-label="Portail">{{ item.title }}</td>
+									<td data-label="Articles">{{ item.articles }}</td>
+									<td data-label="Personnages">{{ item.persons }}</td>
+									<td data-label="Lieux">{{ item.places }}</td>
+									<td data-label="Total">
+										{{ item.articles + item.persons + item.places }}
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
-		<div class="col-lg-6">
+		<div class="col-lg-5">
 			<div class="card border-top-primary">
 				<div class="card-header bg-white">
 					<h2 class="h5 card-title mb-0">
@@ -308,21 +396,36 @@
 					</a>
 				</div>
 			</div>
+
+			<div class="mt-3 card">
+				<div class="card-header bg-white">
+					<h2 class="h5 card-title mb-0">
+						<i class="fas fa-chart-pie me-1"></i>
+						{{ total }} élément{{ total > 1 ? 's' : '' }}
+					</h2>
+				</div>
+				<div class="card-body ctx-container">
+					<canvas id="ctxTextualElement"></canvas>	
+				</div>
+			</div>
+
 			<div class="card card-stats mt-3">
 				<div class="card-body">
-					<h3>{{ total }}</h3>
+					<h3>{{ total - stats.image }}</h3>
 					<p>
 						élément{{ total > 1 ? 's' : '' }}
 						textuel{{ total > 1 ? 's' : '' }}
+						dans l'encyclopédie
 					</p>
 				</div>
 				<div class="icon">
 					<i class="fas fa-file" aria-hidden="true"></i>
 				</div>
 				<div class="card-footer text-center position-relative small">
-					dont
 					<strong>{{ stats.article }}</strong>
 					article{{ stats.article > 1 ? 's' : '' }},
+					<strong>{{ stats.timeline }}</strong>
+					chronologie{{ stats.timeline > 1 ? 's' : '' }},
 					<strong>{{ stats.person }}</strong>
 					personnage{{ stats.person > 1 ? 's' : '' }}
 					et
@@ -330,11 +433,89 @@
 					lieu{{ stats.place > 1 ? 'x' : '' }}
 				</div>
 			</div>
+
+			{% if enable_forum == 1 %}
+				<div class="card card-stats-forum mt-3">
+					<div class="card-body">
+						<h3>{{ stats.post }}</h3>
+						<p>
+							message{{ stats.post > 1 ? 's' : '' }} publié{{ stats.post > 1 ? 's' : '' }} sur le forum
+						</p>
+					</div>
+					<div class="icon">
+						<i class="fas fa-comment" aria-hidden="true"></i>
+					</div>
+				</div>
+				<div class="card card-stats-forum mt-3">
+					<div class="card-body">
+						<h3>{{ stats.topic }}</h3>
+						<p>
+							sujet{{ stats.topic > 1 ? 's' : '' }} publié{{ stats.topic > 1 ? 's' : '' }} sur le forum
+						</p>
+					</div>
+					<div class="icon">
+						<i class="fas fa-comments" aria-hidden="true"></i>
+					</div>
+				</div>
+			{% endif %}
 		</div>
 	</div>
 {% endblock %}
 
 {% block javascripts %}
 	{{ parent() }}
+	
 	{{ encore_entry_script_tags('app') }}
+	<script src="{{ asset('assets/chartjs/chart.min.js') }}"></script>
+	<script src="{{ asset('assets/vanillajs-datepicker/datepicker-full.min.js') }}"></script>
+	<script src="{{ asset('assets/vanillajs-datepicker/fr.js') }}"></script>
+	<script>
+		const elem = document.querySelector('#year');
+		const datepicker = new Datepicker(elem, {
+			buttonClass: 'btn',
+			format: 'yyyy',
+			language: 'fr',
+			pickLevel: 2
+		});
+
+		const totalArticle = {{ stats.article }};
+		const totalTimeline = {{ stats.timeline }};
+		const totalPerson = {{ stats.person }};
+		const totalPlace = {{ stats.place }};
+		const totalImage = {{ stats.image }};
+		const myChart = new Chart(document.querySelector('#ctxTextualElement'), {
+			type: 'pie',
+			data: {
+				labels: ['Article', 'Chronologie', 'Personnage', 'Lieu', 'Image'],
+				datasets: [{
+					data: [totalArticle, totalTimeline, totalPerson, totalPlace, totalImage],
+					hoverOffset: 4,
+				}]
+			}
+		});
+
+		const json = "{{ articleByMonth|json_encode() }}";
+		const stats = JSON.parse(json);
+
+		const articleChart = new Chart(document.querySelector('#ctxArticles'), {
+			type: 'bar',
+			data: {
+				labels: ["janv.", "févr.", "mars", "avril", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."],
+				datasets: [{
+					label: 'Articles',
+					data: stats,
+					fill: false,
+					tension: 0.1
+				}]
+			},
+			options: {
+				indexAxis: 'y',
+				scales: {
+					x: {
+						beginAtZero: true
+					}
+				}
+			}
+		});
+	</script>
 {% endblock %}

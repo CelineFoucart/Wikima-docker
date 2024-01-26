@@ -13,9 +13,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @Vich\Uploadable
- */
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: PlaceRepository::class)]
 #[UniqueEntity('slug')]
 class Place
@@ -23,7 +21,7 @@ class Place
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['index'])]
+    #[Groups(['index', 'select'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -32,7 +30,7 @@ class Place
         min: 1,
         max: 255
     )]
-    #[Groups(['index'])]
+    #[Groups(['index', 'select'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
@@ -54,10 +52,8 @@ class Place
         max: 255
     )]
     private ?string $dominatedBy = null;
-
-    /**
-     * @Vich\UploadableField(mapping="upload_images", fileNameProperty="mapFile")
-     */
+    
+    #[Vich\UploadableField(mapping:"upload_images", fileNameProperty:"mapFile")]
     private ?File $imageMap = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -98,6 +94,7 @@ class Place
     private Collection $localisations;
 
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'localisations')]
+    #[ORM\OrderBy(['title' => 'ASC'])]
     private Collection $places;
 
     #[ORM\ManyToMany(targetEntity: PlaceType::class, inversedBy: 'places')]
@@ -131,6 +128,18 @@ class Place
     #[ORM\Column(nullable: true)]
     private ?bool $isArchived = null;
 
+    #[ORM\ManyToMany(targetEntity: Episode::class, mappedBy: 'places')]
+    private Collection $episodes;
+
+    #[ORM\ManyToOne(inversedBy: 'places')]
+    private ?ImageGroup $imageGroup = null;
+
+    #[ORM\OneToMany(mappedBy: 'place', targetEntity: MapPosition::class)]
+    private Collection $mapPositions;
+
+    #[ORM\ManyToMany(targetEntity: Scenario::class, mappedBy: 'places')]
+    private Collection $scenarios;
+
     public function __construct()
     {
         $this->localisations = new ArrayCollection();
@@ -138,6 +147,9 @@ class Place
         $this->types = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->portals = new ArrayCollection();
+        $this->episodes = new ArrayCollection();
+        $this->mapPositions = new ArrayCollection();
+        $this->scenarios = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -489,6 +501,102 @@ class Place
     public function setIsArchived(?bool $isArchived): static
     {
         $this->isArchived = $isArchived;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Episode>
+     */
+    public function getEpisodes(): Collection
+    {
+        return $this->episodes;
+    }
+
+    public function addEpisode(Episode $episode): static
+    {
+        if (!$this->episodes->contains($episode)) {
+            $this->episodes->add($episode);
+            $episode->addPlace($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEpisode(Episode $episode): static
+    {
+        if ($this->episodes->removeElement($episode)) {
+            $episode->removePlace($this);
+        }
+
+        return $this;
+    }
+
+    public function getImageGroup(): ?ImageGroup
+    {
+        return $this->imageGroup;
+    }
+
+    public function setImageGroup(?ImageGroup $imageGroup): static
+    {
+        $this->imageGroup = $imageGroup;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MapPosition>
+     */
+    public function getMapPositions(): Collection
+    {
+        return $this->mapPositions;
+    }
+
+    public function addMapPosition(MapPosition $mapPosition): static
+    {
+        if (!$this->mapPositions->contains($mapPosition)) {
+            $this->mapPositions->add($mapPosition);
+            $mapPosition->setPlace($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMapPosition(MapPosition $mapPosition): static
+    {
+        if ($this->mapPositions->removeElement($mapPosition)) {
+            // set the owning side to null (unless already changed)
+            if ($mapPosition->getPlace() === $this) {
+                $mapPosition->setPlace(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Scenario>
+     */
+    public function getScenarios(): Collection
+    {
+        return $this->scenarios;
+    }
+
+    public function addScenario(Scenario $scenario): static
+    {
+        if (!$this->scenarios->contains($scenario)) {
+            $this->scenarios->add($scenario);
+            $scenario->addPlace($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScenario(Scenario $scenario): static
+    {
+        if ($this->scenarios->removeElement($scenario)) {
+            $scenario->removePlace($this);
+        }
 
         return $this;
     }

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PersonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -175,11 +176,22 @@ class Person
     #[ORM\Column(nullable: true)]
     private ?bool $isArchived = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $comment = null;
+
+    #[ORM\ManyToMany(targetEntity: Episode::class, mappedBy: 'persons')]
+    private Collection $episodes;
+
+    #[ORM\ManyToMany(targetEntity: Scenario::class, mappedBy: 'persons')]
+    private Collection $scenarios;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->portals = new ArrayCollection();
         $this->type = new ArrayCollection();
+        $this->episodes = new ArrayCollection();
+        $this->scenarios = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -551,6 +563,72 @@ class Person
     public function setIsArchived(?bool $isArchived): static
     {
         $this->isArchived = $isArchived;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): static
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Episode>
+     */
+    public function getEpisodes(): Collection
+    {
+        return $this->episodes;
+    }
+
+    public function addEpisode(Episode $episode): static
+    {
+        if (!$this->episodes->contains($episode)) {
+            $this->episodes->add($episode);
+            $episode->addPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEpisode(Episode $episode): static
+    {
+        if ($this->episodes->removeElement($episode)) {
+            $episode->removePerson($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Scenario>
+     */
+    public function getScenarios(): Collection
+    {
+        return $this->scenarios;
+    }
+
+    public function addScenario(Scenario $scenario): static
+    {
+        if (!$this->scenarios->contains($scenario)) {
+            $this->scenarios->add($scenario);
+            $scenario->addPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScenario(Scenario $scenario): static
+    {
+        if ($this->scenarios->removeElement($scenario)) {
+            $scenario->removePerson($this);
+        }
 
         return $this;
     }

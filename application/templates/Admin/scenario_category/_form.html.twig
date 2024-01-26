@@ -1,0 +1,13 @@
+{{ form_start(form) }}
+    <div class="card border-top-primary">
+        <div class="card-header">
+            <h2 class="card-title h5 mb-0">Nouvelle catégorie de scénario</h2>
+        </div>
+        <div class="card-body">
+            {{ form_widget(form) }}
+        </div>
+    </div>
+    <div class="card-btn mt-3">
+        {% include "Admin/components/_form_btns.html.twig" %}
+    </div>
+{{ form_end(form) }}

@@ -11,9 +11,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @Vich\Uploadable
- */
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 #[UniqueEntity('slug')]
 class Image
@@ -64,10 +62,8 @@ class Image
 
     #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: 'images')]
     private $articles;
-
-    /**
-     * @Vich\UploadableField(mapping="upload_images", fileNameProperty="filename")
-     */
+    
+    #[Vich\UploadableField(mapping:"upload_images", fileNameProperty:"filename")]
     private ?File $imageFile = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
@@ -78,6 +74,18 @@ class Image
 
     #[ORM\OneToMany(mappedBy: 'illustration', targetEntity: Place::class)]
     private Collection $places;
+
+    #[ORM\ManyToMany(targetEntity: IdiomArticle::class, mappedBy: 'images')]
+    private Collection $idiomArticles;
+
+    #[ORM\ManyToMany(targetEntity: ImageTag::class, inversedBy: 'images')]
+    private Collection $tags;
+
+    #[ORM\ManyToMany(targetEntity: ImageGroup::class, mappedBy: 'images')]
+    private Collection $imageGroups;
+
+    #[ORM\OneToMany(mappedBy: 'image', targetEntity: Map::class)]
+    private Collection $maps;
     
     public function __construct()
     {
@@ -86,6 +94,10 @@ class Image
         $this->articles = new ArrayCollection();
         $this->people = new ArrayCollection();
         $this->places = new ArrayCollection();
+        $this->idiomArticles = new ArrayCollection();
+        $this->tags = new ArrayCollection();
+        $this->imageGroups = new ArrayCollection();
+        $this->maps = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -329,6 +341,114 @@ class Image
             // set the owning side to null (unless already changed)
             if ($place->getIllustration() === $this) {
                 $place->setIllustration(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, IdiomArticle>
+     */
+    public function getIdiomArticles(): Collection
+    {
+        return $this->idiomArticles;
+    }
+
+    public function addIdiomArticle(IdiomArticle $idiomArticle): static
+    {
+        if (!$this->idiomArticles->contains($idiomArticle)) {
+            $this->idiomArticles->add($idiomArticle);
+            $idiomArticle->addImage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdiomArticle(IdiomArticle $idiomArticle): static
+    {
+        if ($this->idiomArticles->removeElement($idiomArticle)) {
+            $idiomArticle->removeImage($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ImageTag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(ImageTag $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(ImageTag $tag): static
+    {
+        $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ImageGroup>
+     */
+    public function getImageGroups(): Collection
+    {
+        return $this->imageGroups;
+    }
+
+    public function addImageGroup(ImageGroup $imageGroup): static
+    {
+        if (!$this->imageGroups->contains($imageGroup)) {
+            $this->imageGroups->add($imageGroup);
+            $imageGroup->addImage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImageGroup(ImageGroup $imageGroup): static
+    {
+        if ($this->imageGroups->removeElement($imageGroup)) {
+            $imageGroup->removeImage($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Map>
+     */
+    public function getMaps(): Collection
+    {
+        return $this->maps;
+    }
+
+    public function addMap(Map $map): static
+    {
+        if (!$this->maps->contains($map)) {
+            $this->maps->add($map);
+            $map->setImage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMap(Map $map): static
+    {
+        if ($this->maps->removeElement($map)) {
+            // set the owning side to null (unless already changed)
+            if ($map->getImage() === $this) {
+                $map->setImage(null);
             }
         }
 

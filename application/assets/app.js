@@ -13,6 +13,8 @@ import './styles/index.css';
 import './styles/content.css';
 import './styles/timeline.css';
 import './styles/user-icon.css';
+import './styles/idiom.css';
+import './styles/forum.css';
 import searchInput from './lib/search-input.js';
 import updateNote from './lib/update-note.js';
 
@@ -42,4 +44,7 @@ window.onload = () => {
 
     // Enable search input in navbar
     searchInput('#searchable-dropdown-input', '#searchable-dropdown');
+
+    // Enable search input in map show
+    searchInput('#search-positions-input', '#positions-container');
 }

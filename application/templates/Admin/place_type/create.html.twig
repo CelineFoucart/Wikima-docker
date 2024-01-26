@@ -17,15 +17,12 @@
 		</a>
 	</li>
 	<li class="breadcrumb-item active">
-		Création
+		Créer
 	</li>
 {% endblock %}
 
 {% block toolbar %}
-	<a href="{{ path('admin_app_placetype_list') }}" class="btn btn-default btn-sm">
-		<i class="fas fa-long-arrow-left"></i>
-		Retour
-	</a>
+    {% include 'Admin/components/_toolbar.html.twig' with { prefix: 'placetype', entity: null } %}
 {% endblock %}
 
 {% block body %}

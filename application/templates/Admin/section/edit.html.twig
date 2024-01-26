@@ -2,32 +2,36 @@
 
 {% block activeWiki %} active show {% endblock %}
 {% block activeArticle %}active{% endblock %}
-
 {% block title %}Editer "{{ section.title }}"{% endblock %}
-
 {% block page_title %}Editer "{{ section.title }}"{% endblock %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item">
         <a href="{{ path('admin_app_article_section', {id: section.article.id}) }}" class="text-reset">
-            Sections de "{{ section.article }}"
+            Sections
         </a>
     </li>
     <li class="breadcrumb-item active">
-        {{ section.title }}
+        Editer
     </li>
 {% endblock %}
 
 {% block toolbar %}
     <div class="dropdown d-inline">
-        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenuButton8" data-bs-toggle="dropdown" aria-expanded="false">
             Action
         </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton8">
             <li>
                 <a class="dropdown-item" href="{{ path('admin_app_article_section', {id: section.article.id}) }}">
                     <i class="fas fa-plus-circle" aria-hidden="true"></i>
                     Ajouter
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="{{ path('admin_app_section_conversion', {id: section.id}) }}">
+                    <i class="fas fa-sync"></i>
+                    Convertir
                 </a>
             </li>
             <li>
@@ -55,7 +59,7 @@
 
             {{ form_rest(form) }}
             <div class="card-footer">
-                <a href="{{ path('app_article_show', {slug: section.article.slug}) }}" class="btn btn-primary btn-sm" title="Consulter">
+                <a href="{{ path('app_article_show', {slug: section.article.slug}) }}#part{{ section.id }}" class="btn btn-primary btn-sm" title="Consulter">
                     <i class="fas fa-book-reader"></i> Retourner à l'article
                 </a>
                 <button type="submit" class="btn btn-success btn-sm">
@@ -68,6 +72,13 @@
             </div>
         </div>
     {{ form_end(form) }}
+{% endblock %}
 
-    {% include "Admin/components/_editor.html.twig" with {target_id: 'section_content'} %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset("assets/ckeditor/ckeditor.js") }}"></script>
+    <script src="{{ asset("assets/admin/editor.js") }}"></script>
+    <script>   
+        enableFullEditor("section_content", "p;h3;h4;h5;h6;pre;address;div");
+    </script>
 {% endblock %}

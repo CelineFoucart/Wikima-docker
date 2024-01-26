@@ -1,0 +1,92 @@
+<div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="showModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title h5" id="showModalLabel">
+                    Emplacement
+                </h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form action="" method="post">
+				<div class="modal-body">
+					<div class="mb-3">
+						<label for="titleEdit" class="form-label required">Titre</label>
+						<input type="text" name="titleEdit" class="form-control" id="titleEdit" minlength="2" maxlength="255" required>
+						<div class="invalid-feedback">
+							Le titre est obligatoire et ne peut dépasser 255 caractères
+						</div>
+					</div>
+					<div class="mb-3">
+                        <label for="marker" class="form-label required">Icône</label>
+                        <input type="text" name="markerEdit" class="form-control" maxlength="50" id="markerEdit" value="fas fa-map-marker" required>
+                        <div class="form-text">
+                            Entrer les classes d'un icône <a href="https://fontawesome.com/v5/search?o=r&m=free" target="_blank">fontawesome</a>,
+                            par exemple pour <i class="fas fa-map-marker"></i>, <em>fas fa-map-marker</em>.
+                        </div>
+                        <div class="invalid-feedback">
+                            L'icône est obligatoire et ne peut dépasser 50 caractères
+                        </div>
+                    </div>
+					<div class="mb-3">
+						<label for="description" class="form-label">Description</label>
+						<textarea class="form-control" name="descriptionEdit" maxlength="1500" id="descriptionEdit"></textarea>
+						<div class="invalid-feedback">
+							La description ne peut dépasser 1500 caractères
+						</div>
+					</div>
+					<h5 class="h5 bg-light border py-1 text-center">Déplacer le marqueur</h5>
+					<div class="mb-3">
+						<label for="positionYEdit" class="form-label">Depuis le haut de l'image</label>
+						<input type="number" name="positionYEdit" step="0.01" class="form-control" id="positionYEdit"  required>
+						<div class="invalid-feedback">
+							Ce champ est obligatoire
+						</div>
+					</div>
+					<div class="mb-3">
+						<label for="positionXEdit" class="form-label">Depuis la gauche de l'image</label>
+						<input type="number" name="positionXEdit" step="0.01" class="form-control" id="positionXEdit"  required>
+						<div class="invalid-feedback">
+							Ce champ est obligatoire
+						</div>
+					</div>
+					<div id="place-linked"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">
+						<i class="fas fa-trash-alt"></i>
+						Supprimer
+					</button>
+					<a href="" id="advanced-edit-btn" class="btn btn-default btn-sm" data-bs-toggle="tooltip" title="Éditer">
+						<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+						Formulaire avancé
+					</a>
+					<button type="button" class="btn btn-success btn-sm" id="edit-btn">
+						<i class="fas fa-save fa-fw"></i>
+						Sauvegarder
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModal" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content delete-modal">
+			<div class="modal-header">
+				<h3 class="modal-title fs-5 text-danger" id="deleteModalLabel">Confirmation de suppression</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body text-start">
+				Êtes-vous sûr de vouloir supprimer cet élément élément ?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default btn-sm" data-bs-dismiss="modal">Annuler</button>
+				<button type="button" id="delete-btn" class="btn btn-danger btn-sm">
+					<i class="fas fa-trash-alt" aria-hidden="true"></i> Oui, supprimer
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

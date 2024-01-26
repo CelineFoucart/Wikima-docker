@@ -2,16 +2,21 @@
 
 namespace App\Controller\Wiki;
 
+use App\Entity\User;
 use App\Entity\Article;
 use App\Entity\Data\SearchData;
-use App\Entity\User;
-use App\Form\SearchPortalType;
+use App\Form\Search\SearchType;
 use App\Repository\ArticleRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\Word\ArticleWordGenerator;
 use Symfony\Component\HttpFoundation\Request;
+use App\Form\Search\AdvancedArticleSearchType;
+use App\Service\LogService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class ArticleController extends AbstractController
 {
@@ -20,35 +25,13 @@ final class ArticleController extends AbstractController
     ) {
     }
 
-    #[Route('/articles/{slug}', name: 'app_article_show')]
-    #[Entity('article', expr: 'repository.findBySlug(slug)')]
-    public function article(Article $article): Response
-    {
-        $this->denyAccessUnlessGranted('view', $article);
-
-        return $this->render('article/show_article.html.twig', [
-            'article' => $article,
-        ]);
-    }
-
-    #[Route('/articles/{slug}/gallery', name: 'app_article_show_gallery')]
-    #[Entity('article', expr: 'repository.findBySlug(slug)')]
-    public function articleGalerie(Article $article): Response
-    {
-        $this->denyAccessUnlessGranted('view', $article);
-
-        return $this->render('article/show_article_gallery.html.twig', [
-            'article' => $article,
-        ]);
-    }
-
     #[Route('/articles', name: 'app_article_index')]
     public function index(Request $request, int $perPageEven): Response
     {
         $page = $request->query->getInt('page', 1);
 
         $search = (new SearchData())->setPage($page);
-        $form = $this->createForm(SearchPortalType::class, $search, ['allow_extra_fields' => true]);
+        $form = $this->createForm(AdvancedArticleSearchType::class, $search, ['allow_extra_fields' => true]);
         $form->handleRequest($request);
 
         return $this->render('article/index_article.html.twig', [
@@ -85,6 +68,39 @@ final class ArticleController extends AbstractController
             'articles' => $articles,
             'user' => $user,
         ]);
+    }
+
+    #[Route('/articles/{slug}', name: 'app_article_show')]
+    public function article(#[MapEntity(expr: 'repository.findBySlug(slug)')] Article $article): Response
+    {
+        $this->denyAccessUnlessGranted('view', $article);
+
+        return $this->render('article/show_article.html.twig', [
+            'article' => $article,
+            'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
+        ]);
+    }
+    
+    #[Route('/articles/{slug}/word', name: 'app_article_word')]
+    public function articleToWord(#[MapEntity(expr: 'repository.findBySlug(slug)')] Article $article, ArticleWordGenerator $generator, LogService $logService): Response
+    {
+        $this->denyAccessUnlessGranted('view', $article);
+        try {
+            $file = $generator->setArticle($article)->generate();
+            $response = new BinaryFileResponse($file['path']);
+            $response->setContentDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $file['filename']
+            );
+            $response->deleteFileAfterSend();
+
+            return $response;
+        } catch (\Exception $th) {
+            $this->addFlash('error',"Le fichier n'a pas pu être généré, car il y a des liens vers des images invalides ou un code HTML invalide.");
+            $logService->error("Génération de '{$article->getSlug()}.docx'", $th->getMessage(), 'Article');
+            
+            return $this->redirectToRoute('app_article_show', ['slug' => $article->getSlug()]);
+        }
     }
 
     private function hidePrivate(): bool

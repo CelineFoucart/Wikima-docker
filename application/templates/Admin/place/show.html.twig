@@ -18,7 +18,7 @@
 {% block breadcrumb %}
 	<li class="breadcrumb-item">
 		<a href="{{ path('admin_app_place_list') }}" class="text-reset">
-			Lieu
+			Lieux
 		</a>
 	</li>
 	<li class="breadcrumb-item active">
@@ -27,25 +27,7 @@
 {% endblock %}
 
 {% block toolbar %}
-    <a class="btn btn-sm btn-default" href="{{ path('admin_app_place_create') }}" data-bs-toggle="tooltip" title="Ajouter">
-        <i class="fas fa-plus-circle" aria-hidden="true"></i>
-    </a>
-    <div class="btn-group">
-        <a href="{{ path('app_place_show', {slug: place.slug}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Consulter">
-            <i class="fas fa-book-reader"></i>
-        </a>                   
-        <a href="{{ path('admin_app_place_show', {id: place.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Afficher">
-            <i class="fas fa-info-circle"></i>
-        </a>
-        <a data-bs-toggle="tooltip" title="Gérer l'image" class="btn btn-sm btn-default"  href="{{ path('admin_app_place_image', {id: place.id}) }}">
-            <i class="fas fa-image"></i>
-        </a>
-        <a href="{{ path('admin_app_place_edit', {id: place.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Éditer">
-            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-        </a>
-        {% include "Admin/components/_archive_modal.html.twig" with { element: place, path: 'admin_app_place_archive' } %}
-        {% include "Admin/components/_delete_modal.html.twig" with { element: place, path: 'admin_app_place_delete' } %}
-    </div>
+    {% include "Admin/place/_toolbar.html.twig" %}
 {% endblock %}
 
 {% block body %}
@@ -223,5 +205,31 @@
                 </div>
             </div>
         </div>
+
+        {% if place.imageGroup %}
+            <div class="col-12 mt-3">
+                <article class="card border-top-primary">
+                    <div class="card-header">
+                        <h3 class="card-title h5 mb-0">
+                            Groupe d'images illustrant ce lieu :
+                            <a href="{{ path('app_image_group_show', {slug: place.imageGroup.slug}) }}">{{ place.imageGroup }}</a>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="image-container">
+                            {% for image in place.imageGroup.images %}
+                                <div class="image-block">
+                                    <a href="{{ vich_uploader_asset(image) }}" data-fslightbox="first-lightbox">
+                                        <img data-bs-toggle="tooltip" title="{{ image.title }}" src="{{ vich_uploader_asset(image)|imagine_filter('gallery_thumbnail') }}" alt="{{ image.title }}">
+                                    </a>
+                                </div>
+                            {% else %}
+                                <p class="text-center">Ce groupe n'a pas d'image.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </article>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

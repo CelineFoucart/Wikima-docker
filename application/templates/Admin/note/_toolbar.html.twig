@@ -1,0 +1,6 @@
+{% embed 'Admin/components/_toolbar.html.twig' with { prefix: 'note', entity: note } %}
+    {% block delete_action %}
+        {% include "Admin/components/_archive_modal.html.twig" with { element: note, path: 'admin_app_note_archive' } %}
+        {{ parent() }}
+    {% endblock %}
+{% endembed %}

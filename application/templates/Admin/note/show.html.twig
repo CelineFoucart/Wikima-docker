@@ -12,7 +12,7 @@
 {% block breadcrumb %}
 	<li class="breadcrumb-item">
 		<a href="{{ path('admin_app_note_list') }}" class="text-reset">
-			Note
+			Notes
 		</a>
 	</li>
 	<li class="breadcrumb-item active">
@@ -21,31 +21,7 @@
 {% endblock %}
 
 {% block toolbar %}
-	<div class="dropdown">
-        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-            Action
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li>
-                <a class="dropdown-item" href="{{ path('admin_app_note_create') }}">
-                    <i class="fas fa-plus-circle" aria-hidden="true"></i>
-                    Ajouter
-                </a>
-            </li>
-            <li>
-                <a class="dropdown-item" href="{{ path('admin_app_note_edit', {id: note.id}) }}">
-                    <i class="fas fa-edit" aria-hidden="true"></i>
-                    Editer
-                </a>
-            </li>
-            <li>
-                <a class="dropdown-item" href="{{ path('admin_app_note_list') }}">
-                    <i class="fas fa-list" aria-hidden="true"></i>
-                    Retour à la liste
-                </a>
-            </li>
-        </ul>
-    </div>
+	{{ include('Admin/note/_toolbar.html.twig') }}
 {% endblock %}
 
 {% block body %}

@@ -19,10 +19,6 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>Slug</th>
-                                <td>{{ article.slug }}</td>
-                            </tr>
-                            <tr>
                                 <th>Mots clés</th>
                                 <td>{{ article.keywords }}</td>
                             </tr>
@@ -58,6 +54,10 @@
                     <table class="table table-striped mb-0">
                         <tbody>
                             <tr>
+                                <th>Slug</th>
+                                <td>{{ article.slug }}</td>
+                            </tr>
+                            <tr>
                                 <th>Création</th>
                                 <td>{{ article.createdAt|date(date_format) }}</td>
                             </tr>
@@ -73,6 +73,12 @@
                                 <th>Est archivé</th>
                                 <td>{{ article.isArchived ? 'Oui' : 'Non' }}</td>
                             </tr>
+                            {% if enable_comment %}
+                                <tr>
+                                    <th>Avec commentaires</th>
+                                    <td>{{ article.enableComment ? 'Oui' : 'Non' }}</td>
+                                </tr>
+                            {% endif %}
                             <tr>
                                 <th>Auteur</th>
                                 <td>

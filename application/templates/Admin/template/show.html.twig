@@ -1,0 +1,68 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block activeTemplate %}active show{% endblock %}
+{% block activeTemplateList %}active{% endblock %}
+{% block title %}Voir "{{ template }}"{% endblock %}
+
+{% block page_title %}Voir "{{ template }}"{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_template_list') }}" class="text-reset">
+			Modèles
+		</a>
+	</li>
+	<li class="breadcrumb-item active">
+		Voir
+	</li>
+{% endblock %}
+
+{% block toolbar %}
+    {% include 'Admin/components/_toolbar.html.twig' with { prefix: 'template', entity: template } %}
+{% endblock %}
+
+{% block body %}
+        <div class="card border-top-primary">
+            <div class="card-header bg-white">
+                <h2 class="card-title h5 mb-0">Informations</h2>
+            </div>
+            <div class="card-body card-show">
+                <table class="table table-striped mb-0">
+                    <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ template.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Titre</th>
+                            <td>{{ template.title }}</td>
+                        </tr>
+                        <tr>
+                            <th>Groupes</th>
+                            <td>
+                                {% if template.templateGroups %}
+                                    <ul>
+                                        {% for templateGroup in template.templateGroups %}
+                                            <li>
+                                                <a href="{{ path('admin_app_template_group_show', {id: templateGroup.id}) }}">
+                                                    {{ templateGroup.title }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ template.description|nl2br }}</td>
+                        </tr>
+                        <tr>
+                            <th>Content</th>
+                            <td>{{ template.content|raw }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+{% endblock %}

@@ -8,101 +8,93 @@
 	{% set gallery = false %}
 {% endif %}
 
+<div class="border-bottom container-fluid">
+	<div class="row align-items-center">
+		<div class="col-md-6">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item">
+						<a href="{{ path('app_home') }}">Accueil</a>
+					</li>
+					<li class="breadcrumb-item">
+						<a href="{{ path('app_article_index') }}">Articles</a>
+					</li>
+					<li class="breadcrumb-item active" aria-current="page">{{ article.title }}</li>
+				</ol>
+			</nav>
+		</div>
+		<div class="col-md-6">
+			{{ include('includes/_search.html.twig', { route_name: 'app_article_index' }) }}
+		</div>
+	</div>
+</div>
 
-<div class="container-fluid">
-	<div class="border-bottom pb-3 pb-md-2">
-		<span class="label-title">Portails :
-		</span>
+<div class="item-heading position-relative">
+	<div class="p-2 position-absolute top-0 end-0">
+		<a class="btn btn-sm btn-outline-secondary" 
+			data-bs-toggle="tooltip" title="Aperçu avant impression"
+			href="{{ path('app_print_article', {slug: article.slug}) }}" target="_blank">
+			<i class="fas fa-print"></i> 
+		</a>
+		<a class="btn btn-sm btn-outline-secondary" 
+			data-bs-toggle="tooltip" title="Télécharger le fichier word"
+			href="{{ path('app_article_word', {slug: article.slug}) }}" target="_blank">
+			<i class="fas fa-file-word"></i>
+		</a>
+
+		{% if (is_granted('ROLE_EDITOR') and article.author is not null and article.author.id == app.user.id) or is_granted('ROLE_ADMIN') %}
+			<a data-bs-toggle="tooltip" title="Editer" class="btn btn-sm btn-outline-secondary" href="{{ path('admin_app_article_edit', {id:article.id}) }}">
+				<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+			</a>
+			<a data-bs-toggle="tooltip" title="Gérer les sections" class="btn btn-sm btn-outline-secondary" href="{{ path('admin_app_article_section', {id:article.id}) }}">
+				<i class="fas fa-clone" aria-hidden="true"></i>
+			</a>
+			<a data-bs-toggle="tooltip" title="Gérer la galerie" class="btn btn-sm btn-outline-secondary" href="{{ path('admin_app_article_gallery', {id:article.id}) }}">
+				<i class="fas fa-image"></i> 
+			</a>
+			{% include "components/_sticky_modal.html.twig" with {element: article, path:'admin_app_article_sticky'} %}
+		{% endif %}
+	</div>
+	<p class="pt-4 pt-lg-0">
 		{% for portal in article.portals %}
 			{{ include('components/utils/_tag_link.html.twig', {item: portal, path: 'app_portal_show', position: "bottom"}) }}
 		{% endfor %}
-	</div>
-	<div class="item-heading position-relative">
-		<div class="p-2 position-absolute top-0" style="right:-10px">
-			<div class="dropdown">
-				<button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" title="outils">
-					<i class="fas fa-wrench me-1"></i>
-				</button>
-				<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-					<li>
-						<a class="dropdown-item" href="{{ path('app_print_article', {slug: article.slug}) }}" target="_blank">
-							<i class="fas fa-print"></i> Aperçu avant impression
-						</a>
-					</li>
-					{% if (is_granted('ROLE_EDITOR') and article.author is not null and article.author.id == app.user.id) 
-						or is_granted('ROLE_ADMIN') %}
-						<li>
-							<a class="dropdown-item" href="{{ path('admin_app_article_section', {id:article.id}) }}">
-								<i class="fas fa-edit"></i> Gérer le contenu textuel
-							</a>
-						</li>
-						<li>
-							<a class="dropdown-item" href="{{ path('admin_app_article_gallery', {id:article.id}) }}">
-								<i class="fas fa-image"></i> Gérer la galerie
-							</a>
-						</li>
-						<li>
-							<a class="dropdown-item" href="{{ path('admin_app_article_edit', {id:article.id}) }}">
-								<i class="fas fa-pencil-alt"></i> Editer rapidement
-							</a>
-						</li>
-					{% endif %}
-				</ul>
-			</div>
-		</div>
-		{% if article.type %}
-			<div>
-				<a href="{{ path('app_articletype_show', {slug: article.type.slug}) }}" class="badge rounded-pill bg-secondary link-light text-decoration-none me-1">
-					{% if article.type.icon %}<i class="{{ article.type.icon }} me-1" aria-hidden="true"></i>{% endif %}
-					{{ article.type }}
-				</a>
-			</div>
+	</p>
+	<h2 class="h1">
+		{{ article.title }}
+		{% if article.isDraft %}
+			<i class="fas fa-ruler" data-bs-toggle="tooltip" title="Brouillon : article en travaux (visible uniquement par son auteur et les administrateurs)"></i>
 		{% endif %}
-		<h1 class="mb-1">{{ article.title }}
-			{% if article.isDraft %}
-				<i class="fas fa-ruler" data-bs-toggle="tooltip" title="Brouillon : article en travaux (visible uniquement par son auteur et les administrateurs)"></i>
-			{% endif %}
-			{% if article.isPrivate %}
-				<i class="fas fa-lock" data-bs-toggle="tooltip" title="Privé (visible uniquement par son auteur et les administrateurs)"></i>
-			{% endif %}
-			{% if article.isArchived %}
-				<i class="fas fa-archive me-1 fa-fw" data-bs-toggle="tooltip" aria-hidden="true" title="archivé"></i>
-			{% endif %}
-		</h1>
-		<p class="text-muted mb-3 mt-2">
-			<span class="me-3">
-				<i class="fas fa-user me-1"></i>
-				{% if article.author is not null %}
-					Par
-					{{ article.author.username }}
-				{% else %}
-					Par Anonyme
-				{% endif %}
-			</span>
-			<span class="me-2">
-				<i class="fas fa-calendar-alt me-1"></i>
-				Le
-				{{ article.createdAt|date(date_format) }}
-			</span>
-		</p>
-		<p class="lead mb-3">{{ article.description }}</p>
-	</div>
+		{% if article.isPrivate %}
+			<i class="fas fa-lock" data-bs-toggle="tooltip" title="Privé (visible uniquement par son auteur et les administrateurs)"></i>
+		{% endif %}
+		{% if article.isArchived %}
+			<i class="fas fa-archive me-1 fa-fw" data-bs-toggle="tooltip" aria-hidden="true" title="archivé"></i>
+		{% endif %}
+	</h2>
+	{% if article.type %}
+		<div>
+			<a href="{{ path('app_articletype_show', {slug: article.type.slug}) }}" class="badge rounded-pill bg-secondary link-light text-decoration-none me-1">
+				{% if article.type.icon %}<i class="{{ article.type.icon }} me-1" aria-hidden="true"></i>{% endif %}
+				{{ article.type }}
+			</a>
+		</div>
+	{% endif %}
 
-	<ul class="nav nav-tabs border-bottom-0">
-		<li class="nav-item">
-			<a class="nav-link {{ reading ? 'active': '' }}" href="{{ path('app_article_show', {slug:article.slug}) }}">
-				Lecture
-			</a>
-		</li>
-		<li class="nav-item">
-			<a href="{{ path('app_article_show_gallery', {slug:article.slug}) }}" class="nav-link {{ gallery ? 'active': '' }}">
-				Galerie
-			</a>
-		</li>
+	<p class="lead my-3">{{ article.description }}</p>
+</div>
+
+<ul class="nav nav-tabs border-bottom-0">
+	<li class="nav-item ms-4">
+		<a class="nav-link {{ reading ? 'active': '' }}" href="{{ path('app_article_show', {slug:article.slug}) }}">
+			Lecture
+		</a>
+	</li>
+	{% if enable_comment == 1 %}
 		<li class="nav-item">
 			<a class="nav-link {{ comments ? 'active': '' }}" href="{{ path('app_comment', {slug:article.slug}) }}">
 				Commentaires
 			</a>
 		</li>
-	</ul>
-</div>
+	{% endif %}
+</ul>

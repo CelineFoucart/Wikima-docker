@@ -1,0 +1,49 @@
+{% block stylesheets %}
+    <style>
+        .choices {
+            margin-bottom: 0;
+        }
+    </style>
+{% endblock %}
+
+{{ form_start(form) }}
+    <div class="card border-top-primary">
+        <div class="card-header">
+            <div class="float-end">
+                <a href="{{ path('admin_app_forum_category_show', {id: category.id}) }}" class="btn btn-default btn-sm">
+                    <i class="fas fa-long-arrow-left"></i>
+                    Retour
+                </a>
+            </div>
+            <h2 class="card-title h5 mb-0">Forum</h2>
+        </div>
+        <div class="card-body">
+            {{ form_row(form.title) }}
+            <div class="mb-3">
+                {{ form_label(form.slug) }}
+                <div class="input-group">
+                    {{ form_widget(form.slug) }}
+                    <span 
+                        class="input-group-text" 
+                        data-action="slugify" 
+                        data-target="#forum_slug" 
+                        role="btton" 
+                        data-source="#forum_title"
+                        data-bs-toggle="tooltip"
+                        title="Générer">
+                        <i class="fas fa-sync-alt"></i>
+                    </span>
+                </div>
+                {{ form_help(form.slug) }}
+                {{ form_errors(form.slug) }}
+            </div>
+            {{ form_row(form.description) }}
+            {{ form_row(form.groupAccess) }}
+            {{ form_row(form.category) }}
+        </div>
+    </div>
+    {{ form_rest(form) }}
+    <div class="card-btn mt-3">
+        {% include "Admin/components/_form_btns.html.twig" %}
+    </div>
+{{ form_end(form) }}

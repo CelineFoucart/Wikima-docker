@@ -10,17 +10,22 @@ use App\Repository\CommentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 #[Route('/admin/comment')]
-#[Security("is_granted('ROLE_ADMIN')")]
+#[IsGranted(new Expression("is_granted('ROLE_ADMIN')"))]
 final class AdminCommentController extends AbstractAdminController
 {
     protected string $entityName = "comment";
 
     public function __construct(
-        private CommentRepository $commentRepository
+        private CommentRepository $commentRepository,
+        bool $enableComment
     ) {
+        if (false === $enableComment) {
+            throw $this->createNotFoundException('Not Found');
+        }
     }
 
     #[Route('/', name: 'admin_app_comment_list', methods:['GET'])]

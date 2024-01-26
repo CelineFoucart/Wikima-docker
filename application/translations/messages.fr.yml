@@ -118,6 +118,7 @@ help_description: Courte présentation de moins de 255 caractères
 Physical description: Description physique
 Is sticky: Epingler
 Is Sticky: Epingler
+Enable comment: Activer les commentaires
 ArticleType: Type d'article
 Article Type: Type d'article
 Article Type List: Liste des types d'article
@@ -126,3 +127,34 @@ Icon: Icône
 help_icon: Entrer les classes d'un icône <a href="https://fontawesome.com/v5/search?o=r&m=free" target="_blank">fontawesome</a>, par exemple pour <b>user</b>, <em>fas fa-user</em>.
 Gender: Genre
 Species: Espèce
+Translated name: Nom traduit
+Original name: Nom en version originale
+Template groups: Groupes de modèles
+Tags: Types d'image
+name: Nom
+description: Description
+tags: Types
+Group access: Groupes
+Role name: Nom
+Forum categories: Catégories de forum
+Forums: Forums
+Colour: Couleur
+Moderator: Modérateur
+Forum groups: Groupes sur le forum
+Localisation: Localisation
+Rank: Rang
+Locked: Verrouiller le sujet ?
+Sticky: Epingler le sujet ?
+Forum: Forum
+Link: Lien
+Timelines: Chronologies
+Color: Couleur
+Persons: Personnages
+Pitch: Pitch
+Public: Public
+Image group: Groupe d'image
+Valid: Validé
+Archived: Archivé
+Image groups: groupes d'image
+Default color: Couleur par défaut
+Addressee: Destinataire

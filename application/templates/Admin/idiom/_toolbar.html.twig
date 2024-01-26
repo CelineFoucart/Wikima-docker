@@ -1,0 +1,20 @@
+{% embed 'Admin/components/_toolbar.html.twig' with { prefix: 'idiom', entity: idiom, show_route: 'app_idiom_show'  } %}
+    {% block custom_action %}
+        {% if can_edit %}
+            <a href="{{ path('admin_app_idiom_article', {id: idiom.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Articles">
+                <i class="fas fa-file-alt" aria-hidden="true"></i>
+            </a>
+            <a href="{{ path('admin_app_idiom_order', {id: idiom.id}) }}" class="btn btn-sm btn-default" data-bs-toggle="tooltip" title="Ordonner le contenu">
+                <i class="fas fa-sort-amount-down-alt"></i>
+            </a>
+        {% endif %}
+    {% endblock %}
+
+    {% block edit_action %}
+        {% if can_edit %}{{ parent() }}{% endif %}
+    {% endblock %}
+
+    {% block delete_action %}
+        {% if can_edit %}{{ parent() }}{% endif %}
+    {% endblock %}
+{% endembed %}

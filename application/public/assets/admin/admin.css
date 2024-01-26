@@ -6,8 +6,23 @@ body {
     background-color: #ecf0f5;
 }
 
+#page-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#container-admin {
+    display: flex;
+    flex: 1;
+}
+
 img {
     max-width: 100%;
+}
+
+.modal {
+    z-index: 10010;
 }
 
 .navigation .pagination {
@@ -36,7 +51,8 @@ img {
     box-shadow: 0 1px 1px rgba(0,0,0,.1);
 }
 
-.nav-custom-style .nav-link {
+.nav-custom-style .nav-link,
+.nav-pills .nav-link.active {
     color: inherit;
 }
 
@@ -45,9 +61,14 @@ img {
     color: #444;
 }
 
-.nav-custom-style .nav-link.active {
+.nav-link {
+    color: #337ab7;
+}
+
+.nav-custom-style .nav-link.active,
+.nav-pills .nav-link.active {
     color: #fff;
-    background-color: #337ab7;
+    background-color: #3c8dbc;
 }
 
 .btn-primary {
@@ -59,6 +80,15 @@ img {
     color: #367fa9;
 }
 
+.text-primary {
+    color: #367fa9 !important;
+}
+
+.form-check-input:checked {
+    background-color: #367fa9;
+    border-color: #367fa9;
+}
+
 .page-item.active .page-link  {
     background-color: #3c8dbc;
     border-color: #367fa9;
@@ -68,7 +98,8 @@ img {
     background-color: #367fa9;
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-primary:focus {
     background-color: #286090;
     border-color: #204d74;
     color: #fff;
@@ -88,9 +119,8 @@ img {
 .image-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
 }
-
 
 .image-block form {
     padding-top: 5px;
@@ -107,9 +137,7 @@ img {
 }
 
 .wrapper {
-    margin-left: 4.5rem;
     padding-bottom: 10px;
-    margin-top: 66px;
 }
 
 .sidebar-main-brand {
@@ -155,6 +183,11 @@ img {
 
 .card-stats {
     background: #0073b7;
+    color: #fff;
+}
+
+.card-stats-forum {
+    background: #198754;
     color: #fff;
 }
 
@@ -260,19 +293,13 @@ h1 {
 
 /* sidebar */
 .dashboard-nav {
-    width: 4.5rem;
-    position: fixed;
-    left: 0;
-    top: 56px;
-    bottom: 0;
-    overflow: visible;
+    max-width: 4.5rem;
+    min-width: 4.5rem;
     background-color: #222d32;
+    border-right: 1px solid #222d32;
     font-size: 0.9rem;
     z-index: 9990;
-}
-
-.dashboard-nav::-webkit-scrollbar{
-    display: none;
+    padding-top: 5px;
 }
 
 .dashboard-nav a {
@@ -450,17 +477,12 @@ h1 {
     background: linear-gradient(0deg, rgba(200, 235, 251, 1) 21%, rgba(200, 235, 251, 0.4) 52%, rgba(200, 235, 251, 1) 85%);
 }
 
-.sortable-chosen {
-    background-color: #fff;
-    border: 1px solid rgba(0, 0, 0, .125);
-}
-
 /* toastify style */
 .toastify-container {
     position: fixed;
-    top: 70px;
-    right: 0px;
-    z-index: 9000;
+    top: 5px;
+    right: 5px;
+    z-index: 9999;
 }
 
 .toastify {
@@ -583,6 +605,17 @@ div.dataTables_wrapper div.dataTables_filter input {
     display: block;
 }
 
+@media (max-width: 576px) {
+    .page-header .btn-default {
+        white-space: wrap;
+    }
+    .ctx-container {
+        width:75vw;
+        padding-right: 0.25rem;
+        padding-left: 0.25rem;
+    }
+}
+
 @media (min-width: 400px) {
     .table td::before {
         display: inline-block;
@@ -653,6 +686,10 @@ div.dataTables_wrapper div.dataTables_filter input {
         text-align: left;
     }
 
+    .stats-table tr:last-of-type > * {
+        border-bottom: none;
+    }
+
 
     .table td::before {
         content: " ";
@@ -711,15 +748,41 @@ div.dataTables_wrapper div.dataTables_filter input {
     }
 
     .dashboard-nav {
-        width: 230px;
+        max-width: 230px;
+        min-width: 230px;
         padding: 1rem 0;
-    }
-
-    .wrapper {
-        margin-left: 230px;
+        margin-top: -1px;
     }
 
     .dashboard-nav-item span {
         display: inline-block;
     }
+}
+
+blockquote {
+    padding-left: 20px;
+    padding-right: 8px;
+    border-left: 5px solid #ccc;
+    font-style: italic;
+    margin: 10px 2rem;
+}
+
+.group-list > *::after {
+    content: ', ';
+    color: #212529;
+    font-weight: normal;
+    display: inline;
+}
+
+.group-list > *:last-of-type::after {
+    content: '';
+}
+
+.dropdown .article-dropdown {
+    white-space: nowrap;
+    border-radius: 0;
+}
+
+.dropdown-menu {
+    z-index: 9999;
 }

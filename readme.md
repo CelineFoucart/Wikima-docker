@@ -9,13 +9,13 @@ Wikima est un projet développé en symfony pour organiser des informations sur 
 * Docker
 * Docker Compose
 
-### Installation
+### Installation du projet
+
+Lancer les containers :
 
 ```bash
 docker compose up -d
 ```
-
-### Initialisation du projet en environnement de dev
 
 Dans le container de l'appli, installer les dépendances et les migrations :
 
@@ -25,16 +25,10 @@ npm install
 npm run build
 ```
 
+### Configuration de l'application
+
 Se rendre sur la page d'installation à l'url suivante : **/installation**. Suivre le processus d'installation pour configurer
 la base de données, le compte du super administrateur, les informations du site et le système d'envoi de mail.
-
-### Données de test
-
-Installation de données de test :
-
-```bash
-php bin/console hautelook:fixtures:load
-```
 
 ## Licence
 

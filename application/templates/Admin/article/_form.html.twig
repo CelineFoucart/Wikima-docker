@@ -47,6 +47,7 @@
                     {{ form_row(form.keywords) }}
                     {{ form_row(form.description) }}
                     {{ form_row(form.portals) }}
+                {{ form_row(form.enableComment) }}
                 </div>
             </div>
         </div>
@@ -54,23 +55,28 @@
     <div class="card-btn mt-3">
         <button class="btn btn-success btn-sm" type="submit" name="btn_save_and_edit">
             <i class="fas fa-save" aria-hidden="true"></i>
-            Enregistrer
+            <span class="d-none d-sm-inline">Enregistrer</span>
         </button>
         <button class="btn btn-success btn-sm" type="submit" name="btn_save_and_section">
             <i class="fas fa-save" aria-hidden="true"></i>
-            Enregistrer et gérer
+            <i class="fas fa-clone" aria-hidden="true"></i>
+            <span class="d-none d-sm-inline">Enregistrer et gérer</span>
         </button>
         <button type="submit" class="btn btn-success btn-sm" name="btn_save_and_list">
-            <i class="fas fa-save"></i>
+            <i class="fas fa-save" aria-hidden="true"></i>
             <i class="fas fa-list" aria-hidden="true"></i>
-            Enregistrer et retourner à la liste
+            <span class="d-none d-sm-inline">Enregistrer et retourner à la liste</span>
         </button>
         <button class="btn btn-success btn-sm" type="submit" name="btn_save_and_create">
             <i class="fas fa-plus-circle" aria-hidden="true"></i>
-            Enregistrer et ajouter
+            <span class="d-none d-sm-inline">Enregistrer et ajouter</span>
         </button>
         {{ form_rest(form) }}
     </div>
 {{ form_end(form) }}
 
-{% include "Admin/components/_editor.html.twig" with {target_id: 'article_form_content'} %}
+<script src="{{ asset("assets/ckeditor/ckeditor.js") }}"></script>
+<script src="{{ asset("assets/admin/editor.js") }}"></script>
+<script>   
+    enableFullEditor("article_form_content");
+</script>

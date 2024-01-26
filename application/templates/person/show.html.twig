@@ -19,6 +19,9 @@
 					<nav aria-label="breadcrumb">
 						<ol class="breadcrumb">
 							<li class="breadcrumb-item">
+								<a href="{{ path('app_home') }}">Accueil</a>
+							</li>
+							<li class="breadcrumb-item">
 								<a href="{{ path('app_person_index') }}">Personnages</a>
 							</li>
 							<li class="breadcrumb-item active" aria-current="page">{{ person }}</li>
@@ -29,45 +32,69 @@
 			</div>
 		</div>
 		<div class="item-heading position-relative">
-			{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
-				<div class="p-2 position-absolute top-0" style="right:0px">
+			<div class="p-2 position-absolute top-0" style="right:0px">
+				{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
 					<a href="{{ path('admin_app_person_edit', {id: person.id}) }}" class="btn btn-outline-secondary btn-sm" title="administrer">
 						<i class="fas fa-pencil-alt"></i>
 					</a>
 					<a href="{{ path('admin_app_person_image', {id: person.id}) }}" class="btn btn-outline-secondary btn-sm" title="gérer l'image">
 						<i class="fas fa-image"></i>
 					</a>
-				</div>
-			{% endif %}
-			<p>
+					{% include "components/_sticky_modal.html.twig" with {element: person, path:'admin_app_person_sticky'} %}
+				{% endif %}
+				<a class="btn btn-sm btn-outline-secondary" 
+					data-bs-toggle="tooltip" title="Aperçu avant impression"
+					href="{{ path('app_print_person', {slug: person.slug}) }}" target="_blank">
+					<i class="fas fa-print"></i> 
+				</a>
+				<a class="btn btn-sm btn-outline-secondary" 
+					data-bs-toggle="tooltip" title="Télécharger le fichier word"
+					href="{{ path('app_person_word', {slug: person.slug}) }}" target="_blank">
+					<i class="fas fa-file-word"></i>
+				</a>
+			</div>
+			<p class="pt-4 pt-lg-0">
 				{% for category in person.categories %}
-					<a href="{{ path('app_category_show', {slug: category.slug}) }}" class="label mx-1">
-						<i class="fas fa-folder me-1"></i>
-						{{ category.title }}
-					</a>
+					<span class="mb-1 d-block d-md-inline-block">
+						<a href="{{ path('app_category_show', {slug: category.slug}) }}" class="label mx-1">
+							<i class="fas fa-folder me-1"></i>
+							{{ category.title }}
+						</a>
+					</span>
 				{% endfor %}
 			</p>
-			<h1 class="mb-4">
+			<h2 class="mb-4 h1">
 				<i class="fas fa-user me-1"></i>
 				{{ person }}
-				<div class="float-end">
+				<span class="float-end">
 					{% if person.isArchived %}
 						<i class="fas fa-archive me-1 fa-fw" data-bs-toggle="tooltip" aria-hidden="true" title="archivé"></i>
 					{% endif %}
-				</div>
-			</h1>
+				</span>
+			</h2>
 
 			<p class="lead mb-2">{{ person.description }}</p>
 		</div>
 	</header>
 	<section class="mt-4 px-4 container-fluid">
+		{% include "components/_flashes.html.twig" %}
+
 		<aside class="about-person">
 			<h2 class="about-person-title p-1">{{ person }}</h2>
 			{% if person.image %}
 				<div class="text-center mb-2">
-					<a href="{{ path('app_image_show', {slug: person.image.slug}) }}">
-						<img src="{{ vich_uploader_asset(person.image)|imagine_filter('gallery_thumbnail') }}" alt="{{ person.image.title }}">
+					{% set image_path = vich_uploader_asset(person.image) %}
+					<a href="{{ image_path }}" data-fslightbox="first-lightbox">
+						<img src="{{ image_path|imagine_filter('gallery_thumbnail') }}" alt="{{ person.image.title }}">
 					</a>
+					<div class="text-end w-100">
+						<a href="{{ path('app_image_show', {slug: person.image.slug}) }}" 
+							data-bs-toggle="tooltip" 
+							title="Consulter les informations" 
+							class="text-decoration-none pe-1">
+							<i class="fas fa-info-circle"></i>
+						</a>
+					</div>
 				</div>
 			{% endif %}
 
@@ -180,12 +207,14 @@
 				<tbody>
 					<tr>
 						<td>
-							<ul class="ps-0 mb-0">
+							<ul class="ps-0 mb-0 list-unstyled">
 								{% for portal in person.portals %}
-									<a href="{{ path('app_portal_show', {slug: portal.slug}) }}" class="text-decoration-none">
-										<i class="fas fa-tag small me-1"></i>
-										{{ portal }}
-									</a>
+									<li>
+										<a href="{{ path('app_portal_show', {slug: portal.slug}) }}" class="text-decoration-none">
+											<i class="fas fa-tag small me-1"></i>
+											{{ portal }}
+										</a>
+									</li>
 								{% else %}
 									<li>-</li>
 								{% endfor %}
@@ -207,9 +236,9 @@
 			{{ person.presentation|raw }}
 		</div>
 
-		{% if person.biography or person.personality %}
+		{% if person.biography or person.personality or person.comment %}
 			<div class="m-4" data-controller="toggle">
-				<div class="category-section" style="max-width:273px">
+				<div class="category-section" style="max-width:300px">
 					<div>
 						<span title="afficher ou cacher" role="button" data-action="click->toggle#toggle" data-toggle-target="action" class="float-end">
 							<i class="fas fa-chevron-down"></i>
@@ -227,6 +256,11 @@
 								<a href="#personality" class="text-dark">Personnalité</a>
 							</li>
 						{% endif %}
+						{% if person.comment or person.scenarios|length > 0 %}
+							<li class="fs-6">
+								<a href="#comment" class="text-dark">Informations complémentaires</a>
+							</li>
+						{% endif %}
 					</ol>
 				</div>
 			</div>
@@ -234,15 +268,45 @@
 
 		{% if person.biography %}
 			<div id="biography" class="article-content">
-				<h2 class="h2 pb-1 overflow-hidden">Biographie</h2>
+				<h2 class="h2 pb-1 overflow-hidden">
+					Biographie
+					<a href="#"><i class="fas fa-arrow-up" aria-hidden="true"></i> <span class="visually-hidden">Retourner en haut</span></a>
+				</h2>
 				{{ person.biography|raw }}
 			</div>
 		{% endif %}
 
 		{% if person.personality %}
 			<div id="personality" class="article-content">
-				<h2 class="h2 pb-1 overflow-hidden">Personnalité</h2>
+				<h2 class="h2 pb-1 overflow-hidden">
+					Personnalité
+					<a href="#"><i class="fas fa-arrow-up" aria-hidden="true"></i> <span class="visually-hidden">Retourner en haut</span></a>
+				</h2>
 				{{ person.personality|raw }}
+			</div>
+		{% endif %}
+
+		{% if person.comment or person.scenarios|length > 0 %}
+			<div id="comment" class="article-content mb-3">
+				<h2 class="h2 pb-1 overflow-hidden">
+					Informations complémentaires
+					<a href="#"><i class="fas fa-arrow-up" aria-hidden="true"></i> <span class="visually-hidden">Retourner en haut</span></a>
+				</h2>
+				
+				{% if person.comment %}
+					<h3 class="h4">Commentaires</h3>
+					{{ person.comment|raw }}
+				{% endif %}
+
+				<h3 class="h4">Scénarios</h3>
+				{% for scenario in person.scenarios %}
+					<div class="mb-2 bg-light border p-2">
+						<p class="fw-bold mb-0"><a href="{{ path('app_scenario_show', {slug: scenario.slug})}}">{{ scenario }}</a></p>
+						<div>{{ scenario.pitch|nl2br }}</div>
+					</div>
+				{% else %}
+					<div class="fst-italic">Aucun scénario</div>
+				{% endfor %}
 			</div>
 		{% endif %}
 	</section>

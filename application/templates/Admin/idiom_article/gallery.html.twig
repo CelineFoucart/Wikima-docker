@@ -1,0 +1,115 @@
+{% extends 'Admin/idiom/show_base.html.twig' %}
+
+{% block show_tab %}
+    <div class="card border-top-primary">
+        <div class="card-header">
+            <div class="float-end">
+                <a href="{{ path('admin_app_idiom_article', {id: idiom.id }) }}" class="btn btn-primary btn-sm btn-sm">
+                    <i class="fas fa-arrow-left"></i>
+                    Retour
+                </a>
+                <a href="{{ path('admin_app_idiom_article_edit', {id: article.id}) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Editer">
+                    <i class="fas fa-pencil-alt" aria-hidden="true"></i> Editer
+                </a>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#form-modal">
+					<i class="fas fa-upload"></i> Uploader
+				</button>
+            </div>
+            <h3 class="card-title h5 mb-0">Galerie de {{ article }}</h3>
+        </div>
+        <div class="card-body">
+            <div class="image-container">
+				{% for image in article.images %}
+					<div class="image-block">
+						<a href="{{ vich_uploader_asset(image) }}" data-fslightbox="first-lightbox">
+							<img src="{{ vich_uploader_asset(image)|imagine_filter('gallery_thumbnail') }}" alt="{{ image.title }}">
+						</a>
+						<form action="" method="post" class="text-center">
+							<input type="hidden" name="imageId" value="{{ image.id }}">
+							<input type="hidden" name="_token" value="{{ csrf_token('image' ~ image.id) }}">
+							<input type="hidden" name="delete" value="delete">
+							<button type="submit" class="btn btn-danger btn-sm">Enlever</button>
+						</form>
+					</div>
+				{% else %}
+					<p class="text-center">Cet article n'a pas d'image.</p>
+				{% endfor %}
+			</div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="form-modal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Uploader une image</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				{{ form_start(formImage) }}
+				<div class="modal-body">
+					{{ form_row(formImage.title) }}
+					<div class="mb-2">
+                        {{ form_label(formImage.slug) }}
+                        <div class="input-group">
+                            {{ form_widget(formImage.slug) }}
+                            <span 
+                                class="input-group-text" 
+                                data-action="slugify" 
+                                data-target="#image_slug" 
+                                role="btton" 
+                                data-source="#image_title"
+                                title="Générer"
+                                data-bs-toggle="tooltip">
+                                <i class="fas fa-sync-alt"></i>
+                            </span>
+                        </div>
+                        {{ form_errors(formImage.slug) }}
+                    </div>
+					{{ form_rest(formImage) }}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Fermer</button>
+					<button type="submit" class="btn btn-primary btn-sm">Ajouter</button>
+				</div>
+				{{ form_end(formImage) }}
+			</div>
+		</div>
+	</div>
+
+    <div class="row mt-3">
+        <aside class="col-md-4">
+			<div class="card border-top-primary">
+				<div class="card-header">
+					<h3 class="card-title h5 mb-0">Recherche</h3>
+				</div>
+				<div class="card-body">
+					{{ form_start(form) }}
+					<h4 class="mt-4 mb-3 h6 fw-bold">Par mot clé</h4>
+					{{ form_widget(form.query) }}
+					<h4 class="mt-4 mb-3 h6 fw-bold">Par catégorie</h4>
+					{{ form_widget(form.categories) }}
+					<h4 class="mt-4 mb-3 h6 fw-bold">Par portail</h3>
+					{{ form_widget(form.portals) }}
+					<div style="margin-top:10px">
+						<a href="{{ path('admin_app_article_gallery', {id: article.id}) }}" class="btn btn-sm btn-primary">Tout afficher</a>
+						<button type="submit" class="btn btn-sm btn-primary">Rechercher</button>
+					</div>
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</aside>
+
+        <article class="col-md-8">
+			{{ include('Admin/components/_item_gallery.html.twig', {title: 'Galerie de '~ app_name}) }}
+		</article>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+	const error = document.querySelector('.is-invalid');
+	if (error) {
+		$('#form-modal').modal('show');
+	}
+</script>
+{% endblock %}

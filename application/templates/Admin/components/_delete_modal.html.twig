@@ -5,13 +5,13 @@
 				<h3 class="modal-title fs-5 text-danger" id="deleteModal{{ element.id }}Label">Confirmation de suppression</h3>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body text-start">
 				Êtes-vous sûr de vouloir supprimer l'élément "<em>{{ element }}</em>" ?
 			</div>
 			<div class="modal-footer">
 				<form method="post" action="{{ path(path, {'id': element.id}) }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ element.id) }}">
-                    <button type="button" class="btn btn-default btn-sm" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
                     <button type="submit" class="btn btn-danger btn-sm">
                         <i class="fas fa-trash-alt" aria-hidden="true"></i> Oui, supprimer
                     </button>
@@ -21,7 +21,7 @@
 	</div>
 </div>
 
-<button type="button" class="btn btn-sm btn-danger d-inline" data-bs-toggle="modal" data-bs-target="#deleteModal{{ element.id }}" data-bs-toggle="tooltip" title="Supprimer">
+<button type="button" class="btn btn-sm btn-danger d-inline" data-bs-toggle="modal" data-bs-target="#deleteModal{{ element.id }}">
 	<i class="fas fa-trash-alt" aria-hidden="true"></i>
 	{% if full is defined %}
 		Supprimer

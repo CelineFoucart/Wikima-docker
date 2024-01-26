@@ -9,5 +9,18 @@
         Vous pourrez modifier à tout moment ces informations depuis la page de configuration de l'administration.
     </p>
 
-    {% include "Admin/components/_settings_form.html.twig" %}
+    {% include "Admin/settings/_settings_form.html.twig" %}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function togglePassword(targetId) {
+            const input = document.querySelector(`#${targetId}`);
+            if (input.type === 'password') {
+                input.type = 'text';
+            } else {
+                input.type = 'password';
+            }
+        }
+    </script>
 {% endblock %}

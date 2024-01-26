@@ -4,10 +4,11 @@ namespace App\Controller\Wiki;
 
 use App\Entity\User;
 use App\Entity\Category;
-use App\Form\SearchType;
+use App\Form\Search\SearchType;
 use App\Entity\PlaceType;
 use App\Entity\PersonType;
 use App\Entity\Data\SearchData;
+use App\Entity\ImageTag;
 use App\Entity\Note;
 use App\Form\NoteType;
 use App\Repository\ImageRepository;
@@ -19,20 +20,25 @@ use App\Repository\CategoryRepository;
 use App\Repository\PlaceTypeRepository;
 use App\Repository\PersonTypeRepository;
 use App\Repository\ArticleTypeRepository;
+use App\Repository\ImageTagRepository;
+use App\Repository\ScenarioRepository;
 use App\Service\AlphabeticalHelperService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 final class CategoryController extends AbstractController
 {
     public function __construct(
         private CategoryRepository $categoryRepository,
-        private ArticleRepository $articleRepository
+        private ArticleRepository $articleRepository,
+        private PersonRepository $personRepository,
+        private PlaceRepository $placeRepository
     ) {
     }
 
@@ -53,6 +59,8 @@ final class CategoryController extends AbstractController
             'portals' => $portalRepository->findByCategory($category),
             'title' => $category->getTitle(),
             'description' => $category->getDescription(),
+            'stickyPlaces' => $this->placeRepository->findSticky(null, $category->getId()),
+            'stickyPersons' => $this->personRepository->findSticky(null, $category->getId()),
         ]);
     }
 
@@ -70,7 +78,8 @@ final class CategoryController extends AbstractController
             }
         }
 
-        $articles = $this->articleRepository->findByPortals($category->getPortals()->toArray(), $page, $perPageOdd, $this->hidePrivate(), $type);
+        $portals = $category->getPortals()->toArray();
+        $articles = $this->articleRepository->findByPortals($portals, $page, $perPageOdd, $this->hidePrivate(), $type);
 
         return $this->render('category/show_category_article.html.twig', [
             'category' => $category,
@@ -85,21 +94,38 @@ final class CategoryController extends AbstractController
     }
 
     #[Route('/category/{slug}/gallery', name: 'app_category_gallery')]
-    public function gallery(int $perPageOdd, Category $category, Request $request, ImageRepository $imageRepository): Response
+    public function gallery(int $perPageOdd, Category $category, Request $request, ImageRepository $imageRepository, ImageTagRepository $imageTagRepository): Response
     {
         $page = $request->query->getInt('page', 1);
+        $types = $imageTagRepository->findAll();
+        $typeSlug = $request->query->get('type');
+
+        $results = array_filter($types, function(ImageTag $imageTag) use ($typeSlug) {
+            return $imageTag->getSlug() === $typeSlug;
+        });
+
+        if (!empty($results)) {
+            $type = $results[array_key_first($results)];
+            $typeId = $type->getId();
+        } else {
+            $type = null;
+            $typeId = 0;
+        }
 
         return $this->render('category/category_gallery.html.twig', [
             'category' => $category,
-            'images' => $imageRepository->findByCategory($category, $page, $perPageOdd),
+            'images' => $imageRepository->findByCategory($category, $page, $perPageOdd, $typeId),
             'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
             'title' => $category->getTitle(),
             'description' => $category->getDescription(),
+            'types' => $types,
+            'type' => $type,
+            'route_name' => 'app_image_index',
         ]);
     }
 
     #[Route('/category/{slug}/persons', name: 'app_category_persons')]
-    public function persons(int $perPageOdd, Category $category, Request $request, PersonRepository $personRepository, PersonTypeRepository $personTypeRepository): Response
+    public function persons(int $perPageOdd, Category $category, Request $request, PersonTypeRepository $personTypeRepository): Response
     {
         $types = $personTypeRepository->findAll();
         $page = $request->query->getInt('page', 1);
@@ -119,18 +145,19 @@ final class CategoryController extends AbstractController
 
         return $this->render('category/category_persons.html.twig', [
             'category' => $category,
-            'persons' => $personRepository->findByParent($category, 'category', $page, $typeId, $perPageOdd),
+            'persons' => $this->personRepository->findByParent($category, 'category', $page, $typeId, $perPageOdd),
             'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
             'types' => $types,
             'type' => $type,
-            'stickyElements' => $personRepository->findSticky(null, $category->getId()),
+            'stickyElements' => $this->personRepository->findSticky(null, $category->getId()),
             'title' => $category->getTitle(),
             'description' => $category->getDescription(),
+            'route_name' => 'app_person_index',
         ]);
     }
 
     #[Route('/category/{slug}/places', name: 'app_category_places')]
-    public function places(int $perPageOdd, Category $category, Request $request, PlaceRepository $placeRepository, PlaceTypeRepository $placeTypeRepository): Response
+    public function places(int $perPageOdd, Category $category, Request $request, PlaceTypeRepository $placeTypeRepository): Response
     {
         $types = $placeTypeRepository->findAll();
         $page = $request->query->getInt('page', 1);
@@ -150,18 +177,34 @@ final class CategoryController extends AbstractController
 
         return $this->render('category/category_places.html.twig', [
             'category' => $category,
-            'places' => $placeRepository->findByParent($category, 'category', $page, $typeId, $perPageOdd),
+            'places' => $this->placeRepository->findByParent($category, 'category', $page, $typeId, $perPageOdd),
             'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
             'types' => $types,
             'type' => $type,
-            'stickyElements' => $placeRepository->findSticky(null, $category->getId()),
+            'stickyElements' => $this->placeRepository->findSticky(null, $category->getId()),
             'title' => $category->getTitle(),
             'description' => $category->getDescription(),
+            'route_name' => 'app_place_index',
+        ]);
+    }
+
+    #[Route('/category/{slug}/scenarios', name: 'app_category_scenarios')]
+    public function scenarios(int $perPageOdd, Category $category, Request $request, ScenarioRepository $scenarioRepository): Response
+    {
+        $page = $request->query->getInt('page', 1);
+
+        return $this->render('category/category_scenario.html.twig', [
+            'category' => $category,
+            'scenarios' => $scenarioRepository->findByParent($category->getPortals()->toArray(), $page, $perPageOdd),
+            'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
+            'title' => $category->getTitle(),
+            'description' => $category->getDescription(),
+            'route_name' => 'app_scenario_index',
         ]);
     }
 
     #[Route('/category/{slug}/notes', name: 'app_category_notes')]
-    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR')")]
+    #[IsGranted(new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR')"))]
     public function notes(Category $category, Request $request, EntityManagerInterface $em): Response
     {
         $note = (new Note())->setCategory($category);
@@ -175,6 +218,8 @@ final class CategoryController extends AbstractController
 
             return $this->redirectToRoute('app_category_notes', ['slug' => $category->getSlug()]);
         }
+
+        $portals = $category->getPortals()->toArray();
 
         return $this->render('category/category_note.html.twig', [
             'category' => $category,

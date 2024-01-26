@@ -16,26 +16,51 @@ class VoterHelper
 
     public const CREATE = 'create';
 
-    public function canModerate(User $user): bool
+    public function canModerate(?User $user): bool
     {
+        if (!$user instanceof User) {
+            return false;
+        }
+
         return in_array("ROLE_ADMIN", $user->getRoles()) || in_array("ROLE_SUPER_ADMIN", $user->getRoles());
     }
 
-    public function isEditor(User $user): bool
+    public function canModerateForum(?User $user): bool
     {
+        if (!$user instanceof User) {
+            return false;
+        }
+
+        return $this->canModerate($user) || in_array("ROLE_MODERATOR", $user->getRoles());
+    }
+
+    public function isEditor(?User $user): bool
+    {
+        if (!$user instanceof User) {
+            return false;
+        }
+
         return in_array("ROLE_EDITOR", $user->getRoles()) || $this->canModerate($user);
     }
 
     /**
      * @param User $user
-     * @param Comment|Article $subject
+     * @param Comment|Article|Idiom $subject
      * 
      * @return bool
      */
-    public function canEdit(User $user, $subject, $forEditor = false): bool
+    public function canEdit(?User $user, $subject, $forEditor = false): bool
     {
+        if (!$user instanceof User) {
+            return false;
+        }
+
         if ($this->canModerate($user)) {
             return true;
+        }
+
+        if ($subject->getAuthor() === null) {
+            return false;
         }
         
         $isAuthor = $user->getId() === $subject->getAuthor()->getId();
@@ -53,7 +78,7 @@ class VoterHelper
      * 
      * @return bool
      */
-    public function canDelete(User $user, $subject, $forEditor = false): bool
+    public function canDelete(?User $user, $subject, $forEditor = false): bool
     {
         return $this->canEdit($user, $subject, $forEditor);
     }

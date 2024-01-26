@@ -1,0 +1,66 @@
+{% extends 'Admin/forum_category/base.html.twig' %}
+
+{% block title %}Afficher "{{ forum_group }}"{% endblock %}
+{% block page_title %}Afficher "{{ forum_group }}"{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_forum_category_list') }}" class="text-reset">
+			Forum
+		</a>
+	</li>
+    <li class="breadcrumb-item">
+		<a href="{{ path('admin_app_forum_group_list') }}" class="text-reset">
+			Groupes
+		</a>
+	</li>
+	<li class="breadcrumb-item active">
+		Voir
+	</li>
+{% endblock %}
+
+{% block toolbar %}
+    {% include 'Admin/forum_group/_toolbar.html.twig' %}
+{% endblock %}
+
+{% block body %}
+    <div class="card border-top-primary">
+        <div class="card-header bg-white">
+            <h2 class="card-title h5 mb-0">Informations</h2>
+        </div>
+        <div class="card-body card-show">
+            <table class="table table-striped mb-0">
+                <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ forum_group.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nom affiché</th>
+                        <td>{{ forum_group.title }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nom</th>
+                        <td>{{ forum_group.roleName }}</td>
+                    </tr>
+                    <tr>
+                        <th>Couleur</th>
+                        <td>
+                            <span style="color: {{ forum_group.colour ? forum_group.colour : '#000000' }}">
+                                {{ forum_group.colour ? forum_group.colour : '#000000' }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>{{ forum_group.description }}</td>
+                    </tr>
+                    <tr>
+                        <th>Rôle prédéfini</th>
+                        <td>{{ forum_group.symfonyRole ? 'Oui' : 'Non' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

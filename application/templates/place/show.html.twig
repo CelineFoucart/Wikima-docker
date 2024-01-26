@@ -12,6 +12,9 @@
 					<nav aria-label="breadcrumb">
 						<ol class="breadcrumb">
 							<li class="breadcrumb-item">
+								<a href="{{ path('app_home') }}">Accueil</a>
+							</li>
+							<li class="breadcrumb-item">
 								<a href="{{ path('app_place_index') }}">Lieux</a>
 							</li>
 							<li class="breadcrumb-item active" aria-current="page">{{ place }}</li>
@@ -23,8 +26,8 @@
 			
 		</div>
 		<div class="item-heading position-relative">
-			{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
-				<div class="p-2 position-absolute top-0" style="right:0px">
+			<div class="p-2 position-absolute top-0" style="right:0px">
+				{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
 					<a href="{{ path('admin_app_place_create', {place: place.id}) }}" class="btn btn-outline-secondary btn-sm" title="ajouter un lieu">
 						<i class="fas fa-plus-circle"></i>
 					</a>
@@ -34,42 +37,66 @@
 					<a href="{{ path('admin_app_place_image', {id: place.id}) }}" class="btn btn-outline-secondary btn-sm" title="gérer l'image">
 						<i class="fas fa-image"></i>
 					</a>
-				</div>
-			{% endif %}
-			<p>
+					{% include "components/_sticky_modal.html.twig" with {element: place, path:'admin_app_place_sticky'} %}
+				{% endif %}
+				<a class="btn btn-sm btn-outline-secondary" 
+					data-bs-toggle="tooltip" title="Aperçu avant impression"
+					href="{{ path('app_print_place', {slug: place.slug}) }}" target="_blank">
+					<i class="fas fa-print"></i> 
+				</a>
+				<a class="btn btn-sm btn-outline-secondary" 
+					data-bs-toggle="tooltip" title="Télécharger le fichier word"
+					href="{{ path('app_place_word', {slug: place.slug}) }}" target="_blank">
+					<i class="fas fa-file-word"></i>
+				</a>
+			</div>
+			<p class="pt-4 pt-lg-0">
 				{% for category in place.categories %}
+				<span class="mb-1 d-block d-md-inline-block">
 					<a href="{{ path('app_category_show', {slug: category.slug}) }}" class="label mx-1">
 						<i class="fas fa-folder me-1"></i>
 						{{ category.title }}
 					</a>
+				</span>
 				{% endfor %}
 			</p>
-			<h1 class="mb-2">
+			<h2 class="mb-2 h1">
 				<i class="fas fa-globe me-1"></i>
 				{{ place }}
-				<div class="float-end">
+				<span class="float-end">
 					{% if place.isArchived %}
 						<i class="fas fa-archive me-1 fa-fw" data-bs-toggle="tooltip" aria-hidden="true" title="archivé"></i>
 					{% endif %}
-				</div>
-			</h1>
+				</span>
+			</h2>
 		</div>
 	</header>
-	<section class="mt-4 px-4 container-fluid">
+	<section class="my-4 px-4 container-fluid">
+		{% include "components/_flashes.html.twig" %}
+
 		<aside class="about-person">
 			<h2 class="about-person-title p-1">{{ place }}</h2>
 			{% if place.illustration %}
 				<div class="text-center mb-1">
-					<a href="{{ path('app_image_show', {slug: place.illustration.slug}) }}">
-						<img src="{{ vich_uploader_asset(place.illustration)|imagine_filter('card_image') }}" alt="{{ place.illustration.title }}">
+					{% set image_path = vich_uploader_asset(place.illustration) %}
+					<a href="{{ image_path }}" data-fslightbox="first-lightbox">
+						<img src="{{ image_path|imagine_filter('card_image') }}" alt="{{ place.illustration.title }}">
 					</a>
+					<div class="text-end w-100">
+						<a href="{{ path('app_image_show', {slug: place.illustration.slug}) }}" 
+							data-bs-toggle="tooltip" 
+							title="Consulter les informations" 
+							class="text-decoration-none pe-1">
+							<i class="fas fa-info-circle"></i>
+						</a>
+					</div>
 				</div>
 			{% endif %}
 
 			{% if place.mapFile %}
 				<h3 class="h6 bg-default-light p-1 text-center">Carte</h3>
 				{% set map_link = vich_uploader_asset(place) %}
-				<a href="{{ map_link }}"><img src="{{ map_link }}" alt="Image situation {{ place }}"></a>
+				<a href="{{ map_link }}" data-fslightbox="first-lightbox"><img src="{{ map_link }}" alt="Image situation {{ place }}"></a>
 			{% endif %}
 
 			{% if place.situation %}
@@ -139,10 +166,12 @@
 						<td>
 							<ul class="ps-0 mb-0 list-unstyled">
 								{% for portal in place.portals %}
-									<a href="{{ path('app_portal_show', {slug: portal.slug}) }}" class="text-decoration-none">
-										<i class="fas fa-tag small me-1"></i>
-										{{ portal }}
-									</a>
+									<li>
+										<a href="{{ path('app_portal_show', {slug: portal.slug}) }}" class="text-decoration-none">
+											<i class="fas fa-tag small me-1"></i>
+											{{ portal }}
+										</a>
+									</li>
 								{% else %}
 									<li class="text-center">-</li>
 								{% endfor %}
@@ -153,7 +182,7 @@
 			</table>
 		</aside>
 
-		<div id="presentation" class="article-content">
+		<div id="description" class="article-content">
 			<div>
 				{% for tag in place.types %}
 					<a href="{{ path('app_place_type', {slug: tag.slug}) }}" class="badge rounded-pill bg-secondary link-light text-decoration-none">
@@ -164,7 +193,7 @@
 			{{ place.description|raw }}
 		</div>
 
-		{% if place.history or place.presentation or (place.places is not empty) %}
+		{% if place.history or place.presentation or (place.places is not empty) or place.imageGroup %}
 			<div class="m-4" data-controller="toggle">
 				<div class="category-section" style="max-width:273px">
 					<div>
@@ -174,14 +203,19 @@
 						<h2 class="h6">Sommaire</h2>
 					</div>
 					<ol class="mb-0" data-toggle-target="content">
+						{% if place.presentation %}
+							<li class="fs-6">
+								<a href="#presentation" class="text-dark">Présentation</a>
+							</li>
+						{% endif %}
 						{% if place.history %}
 							<li class="fs-6">
 								<a href="#history" class="text-dark">Histoire</a>
 							</li>
 						{% endif %}
-						{% if place.presentation %}
+						{% if place.imageGroup %}
 							<li class="fs-6">
-								<a href="#presentation" class="text-dark">Présentation</a>
+								<a href="#gallery-place" class="text-dark">Galerie</a>
 							</li>
 						{% endif %}
 						{% if place.places is not empty %}
@@ -196,21 +230,45 @@
 
 		{% if place.presentation %}
 			<div id="presentation" class="article-content">
-				<h2 class="h2 pb-1 overflow-hidden">Présentation</h2>
+				<h2 class="h2 pb-1 overflow-hidden">
+					Présentation
+					<a href="#"><i class="fas fa-arrow-up" aria-hidden="true"></i> <span class="visually-hidden">Retourner en haut</span></a>
+				</h2>
 				{{ place.presentation|raw }}
 			</div>
 		{% endif %}
 
 		{% if place.history %}
 			<div id="history" class="article-content">
-				<h2 class="h2 pb-1 overflow-hidden">Histoire</h2>
+				<h2 class="h2 pb-1 overflow-hidden">
+					Histoire
+					<a href="#"><i class="fas fa-arrow-up" aria-hidden="true"></i> <span class="visually-hidden">Retourner en haut</span></a>
+				</h2>
 				{{ place.history|raw }}
+			</div>
+		{% endif %}
+
+		{% if place.imageGroup %}
+			<div id="gallery-place" class="article-content mb-3">
+				<h2 class="h2 pb-1 overflow-hidden">
+					Galerie
+					<a href="#"><i class="fas fa-arrow-up" aria-hidden="true"></i> <span class="visually-hidden">Retourner en haut</span></a>
+				</h2>
+				<h3 class="h4 text-center">
+					<a href="{{ path('app_image_group_show', {slug: place.imageGroup.slug}) }}">
+						{{ place.imageGroup }}
+					</a>
+				</h3>
+				{% include "image/components/_not_paginated_list.html.twig" with {images: place.imageGroup.images} only %}
 			</div>
 		{% endif %}
 
 		{% if place.places is not empty %}
 			<div id="associated" class="article-content">
-				<h2 class="h2 pb-1 overflow-hidden">Lieux associés</h2>
+				<h2 class="h2 pb-1 overflow-hidden">
+					Lieux associés
+					<a href="#"><i class="fas fa-arrow-up" aria-hidden="true"></i> <span class="visually-hidden">Retourner en haut</span></a>
+				</h2>
 				<div class="row">
 					{% for element in place.places|sort((a, b) => a.title <=> b.title)  %}
 						<div class="col-md-6 col-lg-4 my-2">

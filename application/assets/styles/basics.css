@@ -119,9 +119,19 @@ dd {
         display: inline-block;
         font-weight: bold;
         width: 30%;
+        flex-shrink: 0;
     }
 
     .dataTables_filter {
         margin-top: 5px;
     }
+}
+
+.dropdown-template {
+    max-width: 300px;
+    overflow-y: scroll;
+}
+
+.translate-badge {
+    transform: translate(-40%,-20%)!important;
 }

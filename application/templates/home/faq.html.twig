@@ -5,8 +5,18 @@
 {% endblock %}
 
 {% block body %}
-	<article class="py-5 px-5">
-		<header class="col-12 mb-4">
+	<article class="container-fluid mb-4">
+		<div class="row border-bottom align-items-center py-3 bg-default-light mb-5">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_home') }}">Accueil</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">FAQ</li>
+                </ol>
+            </nav>
+        </div>
+		<header>
 			<h2 class="text-uppercase text-center mb-5 text-default">Vous avez une question ? Consultez cette FAQ</h2>
 		</header>
 		<div class="row justify-content-center">
@@ -41,7 +51,7 @@
 			<div class="accordion-item">
 				<h2 class="accordion-header" id="headingOne">
 					<button class="accordion-button text-default fw-bold collapsed" type="button" data-bs-toggle="collapse"
-						data-bs-target="#basicAccordionCollapseOne" aria-expanded="false" aria-controls="collapseOne">
+						data-bs-target="#basicAccordionCollapseOne" aria-expanded="false" aria-controls="basicAccordionCollapseOne">
 						Ajouter du contenu
 					</button>
 				</h2>
@@ -128,7 +138,7 @@
 			<div class="accordion-item">
 				<h2 class="accordion-header" id="headingTwo">
 					<button class="accordion-button text-default fw-bold collapsed" type="button" data-bs-toggle="collapse"
-						data-bs-target="#basicAccordionCollapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+						data-bs-target="#basicAccordionCollapseTwo" aria-expanded="false" aria-controls="basicAccordionCollapseTwo">
 						Editer le contenu
 					</button>
 				</h2>
@@ -212,7 +222,7 @@
 			<div class="accordion-item">
 				<h2 class="accordion-header" id="headingThree">
 					<button class="accordion-button text-default fw-bold collapsed" type="button" data-bs-toggle="collapse"
-						data-bs-target="#basicAccordionCollapseThree" aria-expanded="false" aria-controls="collapseThree">
+						data-bs-target="#basicAccordionCollapseThree" aria-expanded="false" aria-controls="basicAccordionCollapseThree">
 						Contribuer et commenter
 					</button>
 				</h2>
@@ -249,10 +259,6 @@
 				</div>
 			</div>
 		</div>
-
-
-		
-		
 	</article>
 
 

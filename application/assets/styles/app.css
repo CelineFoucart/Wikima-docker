@@ -4,6 +4,12 @@
     --secondary-light: #F3FAFE;
 }
 
+* {
+    -webkit-print-color-adjust: exact !important;   /* Chrome, Safari 6 – 15.3, Edge */
+    color-adjust: exact !important;                 /* Firefox 48 – 96 */
+    print-color-adjust: exact !important;           /* Firefox 97+, Safari 15.4+ */
+}
+
 a {
     color: #2870a7;
 }
@@ -141,4 +147,27 @@ a {
 }
 .dropdown-menu > li:hover > .dropdown-submenu {
     display: block;
+}
+
+@media print {
+    .image-container {
+        break-inside: avoid;
+    }
+}
+.dot-separator::after {
+    content: '•';
+    display: inline-block;
+    color: #333;
+    margin: 0 5px;
+}
+
+.dot-separator:last-of-type::after {
+    display: none;
+    content: '';
+}
+
+/* ckeditor modal */
+.cke_dialog
+{
+    z-index: 10055 !important;
 }

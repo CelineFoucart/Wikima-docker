@@ -2,30 +2,35 @@
 
 namespace App\Controller\Wiki;
 
+use DateTimeImmutable;
 use App\Entity\Article;
 use App\Entity\Comment;
 use App\Form\CommentType;
+use App\Entity\Data\SearchData;
+use App\Form\Search\SearchType;
+use App\Security\Voter\VoterHelper;
 use App\Repository\ArticleRepository;
 use App\Repository\CommentRepository;
-use App\Security\Voter\VoterHelper;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class CommentController extends AbstractController
 {
     public function __construct(
-        private ArticleRepository $articleRepository
+        private ArticleRepository $articleRepository,
+        bool $enableComment
     ) {
+        if (false === $enableComment) {
+            throw $this->createNotFoundException('Not Found');
+        }
     }
 
     #[Route('/articles/{slug}/comment', name: 'app_comment')]
-    #[Entity('article', expr: 'repository.findBySlug(slug)')]
-    public function index(Article $article, Request $request, CommentRepository $commentRepository): Response
+    public function index(#[MapEntity(expr: 'repository.findBySlug(slug)')] Article $article, Request $request, CommentRepository $commentRepository): Response
     {
         $page = $request->query->getInt('page', 1);
         $user = $this->getUser();
@@ -49,7 +54,8 @@ final class CommentController extends AbstractController
         return $this->render('comment/index.html.twig', [
             'article' => $article,
             'comments' => $commentRepository->findPaginatedByArticle($page, $article),
-            'form' => $form->createView(),
+            'formComment' => $form->createView(),
+            'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
         ]);
     }
 
@@ -72,8 +78,9 @@ final class CommentController extends AbstractController
         }
 
         return $this->render('comment/edit.html.twig', [
-            'form' => $form->createView(),
+            'formComment' => $form->createView(),
             'article' => $comment->getArticle(),
+            'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
         ]);
     }
 
@@ -91,6 +98,7 @@ final class CommentController extends AbstractController
         return $this->render('comment/delete.html.twig', [
             'comment' => $comment,
             'article' => $article,
+            'form' => $this->createForm(SearchType::class, new SearchData())->createView(),
         ]);
     }
 }

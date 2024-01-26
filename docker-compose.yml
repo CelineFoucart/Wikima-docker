@@ -10,7 +10,6 @@ services:
       - ./application:/var/www
       - ./docker/dev/php.ini:/usr/local/etc/php/php.ini
     environment:
-      - DATABASE_URL=mysql://root:root@wiki_database:3306/main?serverVersion=5.7
       - MAILER_DSN=smtp://wiki_maildev:1025
     networks:
       - network-wiki
@@ -27,7 +26,7 @@ services:
       - network-wiki
 
   database:
-    image: mysql:latest
+    image: mariadb:10.4
     container_name: wiki_database
     volumes:
       - db-data:/var/lib/mysql

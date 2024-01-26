@@ -1,0 +1,30 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Editer "{{ imageType }}"{% endblock %}
+
+{% block activeImage %}
+	active show
+{% endblock %}
+
+{% block activeImageType %}active {% endblock %}
+
+{% block page_title %}Editer "{{ imageType }}"{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_imagetype_list') }}" class="text-reset">
+			Types d'image
+		</a>
+	</li>
+	<li class="breadcrumb-item active">
+		Editer
+	</li>
+{% endblock %}
+
+{% block toolbar %}
+    {% include 'Admin/components/_toolbar.html.twig' with { prefix: 'imagetype', entity: imageType, show_route: 'app_image_type' } %}
+{% endblock %}
+
+{% block body %}
+	{% include "Admin/image_type/_form.html.twig" %}
+{% endblock %}

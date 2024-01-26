@@ -1,0 +1,131 @@
+{% extends 'Admin/scenario/show_base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/colorpicker/coloris.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/admin/color.css') }}">
+{% endblock %}
+
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-6">
+        {% if scenario.comment %}
+            <button href="#" class="btn btn-sm btn-primary" data-bs-toggle="collapse" data-bs-target="#collapseComment" aria-expanded="false" aria-controls="collapseComment">
+                <i class="fas fa-comment" aria-hidden="true"></i> Commentaires
+            </button>
+        {% endif %}
+        <a href="{{ path('admin_app_scenario_episode_archives', {id: scenario.id}) }}" class="btn btn-primary btn-sm">
+            <i class="fas fa-archive" aria-hidden="true"></i>
+            Archives
+        </a>
+        {% if scenario.comment %}
+            <div class="collapse" id="collapseComment">
+                <div class="card card-body mt-3">
+                    {{ scenario.comment|nl2br }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="col-6 text-end">
+        <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+            Ajouter rapidement
+        </a>
+        <a href="{{ path('admin_app_episode_create', {id: scenario.id}) }}" class="btn btn-primary btn-sm">Ajouter</a>
+    </div>
+</div>
+
+{# boucle card show #}
+<div class="row g-2" id="episodes">
+    {% for episode in scenario.episodes %}
+        {% if episode.archived != true %}
+            {% include "Admin/scenario/episode/_card.html.twig" with {episode: episode } %}
+        {% endif %}
+    {% endfor %}
+</div>
+{# boucle form #}
+
+{{ form_start(formCollection) }}
+{{ form_widget(formCollection._token) }}
+    {% for element in formCollection.episodes %}
+        {% set episode = element.vars.data %}
+        <div class="modal fade" id="showModal{{ episode.id }}" tabindex="-1" aria-labelledby="showModal{{ episode.id }}Label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="showModal{{ episode.id }}Label">{{ episode.title }}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ form_widget(element) }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-sm">Sauvegarder</button>
+                        <a href="{{ path('admin_app_episode_edit', {id: episode.id}) }}" class="btn btn-sm btn-default">
+                            Formulaire complet
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{{ form_end(formCollection) }}
+
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addModalLabel">Ajouter un épisode</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {{ form_start(form) }}
+                <div class="modal-body">
+                    {{ form_widget(form) }} 
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btn-sm" type="submit">
+                        <i class="fas fa-save" aria-hidden="true"></i>
+                        Enregistrer
+                    </button>
+                    <a href="{{ path('admin_app_scenario_episode', {id: scenario.id}) }}" class="btn btn-default btn-sm">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                        Annuler
+                    </a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/colorpicker/coloris.min.js') }}"></script>
+	<script src="{{ asset('assets/sortable/Sortable.min.js') }}"></script>
+    <script>
+        Coloris({
+            el: '.color-input',
+            swatches: [
+                '#7952b3', // violet
+                '#d946ef', // fuchsia
+                '#d63384', // pink
+                '#dc3545', // red
+                '#92400e', // brown
+                '#fd7e14', // orange
+                '#ffc107', // yellow
+                '#198754', // green
+                '#3c8dbc', // blue
+                '#93c5fd', // blue 300
+                '#6c757d', // grey
+                '#212529', // dark
+            ]
+        });
+
+        Coloris.setInstance('.color-input', { theme: 'polaroid' });
+
+        window.addEventListener('load', () => {
+			let url = "{{ path('api_scenario_episodes', {'id': scenario.id}) }}";
+			sortable('#episodes', url, true);
+		});
+    </script>
+{% endblock %}
+

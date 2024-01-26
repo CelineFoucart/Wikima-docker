@@ -1,0 +1,22 @@
+
+{{ form_start(form) }}
+    <div class="card border-top-primary">
+        <div class="card-header">
+            <h2 class="card-title h5 mb-0">Modèles</h2>
+        </div>
+        <div class="card-body">
+            {{ form_widget(form) }}
+        </div>
+    </div>
+
+    <div class="card-btn mt-3">
+        {% include "Admin/components/_form_btns.html.twig" %}
+        {{ form_rest(form) }}
+    </div>
+{{ form_end(form) }}
+
+<script src="{{ asset("assets/ckeditor/ckeditor.js") }}"></script>
+<script src="{{ asset("assets/admin/editor.js") }}"></script>
+<script>   
+    enableFullEditor("template_content", "p;h3;h4;h5;h6;pre;address;div");
+</script>

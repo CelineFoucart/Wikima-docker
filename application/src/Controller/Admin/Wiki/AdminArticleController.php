@@ -4,30 +4,35 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin\Wiki;
 
+use App\Entity\User;
 use App\Entity\Image;
+use DateTimeImmutable;
 use App\Entity\Article;
 use App\Entity\Section;
-use App\Form\Admin\ImageType;
 use App\Form\SectionType;
+use App\Form\Admin\ImageType;
 use App\Entity\Data\SearchData;
-use App\Form\AdvancedSearchType;
 use App\Form\Admin\ArticleFormType;
 use App\Repository\ImageRepository;
 use App\Security\Voter\VoterHelper;
 use App\Repository\PortalRepository;
 use App\Repository\ArticleRepository;
 use App\Repository\SectionRepository;
+use App\Repository\TemplateRepository;
+use App\Form\Search\AdvancedSearchType;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\TemplateGroupRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use App\Controller\Admin\AbstractAdminController;
-use App\Entity\User;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/article')]
-#[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR')")]
+#[IsGranted(new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_EDITOR')"))]
 final class AdminArticleController extends AbstractAdminController
 {
     protected string $entityName = "article";
@@ -36,13 +41,16 @@ final class AdminArticleController extends AbstractAdminController
         private ArticleRepository $articleRepository,
         private SectionRepository $sectionRepository,
         private ImageRepository $imageRepository,
+        private TemplateRepository $templateRepository,
     ) {
     }
 
     #[Route('/', name: 'admin_app_article_list', methods:['GET'])]
-    public function listAction(): Response
+    public function listAction(TemplateGroupRepository $templateGroupRepository): Response
     {
-        return $this->render('Admin/article/list.html.twig');
+        return $this->render('Admin/article/list.html.twig', [
+            'templates' => $templateGroupRepository->findBy([], ['title' => 'ASC']),
+        ]);
     }
 
     #[Route('/archive', name: 'admin_app_article_archive_index', methods:['GET'])]
@@ -55,9 +63,12 @@ final class AdminArticleController extends AbstractAdminController
 
 
     #[Route('/create', name: 'admin_app_article_create', methods:['GET', 'POST'])]
-    public function createAction(Request $request, PortalRepository $portalRepository): Response
+    public function createAction(Request $request, PortalRepository $portalRepository, TemplateGroupRepository $templateGroupRepository, EntityManagerInterface $em): Response
     {
-        $article = new Article();
+        $templateId = $request->query->getInt('template', 0);
+        $template =  ($templateId > 0) ? $templateGroupRepository->find($templateId) : null;
+        $title = ($template) ? $template->getTitle() : '';
+        $article = (new Article())->setTitle($title)->setEnableComment(true);
 
         $portalId = $request->query->getInt('portal');
         if (0 !== $portalId) {
@@ -74,6 +85,20 @@ final class AdminArticleController extends AbstractAdminController
             $article->setCreatedAt(new \DateTimeImmutable());
             $article->setAuthor($this->getUser());
             $this->articleRepository->add($article, true);
+            
+            if ($template !== null) {
+                foreach ($template->getTemplates() as $section) {
+                    $newSection = (new Section())
+                        ->setTitle($section->getTitle())
+                        ->setContent($section->getContent())
+                        ->setCreatedAt(new DateTimeImmutable());
+                    $article->addSection($newSection);
+                    $em->persist($newSection);
+                }
+
+                $em->flush();
+            }
+
             $this->addFlash('success', "L'article " . $article->getTitle() . " a bien été créé.");
             
             if (null !== $request->get('btn_save_and_section')) {
@@ -85,7 +110,6 @@ final class AdminArticleController extends AbstractAdminController
 
         return $this->render('Admin/article/create.html.twig', [
             'form' => $form->createView(),
-            'images' => $this->imageRepository->findAll(),
         ]);
     }
 
@@ -109,6 +133,10 @@ final class AdminArticleController extends AbstractAdminController
             return $this->redirectToRoute('admin_app_article_show', ['id' => $article->getId()]);
         }
 
+        if ($article->isEnableComment() === null) {
+            $article->setEnableComment(true);
+        }
+
         return $this->render('Admin/article/show_general.html.twig', [
             'article' => $article,
             'general_active' => true,
@@ -120,6 +148,11 @@ final class AdminArticleController extends AbstractAdminController
     public function editAction(Request $request, Article $article): Response
     {
         $this->denyAccessUnlessGranted(VoterHelper::EDIT, $article);
+
+        if ($article->isEnableComment() === null) {
+            $article->setEnableComment(true);
+        }
+
         $form = $this->createForm(ArticleFormType::class, $article);
         $form->handleRequest($request);
         
@@ -138,17 +171,15 @@ final class AdminArticleController extends AbstractAdminController
         return $this->render('Admin/article/edit.html.twig', [
             'form' => $form->createView(),
             'article' => $article,
-            'images' => $this->imageRepository->findAll(),
         ]);
     }
 
     
     #[Route('/{id}/section', name: 'admin_app_article_section', methods:['GET', 'POST'])]
-    #[Entity('article', expr: 'repository.findById(id)')]
-    public function sectionAction(Article $article, Request $request): Response
+    public function sectionAction(#[MapEntity(expr: 'repository.findById(id)')] Article $article, Request $request): Response
     {
         $this->denyAccessUnlessGranted(VoterHelper::EDIT, $article);
-        $section = $this->getSection($request->query->getInt('section', 0), $article);
+        $section = $this->getSection($request->query->getInt('section', 0), $article, $request->query->getInt('template', 0));
         $sectionForm = $this->createForm(SectionType::class, $section);
         $sectionForm->handleRequest($request);
 
@@ -173,11 +204,12 @@ final class AdminArticleController extends AbstractAdminController
             return $this->redirectToRoute('admin_app_article_section', ['id' => $article->getId()]);
         }
 
-        return $this->renderForm('Admin/article/section.html.twig', [
+        return $this->render('Admin/article/section.html.twig', [
             'article' => $article,
             'sectionForm' => $sectionForm,
             'section_active' => true,
             'images' => $this->imageRepository->findAll(),
+            'templates' => $this->templateRepository->findBy([], ['title' => 'ASC']),
         ]);
     }
 
@@ -237,6 +269,8 @@ final class AdminArticleController extends AbstractAdminController
     #[Route('/{id}/archive', name: 'admin_app_article_archive', methods:['POST'])]
     public function archiveAction(Request $request, Article $article): Response
     {
+        $this->denyAccessUnlessGranted(VoterHelper::EDIT, $article);
+
         if ($this->isCsrfTokenValid('archive'.$article->getId(), $request->request->get('_token'))) {
             $isArchived = (bool) $article->getIsArchived();
             $message = $isArchived ? "désarchivé" : "archivé";
@@ -250,9 +284,21 @@ final class AdminArticleController extends AbstractAdminController
     }
 
     #[Route('/{id}/delete', name: 'admin_app_article_delete', methods:['POST'])]
-    public function deleteAction(Request $request, Article $article): Response
+    public function deleteAction(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted(VoterHelper::DELETE, $article);
+
         if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
+
+            if (!$article->getIdioms()->isEmpty()) {
+                foreach ($article->getIdioms() as $idiom) {
+                    $article->removeIdiom($idiom);
+                }
+
+                $entityManager->persist($article);
+                $entityManager->flush();
+            }
+
             $this->articleRepository->remove($article, true);
             $this->addFlash('success', "L'élément a été supprimé avec succès.");
         }
@@ -260,10 +306,32 @@ final class AdminArticleController extends AbstractAdminController
         return $this->redirectToRoute('admin_app_article_list', [], Response::HTTP_SEE_OTHER);
     }
 
-    private function getSection(int $sectionId, $article): Section
+    #[Route('/{id}/sticky', name: 'admin_app_article_sticky', methods:['POST'])]
+    public function stickyAction(Request $request, Article $article): Response
     {
+        if ($this->isCsrfTokenValid('sticky'.$article->getId(), $request->request->get('_token'))) {
+            $sticky = !$article->getIsSticky();
+            $article->setIsSticky($sticky);
+            $this->articleRepository->add($article, true);
+            $this->addFlash('success', "L'article a été modifié avec succès.");
+        }
+
+        return $this->redirectToRoute('app_article_show', ['slug' => $article->getSlug()], Response::HTTP_SEE_OTHER);
+    }
+
+    private function getSection(int $sectionId, Article $article, int $templateId): Section
+    {
+        if ($templateId > 0) {
+            $template = $this->templateRepository->find($templateId);
+            $title = ($template) ? $template->getTitle() : '';
+            $content = ($template) ? $template->getContent() : '';
+        } else {
+            $title = '';
+            $content = '';
+        }
+
         if (0 === $sectionId) {
-            return (new Section())->setArticle($article);
+            return (new Section())->setArticle($article)->setTitle($title)->setContent($content);
         }
         
 

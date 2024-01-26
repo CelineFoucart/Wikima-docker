@@ -2,14 +2,14 @@
 
 {% block title %}Liste des images{% endblock %}
 
-{% block activeWiki %} active show {% endblock %}
-{% block activeImage %}active{% endblock %}
+{% block activeImage %} active show {% endblock %}
+{% block activeImageList %}active{% endblock %}
 
 {% block page_title %}Image{% endblock %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item active">
-        Image
+        Images
     </li>
 {% endblock %}
 
@@ -45,9 +45,7 @@
                                 </a>
                             </td>
                             <td data-label="Titre">
-                                <a href="{{ path('app_image_show', {slug: image.slug}) }}">
-                                    {{ image.title }}
-                                </a>
+                                {{ image.title }}
                             </td>
                             <td data-label="Mots clés">{{ image.keywords }}</td>
                             <td data-label="Mise à jour" data-sort="{{ image.updatedAt ? image.updatedAt|date('Y-m-d H:i') : '' }}">

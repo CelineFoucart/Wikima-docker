@@ -1,19 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Data;
 
 use App\Entity\Category;
 use App\Entity\Portal;
-use Symfony\Component\Validator\Constraints as Assert;
 
-class SearchData
+class SearchData extends AbstractSearchData
 {
-    #[Assert\Length(
-        min: 3
-    )]
-    private ?string $query = null;
-
-    private int $page = 1;
 
     /**
      * @var Portal[]
@@ -25,41 +20,9 @@ class SearchData
      */
     private array $categories = [];
 
-    /**
-     * Get the value of query.
-     */
-    public function getQuery(): ?string
-    {
-        return $this->query;
-    }
+    private array $tags = [];
 
-    /**
-     * Set the value of query.
-     */
-    public function setQuery(?string $query = null): self
-    {
-        $this->query = $query;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of page.
-     */
-    public function getPage(): int
-    {
-        return $this->page;
-    }
-
-    /**
-     * Set the value of page.
-     */
-    public function setPage(int $page): self
-    {
-        $this->page = $page;
-
-        return $this;
-    }
+    private ?array $fields = [];
 
     /**
      * Get the value of portals.
@@ -97,6 +60,54 @@ class SearchData
     public function setCategories(array $categories): self
     {
         $this->categories = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of tags
+     *
+     * @return array
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
+    /**
+     * Set the value of tags
+     *
+     * @param array $tags
+     *
+     * @return self
+     */
+    public function setTags(array $tags): self
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of fields
+     *
+     * @return ?array
+     */
+    public function getFields(): ?array
+    {
+        return $this->fields;
+    }
+
+    /**
+     * Set the value of fields
+     *
+     * @param ?array $fields
+     *
+     * @return self
+     */
+    public function setFields(?array $fields): self
+    {
+        $this->fields = $fields;
 
         return $this;
     }

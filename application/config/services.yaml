@@ -10,6 +10,7 @@ parameters:
     app.contact.mail: '%env(CONTACT_EMAIL)%' 
     app.contact.name: '%env(CONTACT_NAME)%'
     app.backup.folder: '%kernel.project_dir%/backup'
+    app.tmp.folder: '%kernel.project_dir%/var/cache'
     app.per_page_odd: '%env(PER_PAGE_ODD_COLUMNS)%'
     app.per_page_even: '%env(PER_PAGE_EVEN_COLUMNS)%'
     locale: fr
@@ -31,6 +32,12 @@ services:
             $configFile: '%kernel.project_dir%/.env.local'
             $publicDir: '%kernel.project_dir%/public'
             $projectDir: '%kernel.project_dir%/'
+            $enableComment: '%env(COMMENT_MODULE)%'
+            $enableIdiom: '%env(IDIOM_MODULE)%'
+            $enableForum: '%env(FORUM_MODULE)%'
+            $enableScenario: '%env(SCENARIO_MODULE)%'
+            $enablePrivateMessage: '%env(PM_MODULE)%'
+            $tmpDir: '%app.tmp.folder%'
     
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -48,7 +55,38 @@ services:
             $faviconFile: '%env(WIKI_FAVICON)%'
             $bannerFile: '%env(WIKI_BANNER)%'
 
-    Faker\Factory: ~
-
-    App\DataFixtures\HashPasswordProvider:
-        tags: [ { name: nelmio_alice.faker.provider } ]
+    App\Service\Modules\ModuleService:
+        arguments: 
+            $modules: [
+                { 
+                    id: 'IDIOM_MODULE',
+                    title: 'Langues',
+                    icon: 'fas fa-language',
+                    description: "Ce module permet de gérer sur l'encyclopédie des langues qui comprennent des articles que vous pouvez regrouper par catégorie."
+                },
+                {
+                    id: 'SCENARIO_MODULE',
+                    title: 'Scénarios',
+                    icon: 'fas fa-book',
+                    description: "Ce module intègre à l'application un système de conception de scénario dans lequel vous pouvez réordonner les épisodes."
+                },
+                { 
+                    id: 'COMMENT_MODULE',
+                    title: 'Commentaires',
+                    icon: 'fas fa-comment-alt',
+                    description: "Ce module permet aux utilisateurs connectés de poster des commentaires sur les articles de l'encyclopédie."
+                },
+                {
+                    id: 'FORUM_MODULE',
+                    title: 'Forum',
+                    icon: 'fas fa-comments',
+                    description: "Ce module permet d'intégrer au site un forum de discussion pour échanger avec vos membres et les personnes qui contribuent."
+                },
+                {
+                    id: 'PM_MODULE',
+                    title: 'Messagerie privée',
+                    icon: 'fas fa-inbox',
+                    description: "Ce module intègre à l'application un système de messagerie privée entre les membres inscrits à l'application."
+                }
+                
+            ]

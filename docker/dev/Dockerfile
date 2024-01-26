@@ -1,4 +1,4 @@
-FROM php:8.0-fpm
+FROM php:8.2-fpm
 
 RUN apt update \
     && apt upgrade \
@@ -14,11 +14,12 @@ RUN pecl install imagick; \
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-COPY php.ini /usr/local/etc/php/php.ini 
-
 RUN apt install nodejs -y
 
 RUN apt install npm -y
+
+COPY php.ini /usr/local/etc/php/php.ini 
+COPY nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /var/www
 

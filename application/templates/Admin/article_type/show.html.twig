@@ -17,26 +17,12 @@
 		</a>
 	</li>
 	<li class="breadcrumb-item active">
-		{{ articleType }}
+		Voir
 	</li>
 {% endblock %}
 
 {% block toolbar %}
-    <a class="btn btn-sm btn-default" href="{{ path('admin_app_articletype_create') }}" data-bs-toggle="tooltip" title="Ajouter">
-        <i class="fas fa-plus-circle" aria-hidden="true"></i>
-    </a>
-    <div class="btn-group">
-        <a href="{{ path('app_articletype_show', {slug: articleType.slug}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Consulter">
-            <i class="fas fa-book-reader"></i>
-        </a>                   
-        <a href="{{ path('admin_app_articletype_show', {id: articleType.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Afficher">
-            <i class="fas fa-info-circle"></i>
-        </a>
-        <a href="{{ path('admin_app_articletype_edit', {id: articleType.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Éditer">
-            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-        </a>
-        {% include "Admin/components/_delete_modal.html.twig" with { element: articleType, path: 'admin_app_articletype_delete' } %}
-    </div>
+    {% include 'Admin/components/_toolbar.html.twig' with { prefix: 'articletype', entity: articleType, show_route: 'app_articletype_show' } %}
 {% endblock %}
 
 {% block body %}
@@ -62,7 +48,8 @@
                     <tr>
                         <th>Description</th>
                         <td>{{ articleType.description|nl2br }}</td>
-                    </tr><tr>
+                    </tr>
+                    <tr>
                         <th>Icône</th>
                         <td><i class="{{ articleType.icon }}" data-bs-toggle="tooltip" title="{{ articleType.icon }}"></i></td>
                     </tr>

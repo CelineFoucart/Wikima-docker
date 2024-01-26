@@ -13,9 +13,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @Vich\Uploadable
- */
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: PortalRepository::class)]
 #[UniqueEntity('slug')]
 class Portal
@@ -67,6 +65,7 @@ class Portal
     private $categories;
 
     #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: 'portals')]
+    #[ORM\OrderBy(['title' => 'ASC'])]
     private $articles;
 
     #[ORM\ManyToMany(targetEntity: Image::class, mappedBy: 'portals')]
@@ -76,9 +75,11 @@ class Portal
     private $pages;
 
     #[ORM\ManyToMany(targetEntity: Timeline::class, mappedBy: 'portals')]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     private $timelines;
 
     #[ORM\ManyToMany(targetEntity: Person::class, mappedBy: 'portals')]
+    #[ORM\OrderBy(['firstname' => 'ASC'])]
     private $people;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -87,19 +88,30 @@ class Portal
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $banner = null;
 
-    /**
-     * @Vich\UploadableField(mapping="upload_images", fileNameProperty="banner")
-     */
+    #[Vich\UploadableField(mapping:"upload_images", fileNameProperty:"banner")]
     private ?File $imageBanner = null;
 
     #[ORM\OneToMany(mappedBy: 'portal', targetEntity: Note::class)]
     private Collection $notes;
 
     #[ORM\ManyToMany(targetEntity: Place::class, mappedBy: 'portals')]
+    #[ORM\OrderBy(['title' => 'ASC'])]
     private Collection $places;
 
     #[ORM\Column(nullable: true)]
     private ?int $position = null;
+
+    #[ORM\ManyToMany(targetEntity: Idiom::class, mappedBy: 'portals')]
+    private Collection $idioms;
+
+    #[ORM\ManyToMany(targetEntity: Scenario::class, mappedBy: 'portals')]
+    private Collection $scenarios;
+
+    #[ORM\ManyToMany(targetEntity: ImageGroup::class, mappedBy: 'portals')]
+    private Collection $imageGroups;
+
+    #[ORM\ManyToMany(targetEntity: Map::class, mappedBy: 'portals')]
+    private Collection $maps;
 
     public function __construct()
     {
@@ -111,6 +123,10 @@ class Portal
         $this->people = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->places = new ArrayCollection();
+        $this->idioms = new ArrayCollection();
+        $this->scenarios = new ArrayCollection();
+        $this->imageGroups = new ArrayCollection();
+        $this->maps = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -463,6 +479,114 @@ class Portal
     public function setPosition(?int $position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Idiom>
+     */
+    public function getIdioms(): Collection
+    {
+        return $this->idioms;
+    }
+
+    public function addIdiom(Idiom $idiom): static
+    {
+        if (!$this->idioms->contains($idiom)) {
+            $this->idioms->add($idiom);
+            $idiom->addPortal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdiom(Idiom $idiom): static
+    {
+        if ($this->idioms->removeElement($idiom)) {
+            $idiom->removePortal($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Scenario>
+     */
+    public function getScenarios(): Collection
+    {
+        return $this->scenarios;
+    }
+
+    public function addScenario(Scenario $scenario): static
+    {
+        if (!$this->scenarios->contains($scenario)) {
+            $this->scenarios->add($scenario);
+            $scenario->addPortal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScenario(Scenario $scenario): static
+    {
+        if ($this->scenarios->removeElement($scenario)) {
+            $scenario->removePortal($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ImageGroup>
+     */
+    public function getImageGroups(): Collection
+    {
+        return $this->imageGroups;
+    }
+
+    public function addImageGroup(ImageGroup $imageGroup): static
+    {
+        if (!$this->imageGroups->contains($imageGroup)) {
+            $this->imageGroups->add($imageGroup);
+            $imageGroup->addPortal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImageGroup(ImageGroup $imageGroup): static
+    {
+        if ($this->imageGroups->removeElement($imageGroup)) {
+            $imageGroup->removePortal($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Map>
+     */
+    public function getMaps(): Collection
+    {
+        return $this->maps;
+    }
+
+    public function addMap(Map $map): static
+    {
+        if (!$this->maps->contains($map)) {
+            $this->maps->add($map);
+            $map->addPortal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMap(Map $map): static
+    {
+        if ($this->maps->removeElement($map)) {
+            $map->removePortal($this);
+        }
 
         return $this;
     }

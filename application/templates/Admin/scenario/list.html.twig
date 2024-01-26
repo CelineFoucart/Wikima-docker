@@ -1,0 +1,25 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Liste des scénarios{% endblock %}
+{% block activeScenario %}active show{% endblock %}
+{% block activeScenarioList %} active {% endblock %}
+{% block page_title %}Scénarios{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Scénarios</li>
+{% endblock %}
+
+{% block toolbar %}
+    <a href="{{ path('admin_app_scenario_create') }}" class="btn btn-default btn-sm">
+        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+        Ajouter
+    </a>
+    <a href="{{ path('admin_app_scenario_archive_index') }}" class="btn btn-default btn-sm">
+        <i class="fas fa-archive" aria-hidden="true"></i>
+        Archives
+    </a>
+{% endblock %}
+
+{% block body %}
+    {% include "Admin/scenario/_index.html.twig" %}
+{% endblock %}

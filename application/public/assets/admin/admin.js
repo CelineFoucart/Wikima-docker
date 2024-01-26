@@ -27,7 +27,7 @@ function toastify(type = 'success', text = null) {
 
     const toastifyId = "toastify-" + Date.now();
     const messages = {
-        success: "Les données ont bien été sauvegardée",
+        success: "Les données ont bien été sauvegardées.",
         error: "L'opération a échoué"
     };
     const validStatus = ['success', 'error'];
@@ -56,21 +56,30 @@ function toastify(type = 'success', text = null) {
  * @param {string} list     selector of the list
  * @param {string} path     the path used to send the updated data
  */
-async function sortable(list, path) {
+async function sortable(list, path, withReload = false) {
     const events = document.querySelector(list);
     if (!events) {
         return;
     }
-    await Sortable.create(events, {
+
+    await renderSortable(events, path, withReload);
+}
+
+/**
+ * @param {HTMLElement} element
+ * @param {string}      path
+ */
+async function renderSortable(element, path, withReload) {
+    await Sortable.create(element, {
         dataIdAttr: 'data-order',
         ghostClass: 'blue-background-class',
         onEnd: function (evt) {
             const data = [];
 
-            for (let i = 0; i < events.children.length; i++) {
-                const element = events.children[i];
+            for (let i = 0; i < element.children.length; i++) {
+                const child = element.children[i];
                 data.push({
-                    id: element.getAttribute('id'),
+                    id: child.getAttribute('id'),
                     position: i
                 })
             }
@@ -89,7 +98,13 @@ async function sortable(list, path) {
                         throw new Error("Il y a eu une erreur et les données n'ont pas été sauvegardées.");
                     }
                 })
-                .then(response => toastify('success', JSON.stringify(response)))
+                .then(response => {
+                    toastify('success', JSON.stringify(response))
+                    
+                    if (withReload === true) {
+                        location.reload();
+                    }
+                })
                 .catch(error => toastify('error', error));
         }
     });
@@ -255,12 +270,24 @@ $(document).ready(function () {
             .siblings()
             .removeClass("show");
     });
-
+    
     $(document).ready(function () {
+        // simple datatable
         $('.data-table').DataTable({
             language: {
                 url: '/assets/DataTables/i18n/fr-FR.json',
             },
+        });
+
+        // datatable for sortable elements
+        $(document).ready(function () {
+            $('.data-table-sort').DataTable({
+                paging: false,
+                ordering:  false,
+                language: {
+                    url: '/assets/DataTables/i18n/fr-FR.json',
+                },
+            });
         });
 
         const options = {

@@ -2,42 +2,28 @@
 
 {% block title %}Afficher "{{ image }}"{% endblock %}
 
-{% block activeWiki %}active show{% endblock %}
-{% block activeImage %}active{% endblock %}
+{% block activeImage %}active show{% endblock %}
+{% block activeImageList %}active{% endblock %}
 
 {% block page_title %}Afficher "{{ image }}"{% endblock %}
 
 {% block breadcrumb %}
 	<li class="breadcrumb-item">
 		<a href="{{ path('admin_app_image_list') }}" class="text-reset">
-			Image
+			Images
 		</a>
 	</li>
 	<li class="breadcrumb-item active">
-		{{ image }}
+		Voir
 	</li>
 {% endblock %}
 
 {% block toolbar %}
-    <a class="btn btn-sm btn-default" href="{{ path('admin_app_image_create') }}" data-bs-toggle="tooltip" title="Ajouter">
-        <i class="fas fa-plus-circle" aria-hidden="true"></i>
-    </a>
-    <div class="btn-group">
-        <a href="{{ path('app_image_show', {slug: image.slug}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Consulter">
-            <i class="fas fa-book-reader"></i>
-        </a>                   
-        <a href="{{ path('admin_app_image_show', {id: image.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Afficher">
-            <i class="fas fa-info-circle"></i>
-        </a>
-        <a href="{{ path('admin_app_image_edit', {id: image.id}) }}" data-bs-toggle="tooltip" class="btn btn-sm btn-default" title="Éditer">
-            <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-        </a>
-        {% include "Admin/components/_delete_modal.html.twig" with { element: image, path: 'admin_app_image_delete' } %}
-    </div>
+    {% include 'Admin/components/_toolbar.html.twig' with { prefix: 'image', entity: image, show_route: 'app_image_show' } %}
 {% endblock %}
 
 {% block body %}
-    <div class="row">
+    <div class="row g-2">
         <div class="col-md-8">
             <div class="card border-top-primary">
                 <div class="card-header bg-white">
@@ -67,6 +53,18 @@
                                 <td>{{ image.description|nl2br }}</td>
                             </tr>
                             <tr>
+                                <th>Types</th>
+                                <td>
+                                    {% if image.tags is not empty %}
+                                        <ul class="mb-0">
+                                            {% for tag in image.tags %}
+                                                <li><a href="{{ path('app_image_type', {slug: tag.slug}) }}">{{ tag }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
                                 <th>Catégories</th>
                                 <td>
                                     {% if image.categories is not empty %}
@@ -87,6 +85,25 @@
                                                 <li><a href="{{ path('app_portal_show', {slug: portal.slug}) }}">{{ portal }}</a></li>
                                             {% endfor %}
                                         </ul>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Cartes</th>
+                                <td>
+                                    <div class="float-end">
+                                        <a href="{{ path('admin_app_map_create', {image:image.id}) }}" class="btn btn-default btn-sm" title="créer une carte à partir">
+                                            <i class="fas fa-map"></i>
+                                        </a>
+                                    </div>
+                                    {% if image.maps is not empty %}
+                                        <ul class="mb-0">
+                                            {% for map in image.map %}
+                                                <li><a href="{{ path('admin_app_map_show', {id: map.id}) }}">{{ map }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <span class="fst-italic">Aucune carte</span>
                                     {% endif %}
                                 </td>
                             </tr>

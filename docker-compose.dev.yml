@@ -27,7 +27,7 @@ services:
       - network-wiki
 
   database:
-    image: mysql:latest
+    image: mariadb:10.4
     container_name: wiki_database
     volumes:
       - db-data:/var/lib/mysql

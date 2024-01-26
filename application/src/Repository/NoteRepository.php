@@ -47,6 +47,9 @@ class NoteRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('n')
             ->orderBy('n.createdAt', 'DESC')
             ->setMaxResults($limit)
+            ->andWhere('n.isArchived = :isArchived')
+            ->setParameter('isArchived', false)
+            ->orWhere('n.isArchived IS NULL')
             ->getQuery()
             ->getResult()
         ;
@@ -67,5 +70,22 @@ class NoteRepository extends ServiceEntityRepository
         } 
             
         return $builder->getQuery()->getResult();
+    }
+
+    public function countNotProcessed(): int
+    {
+        try {
+            return $this->createQueryBuilder('n')
+                ->select('COUNT(n.id)')
+                ->andWhere('(n.isArchived = :isArchived OR n.isArchived IS NULL)')
+                ->setParameter('isArchived', false)
+                ->andWhere('(n.isProcessed = :isProcessed OR n.isProcessed IS NULL)')
+                ->setParameter('isProcessed', false)
+                ->getQuery()
+                ->getSingleScalarResult()
+            ;
+        } catch (\Exception $th) {
+            return 0;
+        }
     }
 }

@@ -1,0 +1,28 @@
+{% extends 'Admin/forum_category/base.html.twig' %}
+
+{% block title %}Créer un groupe{% endblock %}
+{% block page_title %}Créer un groupe{% endblock %}
+
+{% block toolbar %}
+    {% include 'Admin/components/_toolbar.html.twig' with { prefix: 'forum_group', entity: null } %}
+{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item">
+		<a href="{{ path('admin_app_forum_category_list') }}" class="text-reset">
+			Forum
+		</a>
+	</li>
+    <li class="breadcrumb-item">
+		<a href="{{ path('admin_app_forum_group_list') }}" class="text-reset">
+			Groupes
+		</a>
+	</li>
+	<li class="breadcrumb-item active">
+		Créer
+	</li>
+{% endblock %}
+
+{% block body %}
+    {{ include('Admin/forum_group/_form.html.twig') }}
+{% endblock %}

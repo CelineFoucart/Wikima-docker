@@ -2,45 +2,78 @@
 
 namespace App\Controller\Admin;
 
+use DateTime;
 use App\Entity\About;
 use App\Form\AboutType;
-use App\Service\ConfigService;
-use App\Form\Admin\AdvancedSettingsType;
 use App\Repository\NoteRepository;
 use App\Repository\AboutRepository;
+use App\Repository\BackupRepository;
+use App\Repository\PortalRepository;
+use Symfony\Component\Finder\Finder;
+use App\Service\Statistics\DatabaseSize;
 use App\Service\Statistics\SatisticsEntity;
 use App\Service\Statistics\StatisticsHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+#[Route('/admin')]
 class AdminDashboardController extends AbstractController
 {
-    #[Route('/admin', name: 'admin_app_dashboard')]
-    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_EDITOR')")]
-    public function dashboardAction(StatisticsHandler $statisticsHandler, NoteRepository $noteRepository): Response
+    #[Route('', name: 'admin_app_dashboard')]
+    #[IsGranted(new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_EDITOR')"))]
+    public function dashboardAction(StatisticsHandler $statisticsHandler, NoteRepository $noteRepository, DatabaseSize $databaseSize, PortalRepository $portalRepository, Request $request): Response
     {
-        $tables = ['category', 'portal', 'article', 'image', 'place', 'person', 'page', 'note', 'comment', 'user'];
+        $tables = [
+            'category', 'portal', 'article', 'image', 'place', 'person', 'page', 'note', 'comment', 'user', 'idiom', 'timeline', 'topic', 'post'
+        ];
 
         foreach ($tables as $table) {
             $statisticsHandler->addEntity(new SatisticsEntity($table));
         }
 
         $stats = $statisticsHandler->getStatistics();
-        $total = (int)$stats['article'] + (int)$stats['person'] + (int) $stats['place'];
+        $total = (int)$stats['article'] + (int)$stats['person'] + (int) $stats['place'] + (int) $stats['timeline'] + (int) $stats['image'];
+
+        $year = $request->query->get('year', null);
+
+        if (null === $year) {
+            $year = (new DateTime())->format('Y');
+        }
+
+        $articleByMonthData = $statisticsHandler->getStatsByMonth('article', 'created_at', $year, 'is_draft = 0 or is_draft IS NULL');
+
+        $articleByMonth = [];
+        for ($i=0; $i < 12; $i++) { 
+            $articleByMonth[] = 0;
+        }
+
+        $totalThisYear = 0;
+
+        foreach ($articleByMonthData as $month) {
+            $totalArticle = (int)$month['total'];
+            $articleByMonth[(int)$month['monthId'] - 1] = $totalArticle;
+            $totalThisYear += $totalArticle;
+        }
         
         return $this->render('Admin/dashboard.html.twig', [
             'stats' => $stats,
             'total' => $total,
             'notes' => $noteRepository->findLastNotes(5),
+            'size'  => $databaseSize->getSize(),
+            'articleByMonth' => $articleByMonth,
+            'totalThisYear' => $totalThisYear,
+            'year' => $year,
+            'portalStats' => $portalRepository->getPortalStats(),
+            'imagesSize' => $this->getImagesSize(),
         ]);
     }
 
-    #[Route('/admin/about', name: 'admin_app_overview')]
-    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
+    #[Route('/about', name: 'admin_app_overview')]
+    #[IsGranted(new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')"))]
     public function overviewAction(Request $request, AboutRepository $aboutRepository): Response
     {
         $overview = $aboutRepository->findAboutRow('overview');
@@ -58,66 +91,37 @@ class AdminDashboardController extends AbstractController
             return $this->redirectToRoute('admin_app_overview');
         }
 
-        return $this->renderForm('Admin/overview.html.twig', [
+        return $this->render('Admin/overview.html.twig', [
             'form' => $form,
         ]);
     }
 
-    #[Route('/admin/settings', name: 'admin_app_settings')]
-    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')")]
-    public function settingsAction(Request $request, ConfigService $configService): Response
+    #[Route('/export', name: 'admin_app_export')]
+    #[IsGranted(new Expression("is_granted('ROLE_SUPER_ADMIN')"))]
+    public function exportAction(BackupRepository $backupRepository): Response
     {
-        $envVars = $configService->getEnvVars();
-        $hasEnvFile = $configService->hasConfigFile();
-        $form = $this->createForm(AdvancedSettingsType::class, $envVars);
-        $form->handleRequest($request);
-        
-        if ($form->isSubmitted() && $form->isValid()) { 
-            $data = $form->getData();
-
-            if ($data['faviconFile']) {
-                $statusFavicon = $configService->move($data['faviconFile'], $envVars['WIKI_FAVICON']);
-
-                if (!$statusFavicon) {
-                    $this->addFlash('error', "Le chargement du nouveau favicon a échoué.");
-                }
-            }
-
-            if ($data['bannerFile'] && $data['bannerFile'] ) {
-                /** @var UploadedFile */
-                $file = $data['bannerFile'];
-                $name = "banner.".$file->getClientOriginalExtension();
-                $statusBanner = $configService->move($data['bannerFile'], $name);
-
-                if (!$statusBanner) {
-                    $this->addFlash('error', "Le chargement de la nouvelle bannière a échoué.");
-                }  else {
-                    $data['WIKI_BANNER'] = $name;
-                }
-            }
-
-            $status = $configService->save($data);
-
-            if ($status) {
-                $this->addFlash('success', "Les paramètres ont bien été enregistrés.");
-            } else {
-                $this->addFlash('error', "La sauvegarde a échoué, car le fichier de configuration .env.local est manquant.");
-            }
-
-            return $this->redirectToRoute('admin_app_settings');
-        }
-
-        $imgPath = $configService->getPublicDir() . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR;
-
-        $faviconFilePath = $imgPath . $envVars['WIKI_FAVICON'];
-        $bannerFilePath = $imgPath . $envVars['WIKI_FAVICON'];
-        
-        return $this->render('Admin/settings.html.twig', [
-            'hasEnvFile' => $hasEnvFile,
-            'form' => $form->createView(),
-            'envVars' => $envVars,
-            'faviconFile' => file_exists($faviconFilePath) ? $envVars['WIKI_FAVICON'] : null,
-            'bannerFile' => file_exists($bannerFilePath) ? $envVars['WIKI_BANNER'] : null,
+        return $this->render('Admin/export.html.twig', [
+            'backup' => $backupRepository->findLastBackup(),
         ]);
+    }
+
+    private function getImagesSize($precision = 2): string
+    {
+        try {
+            $uploadedDir = $this->getParameter('kernel.project_dir').'/public/uploads/';
+            $dirIterator = new \DirectoryIterator($uploadedDir);
+            $bytes = $dirIterator->getSize();
+
+            if ($bytes === false) {
+                return '0 KB';
+            }
+
+            $base = log($bytes, 1024);
+            $suffixes = ['', 'KB', 'MB', 'GB', 'TB'];   
+
+            return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
+        } catch (\Exception $th) {
+            return '0 KB';
+        }
     }
 }
